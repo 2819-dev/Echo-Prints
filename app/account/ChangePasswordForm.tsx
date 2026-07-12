@@ -16,16 +16,22 @@ export default function ChangePasswordForm() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
-    const result = await changePasswordAction(formData);
 
-    if (result.error) {
-      setError(result.error);
+    try {
+      const result = await changePasswordAction(formData);
+
+      if (result.error) {
+        setError(result.error);
+        setStatus("idle");
+        return;
+      }
+
+      setStatus("done");
+      e.currentTarget.reset();
+    } catch {
+      setError("Something went wrong. Try again in a moment.");
       setStatus("idle");
-      return;
     }
-
-    setStatus("done");
-    e.currentTarget.reset();
   }
 
   return (

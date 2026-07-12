@@ -15,18 +15,24 @@ export default function LoginForm() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
-    const result = await loginAction(formData);
 
-    if (result.error) {
-      setError(result.error);
+    try {
+      const result = await loginAction(formData);
+
+      if (result.error) {
+        setError(result.error);
+        setSubmitting(false);
+        return;
+      }
+
+      const destination =
+        result.role === "admin" ? "/admin" : result.role === "printer" ? "/dashboard" : "/retailer";
+      router.push(destination);
+      router.refresh();
+    } catch {
+      setError("Something went wrong logging in. Try again in a moment.");
       setSubmitting(false);
-      return;
     }
-
-    const destination =
-      result.role === "admin" ? "/admin" : result.role === "printer" ? "/dashboard" : "/retailer";
-    router.push(destination);
-    router.refresh();
   }
 
   return (
