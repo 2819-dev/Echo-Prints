@@ -9,9 +9,14 @@ export default function AppHeader({ title, subtitle }: { title: string; subtitle
         <Link href="/browse" aria-label="Echo Prints home">
           <BrandLogo size="sm" />
         </Link>
-        <form action={logoutAction}>
-          <button className="text-sm text-slate-500 hover:text-slate-700">Log out</button>
-        </form>
+        <div className="flex items-center gap-4">
+          <Link href="/account" className="text-sm text-slate-500 hover:text-slate-700">
+            Account
+          </Link>
+          <form action={logoutAction}>
+            <button className="text-sm text-slate-500 hover:text-slate-700">Log out</button>
+          </form>
+        </div>
       </div>
       <div className="mt-10">
         <h1 className="text-2xl font-bold">{title}</h1>
