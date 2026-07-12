@@ -1,0 +1,53 @@
+export interface UserRow {
+  id: number;
+  email: string;
+  name: string;
+  role: "printer" | "retailer";
+  business_name: string | null;
+  phone: string | null;
+  created_at: string;
+}
+
+export default function AccountsTab({ users }: { users: UserRow[] }) {
+  const printers = users.filter((u) => u.role === "printer");
+  const retailers = users.filter((u) => u.role === "retailer");
+
+  return (
+    <div className="space-y-8">
+      <section>
+        <h2 className="text-lg font-semibold">Certified Retailers</h2>
+        <p className="mt-1 text-sm text-slate-500">
+          Printers choose from this list when dropping off finished prints.
+        </p>
+        <div className="mt-4 space-y-2">
+          {retailers.length === 0 && <p className="text-sm text-slate-500">None yet.</p>}
+          {retailers.map((u) => (
+            <div key={u.id} className="rounded-xl bg-panel p-3 text-sm">
+              <p className="font-medium">{u.business_name || u.name}</p>
+              <p className="text-xs text-slate-500">
+                {u.name} &middot; {u.email}
+                {u.phone ? ` · ${u.phone}` : ""}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold">Printers</h2>
+        <div className="mt-4 space-y-2">
+          {printers.length === 0 && <p className="text-sm text-slate-500">None yet.</p>}
+          {printers.map((u) => (
+            <div key={u.id} className="rounded-xl bg-panel p-3 text-sm">
+              <p className="font-medium">{u.name}</p>
+              <p className="text-xs text-slate-500">
+                {u.email}
+                {u.phone ? ` · ${u.phone}` : ""}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
