@@ -18,35 +18,28 @@ export function LogoMark({ size = 40 }: { size?: number }) {
       {/* isometric cube */}
       <path
         d="M32 6 L54 18 L32 30 L10 18 Z"
-        fill="#9aa5b1"
-        stroke="#0b1220"
+        fill="#8b909a"
+        stroke="#171b24"
         strokeWidth="3"
         strokeLinejoin="round"
       />
       <path
         d="M10 18 L32 30 L32 54 L10 42 Z"
-        fill="#39414d"
-        stroke="#0b1220"
+        fill="#454a54"
+        stroke="#171b24"
         strokeWidth="3"
         strokeLinejoin="round"
       />
       <path
         d="M32 30 L54 18 L54 42 L32 54 Z"
-        fill="#2f8ff0"
-        stroke="#0b1220"
+        fill="#1493f0"
+        stroke="#171b24"
         strokeWidth="3"
         strokeLinejoin="round"
       />
       {/* echo waves */}
-      <path d="M58 23 A9 9 0 0 1 58 41" stroke="#2f8ff0" strokeWidth="3.2" strokeLinecap="round" fill="none" />
-      <path
-        d="M63.5 15 A18 18 0 0 1 63.5 49"
-        stroke="#2f8ff0"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.6"
-      />
+      <path d="M57 24 A8 8 0 0 1 57 40" stroke="#1493f0" strokeWidth="3.4" strokeLinecap="round" fill="none" />
+      <path d="M63 15 A17 17 0 0 1 63 49" stroke="#1493f0" strokeWidth="3.4" strokeLinecap="round" fill="none" />
     </svg>
   );
 }
@@ -57,8 +50,8 @@ export default function Logo({ size = "md" }: { size?: keyof typeof SIZES }) {
     <span className="inline-flex items-center gap-2.5">
       <LogoMark size={cfg.icon} />
       <span className="flex flex-col leading-none">
-        <span className={`font-extrabold tracking-tight text-white ${cfg.wordmark}`}>ECHO</span>
-        <span className={`font-semibold tracking-[0.3em] text-slate-400 ${cfg.sub}`}>PRINTS</span>
+        <span className={`font-extrabold tracking-normal text-white ${cfg.wordmark}`}>ECHO</span>
+        <span className={`font-semibold tracking-[0.35em] text-slate-400 ${cfg.sub}`}>PRINTS</span>
       </span>
     </span>
   );
