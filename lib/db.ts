@@ -1,27 +1,30 @@
-import { getDatabase, type DatabaseConnection } from "@netlify/database";
+import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 
-let _db: DatabaseConnection | null = null;
+let _sql: NeonQueryFunction<false, false> | null = null;
 
-function getDb(): DatabaseConnection {
-  if (!_db) {
+// Lazily initializes the real connection on first use, so importing this
+// module doesn't require a live database (e.g. during `next build`).
+function getSql(): NeonQueryFunction<false, false> {
+  if (!_sql) {
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) {
       throw new Error(
         "DATABASE_URL environment variable is not set. Point it at your Postgres connection string."
       );
     }
-    _db = getDatabase({ connectionString });
+    _sql = neon(connectionString);
   }
-  return _db;
+  return _sql;
 }
 
-// Lazily initializes the real connection on first use, so importing this
-// module doesn't require a live database (e.g. during `next build`).
-export const db = new Proxy({} as DatabaseConnection, {
-  get(_target, prop, receiver) {
-    return Reflect.get(getDb(), prop, receiver);
-  },
-});
+function sql<T = Record<string, unknown>>(
+  strings: TemplateStringsArray,
+  ...params: unknown[]
+): Promise<T[]> {
+  return getSql()(strings, ...params) as Promise<T[]>;
+}
+
+export const db = { sql };
 
 export type Role = "admin" | "printer" | "retailer";
 
