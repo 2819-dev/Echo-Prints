@@ -3,7 +3,15 @@ import { getDatabase, type DatabaseConnection } from "@netlify/database";
 let _db: DatabaseConnection | null = null;
 
 function getDb(): DatabaseConnection {
-  if (!_db) _db = getDatabase();
+  if (!_db) {
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error(
+        "DATABASE_URL environment variable is not set. Point it at your Postgres connection string."
+      );
+    }
+    _db = getDatabase({ connectionString });
+  }
   return _db;
 }
 
