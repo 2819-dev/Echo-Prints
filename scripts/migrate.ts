@@ -1,8 +1,15 @@
 import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
-import { Pool } from "pg";
+import { neon } from "@neondatabase/serverless";
 
 const MIGRATIONS_DIR = join(__dirname, "..", "db", "migrations");
+
+function splitStatements(fileSql: string): string[] {
+  return fileSql
+    .split(/;\s*(?:\n|$)/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
 
 async function main() {
   const connectionString = process.env.DATABASE_URL;
@@ -10,9 +17,9 @@ async function main() {
     throw new Error("Set DATABASE_URL before running migrations.");
   }
 
-  const pool = new Pool({ connectionString });
+  const sql = neon(connectionString);
 
-  await pool.query(`
+  await sql.query(`
     CREATE TABLE IF NOT EXISTS schema_migrations (
       name TEXT PRIMARY KEY,
       applied_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -23,9 +30,7 @@ async function main() {
     .filter((f) => f.endsWith(".sql"))
     .sort();
 
-  const { rows: applied } = await pool.query<{ name: string }>(
-    "SELECT name FROM schema_migrations"
-  );
+  const applied = (await sql.query(`SELECT name FROM schema_migrations`)) as { name: string }[];
   const appliedNames = new Set(applied.map((r) => r.name));
 
   for (const file of files) {
@@ -33,23 +38,16 @@ async function main() {
       console.log(`skip  ${file} (already applied)`);
       continue;
     }
-    const sql = readFileSync(join(MIGRATIONS_DIR, file), "utf8");
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
-      await client.query(sql);
-      await client.query("INSERT INTO schema_migrations (name) VALUES ($1)", [file]);
-      await client.query("COMMIT");
-      console.log(`apply ${file}`);
-    } catch (err) {
-      await client.query("ROLLBACK");
-      throw new Error(`Migration ${file} failed: ${(err as Error).message}`);
-    } finally {
-      client.release();
-    }
+    const fileSql = readFileSync(join(MIGRATIONS_DIR, file), "utf8");
+    const statements = splitStatements(fileSql);
+
+    await sql.transaction((tx) => [
+      ...statements.map((stmt) => tx.query(stmt)),
+      tx.query(`INSERT INTO schema_migrations (name) VALUES ($1)`, [file]),
+    ]);
+    console.log(`apply ${file}`);
   }
 
-  await pool.end();
   console.log("Done.");
 }
 
