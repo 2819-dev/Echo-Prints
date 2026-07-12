@@ -16,13 +16,17 @@ export async function loginAction(
     return { error: "Enter your email and password." };
   }
 
-  const user = await verifyCredentials(email, password);
-  if (!user) {
-    return { error: "That email/password combo doesn't match our records." };
-  }
+  try {
+    const user = await verifyCredentials(email, password);
+    if (!user) {
+      return { error: "That email/password combo doesn't match our records." };
+    }
 
-  await createSession(user.id, user.role);
-  return { role: user.role };
+    await createSession(user.id, user.role);
+    return { role: user.role };
+  } catch (err) {
+    return { error: `Server error: ${err instanceof Error ? err.message : String(err)}` };
+  }
 }
 
 export async function logoutAction() {
