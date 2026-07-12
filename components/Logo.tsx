@@ -2,6 +2,7 @@ const SIZES = {
   sm: { icon: 28, wordmark: "text-base", sub: "text-[9px]" },
   md: { icon: 40, wordmark: "text-xl", sub: "text-[10px]" },
   lg: { icon: 72, wordmark: "text-4xl", sub: "text-sm" },
+  xl: { icon: 108, wordmark: "text-6xl", sub: "text-base" },
 } as const;
 
 export function LogoMark({ size = 40 }: { size?: number }) {

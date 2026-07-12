@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LogoMark } from "@/components/Logo";
+import Logo from "@/components/Logo";
 
 export default function LandingPage() {
   return (
@@ -12,13 +12,11 @@ export default function LandingPage() {
         }}
       />
       <div className="relative">
+        <h1 className="sr-only">Echo Prints</h1>
         <div className="flex justify-center">
-          <LogoMark size={96} />
+          <Logo size="xl" />
         </div>
-        <h1 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Echo Prints
-        </h1>
-        <p className="mx-auto mt-4 max-w-md text-slate-400">
+        <p className="mx-auto mt-6 max-w-md text-slate-400">
           Custom 3D printed goods, made-to-order swirl colorways, and a network of
           printers &amp; retailers.
         </p>
