@@ -37,6 +37,8 @@ export interface User {
   business_name: string | null;
   address: string | null;
   phone: string | null;
+  printers_owned: string | null;
+  filaments_available: string | null;
   created_at: string;
 }
 
@@ -50,6 +52,9 @@ export interface Application {
   email: string;
   business_name: string | null;
   phone: string | null;
+  address: string | null;
+  printers_owned: string | null;
+  filaments_available: string | null;
   message: string | null;
   status: ApplicationStatus;
   created_at: string;
@@ -81,5 +86,17 @@ export interface PrintJob {
   fulfillment_method: FulfillmentMethod | null;
   fulfillment_retailer_id: number | null;
   fulfilled_at: string | null;
+  created_at: string;
+}
+
+export type OrderStatus = "pending" | "fulfilled";
+
+export interface Order {
+  id: number;
+  name: string;
+  price: string;
+  quantity: number;
+  notes: string | null;
+  status: OrderStatus;
   created_at: string;
 }

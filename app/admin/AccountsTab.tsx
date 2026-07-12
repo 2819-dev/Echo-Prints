@@ -4,7 +4,10 @@ export interface UserRow {
   name: string;
   role: "printer" | "retailer";
   business_name: string | null;
+  address: string | null;
   phone: string | null;
+  printers_owned: string | null;
+  filaments_available: string | null;
   created_at: string;
 }
 
@@ -28,6 +31,7 @@ export default function AccountsTab({ users }: { users: UserRow[] }) {
                 {u.name} &middot; {u.email}
                 {u.phone ? ` · ${u.phone}` : ""}
               </p>
+              {u.address && <p className="mt-1 text-xs text-slate-500">{u.address}</p>}
             </div>
           ))}
         </div>
@@ -44,6 +48,16 @@ export default function AccountsTab({ users }: { users: UserRow[] }) {
                 {u.email}
                 {u.phone ? ` · ${u.phone}` : ""}
               </p>
+              {u.printers_owned && (
+                <p className="mt-1 text-xs text-slate-500">
+                  <span className="text-slate-500">Printers:</span> {u.printers_owned}
+                </p>
+              )}
+              {u.filaments_available && (
+                <p className="text-xs text-slate-500">
+                  <span className="text-slate-500">Filaments:</span> {u.filaments_available}
+                </p>
+              )}
             </div>
           ))}
         </div>

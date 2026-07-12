@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
-import { db, type ApplicationType } from "@/lib/db";
+import { db, type Application, type ApplicationType } from "@/lib/db";
 import { hashPassword, requireUser } from "@/lib/auth";
 
 export async function submitApplicationAction(formData: FormData) {
@@ -11,6 +11,9 @@ export async function submitApplicationAction(formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const businessName = String(formData.get("businessName") || "").trim() || null;
   const phone = String(formData.get("phone") || "").trim() || null;
+  const address = String(formData.get("address") || "").trim() || null;
+  const printersOwned = String(formData.get("printersOwned") || "").trim() || null;
+  const filamentsAvailable = String(formData.get("filamentsAvailable") || "").trim() || null;
   const message = String(formData.get("message") || "").trim() || null;
 
   if (type !== "retailer" && type !== "printer") {
@@ -21,8 +24,10 @@ export async function submitApplicationAction(formData: FormData) {
   }
 
   await db.sql`
-    INSERT INTO applications (type, name, email, business_name, phone, message)
-    VALUES (${type}, ${name}, ${email}, ${businessName}, ${phone}, ${message})
+    INSERT INTO applications
+      (type, name, email, business_name, phone, address, printers_owned, filaments_available, message)
+    VALUES
+      (${type}, ${name}, ${email}, ${businessName}, ${phone}, ${address}, ${printersOwned}, ${filamentsAvailable}, ${message})
   `;
 
   revalidatePath("/admin");
@@ -36,18 +41,8 @@ function generateTempPassword() {
 export async function approveApplicationAction(applicationId: number) {
   await requireUser("admin");
 
-  const rows = await db.sql`SELECT * FROM applications WHERE id = ${applicationId}`;
-  const application = rows[0] as
-    | {
-        id: number;
-        type: ApplicationType;
-        name: string;
-        email: string;
-        business_name: string | null;
-        phone: string | null;
-        status: string;
-      }
-    | undefined;
+  const rows = await db.sql<Application>`SELECT * FROM applications WHERE id = ${applicationId}`;
+  const application = rows[0];
 
   if (!application || application.status !== "pending") {
     return { ok: false, error: "Application not found or already handled.", tempPassword: null as string | null };
@@ -58,8 +53,11 @@ export async function approveApplicationAction(applicationId: number) {
   const role = application.type; // 'retailer' | 'printer'
 
   await db.sql`
-    INSERT INTO users (email, password_hash, name, role, business_name, phone)
-    VALUES (${application.email}, ${passwordHash}, ${application.name}, ${role}, ${application.business_name}, ${application.phone})
+    INSERT INTO users
+      (email, password_hash, name, role, business_name, phone, address, printers_owned, filaments_available)
+    VALUES
+      (${application.email}, ${passwordHash}, ${application.name}, ${role}, ${application.business_name},
+       ${application.phone}, ${application.address}, ${application.printers_owned}, ${application.filaments_available})
     ON CONFLICT (email) DO NOTHING
   `;
 

@@ -25,8 +25,8 @@ function ColorSwatch({ color }: { color: ColorStock }) {
         <span
           className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-semibold backdrop-blur ${
             color.in_stock
-              ? "bg-emerald-500/20 text-emerald-300"
-              : "bg-rose-500/20 text-rose-300"
+              ? "bg-white/85 text-emerald-700"
+              : "bg-white/85 text-rose-700"
           }`}
         >
           {color.in_stock ? "Available now" : "Currently unavailable"}
@@ -56,7 +56,7 @@ export default async function ColorGuidePage() {
       <SiteHeader backHref="/browse" backLabel="Back to browse" />
 
       <h1 className="mt-10 text-3xl font-bold tracking-tight sm:text-4xl">Color Guide</h1>
-      <p className="mt-3 max-w-2xl text-slate-400">
+      <p className="mt-3 max-w-2xl text-slate-500">
         These swatches show exactly what each swirl colorway looks like, so you can pick with
         confidence &mdash; no guessing from a name on a label. Find your favorite here, then
         head to the shop and choose it as a variant.
@@ -71,10 +71,10 @@ export default async function ColorGuidePage() {
         )}
       </div>
 
-      <div className="mt-12 flex flex-col items-center gap-4 rounded-2xl border border-slate-800 bg-panel/50 p-8 text-center sm:flex-row sm:justify-between sm:text-left">
+      <div className="mt-12 flex flex-col items-center gap-4 rounded-2xl border border-slate-200 bg-panel/50 p-8 text-center sm:flex-row sm:justify-between sm:text-left">
         <div>
           <h3 className="font-semibold">Found your color?</h3>
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="mt-1 text-sm text-slate-500">
             Head to the shop and pick it as a variant when you order.
           </p>
         </div>
@@ -88,14 +88,14 @@ export default async function ColorGuidePage() {
         </a>
       </div>
 
-      <div className="mt-6 rounded-2xl border border-dashed border-slate-700 p-6 text-center">
+      <div className="mt-6 rounded-2xl border border-dashed border-slate-300 p-6 text-center">
         <h3 className="font-semibold">Don&apos;t see the color you want?</h3>
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="mt-1 text-sm text-slate-500">
           Request a custom colorway and we&apos;ll see what we can do.
         </p>
         <a
           href={mailtoHref}
-          className="mt-4 inline-block rounded-full border border-slate-600 px-6 py-2.5 font-semibold text-slate-200 transition hover:bg-slate-700/50"
+          className="mt-4 inline-block rounded-full border border-slate-300 px-6 py-2.5 font-semibold text-slate-700 transition hover:bg-slate-100"
         >
           Request a Custom Color
         </a>

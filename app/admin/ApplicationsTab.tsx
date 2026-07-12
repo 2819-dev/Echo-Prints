@@ -42,7 +42,7 @@ export default function ApplicationsTab({ applications }: { applications: Applic
   return (
     <div className="space-y-8">
       {notice && (
-        <div className="rounded-xl bg-accent/10 p-4 text-sm text-accent">
+        <div className="rounded-xl bg-accent/10 p-4 text-sm text-accent-dark">
           {notice}
           <button onClick={() => setNotice(null)} className="ml-3 underline">
             dismiss
@@ -51,23 +51,51 @@ export default function ApplicationsTab({ applications }: { applications: Applic
       )}
 
       <section>
-        <h2 className="text-lg font-semibold">Pending Applications</h2>
+        <h2 className="text-lg font-semibold">Pending Submissions</h2>
         <div className="mt-4 space-y-3">
           {pending.length === 0 && <p className="text-sm text-slate-500">Nothing pending.</p>}
           {pending.map((app) => (
             <div key={app.id} className="card-glow rounded-xl bg-panel p-4">
               <div className="flex items-start justify-between gap-4">
-                <div>
+                <div className="min-w-0">
                   <p className="font-medium">
                     {app.name}{" "}
-                    <span className="rounded-full bg-slate-700/50 px-2 py-0.5 text-xs capitalize text-slate-300">
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs capitalize text-slate-600">
                       {app.type}
                     </span>
                   </p>
                   <p className="text-sm text-slate-500">{app.email}</p>
-                  {app.business_name && <p className="text-sm text-slate-500">{app.business_name}</p>}
                   {app.phone && <p className="text-sm text-slate-500">{app.phone}</p>}
-                  {app.message && <p className="mt-2 text-sm text-slate-400">{app.message}</p>}
+
+                  {app.type === "retailer" ? (
+                    <div className="mt-2 space-y-1 text-sm text-slate-600">
+                      {app.business_name && (
+                        <p>
+                          <span className="text-slate-500">Business:</span> {app.business_name}
+                        </p>
+                      )}
+                      {app.address && (
+                        <p>
+                          <span className="text-slate-500">Address:</span> {app.address}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-2 space-y-1 text-sm text-slate-600">
+                      {app.printers_owned && (
+                        <p>
+                          <span className="text-slate-500">Printers:</span> {app.printers_owned}
+                        </p>
+                      )}
+                      {app.filaments_available && (
+                        <p>
+                          <span className="text-slate-500">Filaments:</span> {app.filaments_available}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {app.message && <p className="mt-2 text-sm text-slate-500">{app.message}</p>}
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button
@@ -80,7 +108,7 @@ export default function ApplicationsTab({ applications }: { applications: Applic
                   <button
                     onClick={() => reject(app)}
                     disabled={isPending && busyId === app.id}
-                    className="rounded-full bg-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-600 disabled:opacity-60"
+                    className="rounded-full bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300 disabled:opacity-60"
                   >
                     Reject
                   </button>
@@ -92,15 +120,15 @@ export default function ApplicationsTab({ applications }: { applications: Applic
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-400">History</h2>
+        <h2 className="text-lg font-semibold text-slate-500">History</h2>
         <div className="mt-4 space-y-2">
           {decided.map((app) => (
-            <div key={app.id} className="flex items-center justify-between rounded-xl bg-panel/50 px-4 py-2 text-sm">
+            <div key={app.id} className="flex items-center justify-between rounded-xl bg-panel/60 px-4 py-2 text-sm">
               <span>
                 {app.name} &middot; {app.type} &middot; {app.email}
               </span>
               <span
-                className={`capitalize ${app.status === "approved" ? "text-emerald-400" : "text-rose-400"}`}
+                className={`capitalize ${app.status === "approved" ? "text-emerald-600" : "text-rose-600"}`}
               >
                 {app.status}
               </span>

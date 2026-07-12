@@ -17,10 +17,10 @@ export default async function RetailerPage() {
       <AppHeader title={`Welcome, ${user.name}`} subtitle="Echo Prints retailer portal" />
 
       <div className="mt-8 rounded-2xl bg-panel p-6 card-glow">
-        <p className="text-slate-300">
+        <p className="text-slate-700">
           You&apos;re a certified Echo Prints retailer{user.business_name ? ` for ${user.business_name}` : ""}.
         </p>
-        <p className="mt-3 text-sm text-slate-400">
+        <p className="mt-3 text-sm text-slate-500">
           We supply you with inventory and a wholesale price sheet &mdash; you sell to your
           customers and keep the profit. Reach out any time for a restock or an updated price
           sheet.

@@ -7,7 +7,7 @@ export default function BecomeARetailerPage() {
       <SiteHeader backHref="/browse" backLabel="Back to browse" />
 
       <h1 className="mt-10 text-3xl font-bold tracking-tight sm:text-4xl">Join Echo Prints</h1>
-      <p className="mt-3 text-slate-400">
+      <p className="mt-3 text-slate-500">
         Two ways to work with us &mdash; pick the tab that fits.
       </p>
 

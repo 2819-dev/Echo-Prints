@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
-  background: radial-gradient(circle at 20% -10%, #1a2536 0%, #0a0d13 55%);
+  background: radial-gradient(circle at 20% -10%, #eef4fc 0%, #f6f8fb 55%);
   min-height: 100vh;
 }
 
 .card-glow {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 20px 60px -20px rgba(47, 143, 240, 0.25);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06), 0 20px 40px -24px rgba(47, 143, 240, 0.25);
 }

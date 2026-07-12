@@ -61,7 +61,7 @@ export default function JobsTab({ jobs }: { jobs: JobRow[] }) {
                   <button
                     onClick={() => remove(job.id)}
                     disabled={isPending}
-                    className="shrink-0 text-xs text-slate-500 hover:text-rose-400"
+                    className="shrink-0 text-xs text-slate-500 hover:text-rose-600"
                   >
                     Remove
                   </button>
@@ -79,19 +79,19 @@ export default function JobsTab({ jobs }: { jobs: JobRow[] }) {
             name="title"
             placeholder="Title"
             required
-            className="rounded-lg border border-slate-700 bg-ink px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
           />
           <input
             name="fileUrl"
             placeholder="MakerWorld link or .stl file URL"
             required
-            className="rounded-lg border border-slate-700 bg-ink px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
           />
           <textarea
             name="description"
             placeholder="Notes (optional)"
             rows={2}
-            className="rounded-lg border border-slate-700 bg-ink px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
           />
           <input
             type="number"
@@ -99,9 +99,9 @@ export default function JobsTab({ jobs }: { jobs: JobRow[] }) {
             placeholder="Quantity needed"
             defaultValue={1}
             min={1}
-            className="rounded-lg border border-slate-700 bg-ink px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
           />
-          {error && <p className="text-sm text-rose-400">{error}</p>}
+          {error && <p className="text-sm text-rose-600">{error}</p>}
           <button
             type="submit"
             className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark"

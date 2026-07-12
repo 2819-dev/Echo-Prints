@@ -20,9 +20,7 @@ export default function BrandLogo({
   const width = Math.round(height * ASPECT);
 
   return (
-    <span
-      className={`inline-flex items-center rounded-xl bg-white px-3 py-2 shadow-lg shadow-black/30 ${className}`}
-    >
+    <span className={`inline-flex items-center ${className}`}>
       <Image src="/logo.png" alt="Echo Prints" width={width} height={height} priority />
     </span>
   );

@@ -16,7 +16,7 @@ export default function LandingPage() {
         <div className="flex justify-center">
           <BrandLogo size="xl" />
         </div>
-        <p className="mx-auto mt-6 max-w-md text-slate-400">
+        <p className="mx-auto mt-6 max-w-md text-slate-500">
           Custom 3D printed goods, made-to-order swirl colorways, and a network of
           printers &amp; retailers.
         </p>

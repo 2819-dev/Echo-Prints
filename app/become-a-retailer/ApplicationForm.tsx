@@ -3,6 +3,24 @@
 import { useState } from "react";
 import { submitApplicationAction } from "@/lib/actions/applications";
 
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="mb-1 block text-sm text-slate-600">{label}</label>
+      {children}
+    </div>
+  );
+}
+
+const inputClass =
+  "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 outline-none focus:border-accent";
+
 export default function ApplicationForm({ type }: { type: "retailer" | "printer" }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,9 +49,9 @@ export default function ApplicationForm({ type }: { type: "retailer" | "printer"
 
   if (status === "done") {
     return (
-      <div className="rounded-2xl bg-emerald-500/10 p-6 text-center text-emerald-300">
+      <div className="rounded-2xl bg-emerald-50 p-6 text-center text-emerald-700">
         <p className="font-semibold">Application received!</p>
-        <p className="mt-1 text-sm text-emerald-400/80">
+        <p className="mt-1 text-sm text-emerald-700/80">
           We&apos;ll review it and follow up by email with next steps and login details.
         </p>
       </div>
@@ -42,53 +60,57 @@ export default function ApplicationForm({ type }: { type: "retailer" | "printer"
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="mb-1 block text-sm text-slate-400">Full name</label>
-        <input
-          name="name"
-          required
-          className="w-full rounded-lg border border-slate-700 bg-ink px-4 py-2.5 outline-none focus:border-accent"
-        />
-      </div>
-      <div>
-        <label className="mb-1 block text-sm text-slate-400">Email</label>
-        <input
-          type="email"
-          name="email"
-          required
-          className="w-full rounded-lg border border-slate-700 bg-ink px-4 py-2.5 outline-none focus:border-accent"
-        />
-      </div>
-      <div>
-        <label className="mb-1 block text-sm text-slate-400">
-          {type === "retailer" ? "Business / shop name" : "Business name (optional)"}
-        </label>
-        <input
-          name="businessName"
-          className="w-full rounded-lg border border-slate-700 bg-ink px-4 py-2.5 outline-none focus:border-accent"
-        />
-      </div>
-      <div>
-        <label className="mb-1 block text-sm text-slate-400">Phone (optional)</label>
-        <input
-          name="phone"
-          className="w-full rounded-lg border border-slate-700 bg-ink px-4 py-2.5 outline-none focus:border-accent"
-        />
-      </div>
-      <div>
-        <label className="mb-1 block text-sm text-slate-400">
-          {type === "retailer"
-            ? "Tell us about your store and where you'd sell"
-            : "Tell us about your printer(s) and what you can print"}
-        </label>
-        <textarea
-          name="message"
-          rows={4}
-          className="w-full rounded-lg border border-slate-700 bg-ink px-4 py-2.5 outline-none focus:border-accent"
-        />
-      </div>
+      <Field label="Full name">
+        <input name="name" required className={inputClass} />
+      </Field>
+      <Field label="Email">
+        <input type="email" name="email" required className={inputClass} />
+      </Field>
+      <Field label="Phone">
+        <input name="phone" className={inputClass} />
+      </Field>
 
-      {errorMessage && <p className="text-sm text-rose-400">{errorMessage}</p>}
+      {type === "retailer" ? (
+        <>
+          <Field label="Business / shop name">
+            <input name="businessName" required className={inputClass} />
+          </Field>
+          <Field label="Store address">
+            <input name="address" required placeholder="Street, city, state, ZIP" className={inputClass} />
+          </Field>
+          <Field label="Tell us about your store">
+            <textarea
+              name="message"
+              rows={3}
+              placeholder="Location, foot traffic, and why you'd like to carry Echo Prints"
+              className={inputClass}
+            />
+          </Field>
+        </>
+      ) : (
+        <>
+          <Field label="Printers you own">
+            <textarea
+              name="printersOwned"
+              required
+              rows={2}
+              placeholder="e.g. 2x Bambu Lab X1C, 1x Prusa MK4"
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Filaments you have on hand">
+            <textarea
+              name="filamentsAvailable"
+              required
+              rows={2}
+              placeholder="e.g. PLA (various colors), PETG, Bambu Silk Dual-Color"
+              className={inputClass}
+            />
+          </Field>
+        </>
+      )}
+
+      {errorMessage && <p className="text-sm text-rose-600">{errorMessage}</p>}
 
       <button
         type="submit"

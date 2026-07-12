@@ -63,7 +63,7 @@ export default function BrowsePage() {
 
       <div className="mt-16 flex flex-col items-center text-center">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Browse Echo Prints</h1>
-        <p className="mt-3 text-slate-400">What are you here for?</p>
+        <p className="mt-3 text-slate-500">What are you here for?</p>
 
         <div className="mt-12 grid w-full gap-6 sm:grid-cols-3">
           {tiles.map(({ title, description, href, external, Icon }) => (
@@ -78,7 +78,7 @@ export default function BrowsePage() {
                 <Icon />
               </span>
               <h2 className="mt-4 text-xl font-semibold">{title}</h2>
-              <p className="mt-2 text-sm text-slate-400">{description}</p>
+              <p className="mt-2 text-sm text-slate-500">{description}</p>
             </Link>
           ))}
         </div>

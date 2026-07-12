@@ -144,7 +144,7 @@ function MyJobCard({
             Open model / file &rarr;
           </a>
         </div>
-        <span className="shrink-0 rounded-full bg-slate-700/50 px-3 py-1 text-xs font-semibold capitalize text-slate-300">
+        <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">
           {job.status}
         </span>
       </div>
@@ -160,13 +160,13 @@ function MyJobCard({
       )}
 
       {job.status === "printed" && (
-        <div className="mt-4 space-y-3 border-t border-slate-700 pt-4">
-          <p className="text-sm text-slate-400">How will you get this to the customer?</p>
+        <div className="mt-4 space-y-3 border-t border-slate-200 pt-4">
+          <p className="text-sm text-slate-500">How will you get this to the customer?</p>
           <div className="flex flex-wrap items-center gap-2">
             <select
               value={retailerId}
               onChange={(e) => setRetailerId(e.target.value)}
-              className="rounded-lg border border-slate-700 bg-ink px-3 py-2 text-sm outline-none focus:border-accent"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
             >
               <option value="">Choose a certified retailer&hellip;</option>
               {retailers.map((r) => (
@@ -186,7 +186,7 @@ function MyJobCard({
             <button
               onClick={() => onFulfill("echo_pickup", null)}
               disabled={busy}
-              className="rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-slate-700/50 disabled:opacity-60"
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-60"
             >
               Echo Prints will pick it up
             </button>

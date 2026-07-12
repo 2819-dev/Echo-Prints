@@ -5,14 +5,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0a0d13",
-        panel: "#141922",
-        panel2: "#1b2230",
+        panel: "#ffffff",
+        panel2: "#f4f6f9",
         accent: "#2f8ff0",
         "accent-dark": "#1c6fd0",
-      },
-      fontFamily: {
-        display: ["var(--font-display)"],
       },
     },
   },

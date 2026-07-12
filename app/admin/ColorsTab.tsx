@@ -55,7 +55,7 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
                 onClick={() => toggle(color)}
                 disabled={isPending}
                 className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                  color.in_stock ? "bg-emerald-500/15 text-emerald-400" : "bg-rose-500/15 text-rose-400"
+                  color.in_stock ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
                 }`}
               >
                 {color.in_stock ? "In stock" : "Out of stock"}
@@ -63,7 +63,7 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
               <button
                 onClick={() => remove(color)}
                 disabled={isPending}
-                className="text-xs text-slate-500 hover:text-rose-400"
+                className="text-xs text-slate-500 hover:text-rose-600"
               >
                 Remove
               </button>
@@ -79,27 +79,27 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
             name="name"
             placeholder="Name (e.g. Gilded Rose)"
             required
-            className="rounded-lg border border-slate-700 bg-ink px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
           />
           <input
             name="material"
             placeholder="Material"
             defaultValue="Bambu Lab Silk Dual-Color (Swirl)"
-            className="rounded-lg border border-slate-700 bg-ink px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
           />
-          <label className="flex items-center gap-2 text-sm text-slate-400">
+          <label className="flex items-center gap-2 text-sm text-slate-500">
             Primary
-            <input type="color" name="hexPrimary" defaultValue="#5eead4" className="h-9 w-14 rounded bg-ink" />
+            <input type="color" name="hexPrimary" defaultValue="#5eead4" className="h-9 w-14 rounded border border-slate-300 bg-white" />
           </label>
-          <label className="flex items-center gap-2 text-sm text-slate-400">
+          <label className="flex items-center gap-2 text-sm text-slate-500">
             Secondary
-            <input type="color" name="hexSecondary" defaultValue="#a78bfa" className="h-9 w-14 rounded bg-ink" />
+            <input type="color" name="hexSecondary" defaultValue="#a78bfa" className="h-9 w-14 rounded border border-slate-300 bg-white" />
           </label>
-          <label className="flex items-center gap-2 text-sm text-slate-400">
+          <label className="flex items-center gap-2 text-sm text-slate-500">
             <input type="checkbox" name="inStock" defaultChecked className="h-4 w-4" />
             In stock
           </label>
-          {error && <p className="text-sm text-rose-400 sm:col-span-2">{error}</p>}
+          {error && <p className="text-sm text-rose-600 sm:col-span-2">{error}</p>}
           <button
             type="submit"
             className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark sm:col-span-2"

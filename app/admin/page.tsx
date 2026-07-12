@@ -1,5 +1,5 @@
 import { requireUser } from "@/lib/auth";
-import { db, type Application, type ColorStock } from "@/lib/db";
+import { db, type Application, type ColorStock, type Order } from "@/lib/db";
 import AppHeader from "@/components/AppHeader";
 import AdminPanel, { type JobRow, type UserRow } from "./AdminPanel";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage() {
   const user = await requireUser("admin");
 
-  const [applications, colors, jobs, users] = await Promise.all([
+  const [applications, colors, jobs, users, orders] = await Promise.all([
     db.sql<Application>`SELECT * FROM applications ORDER BY status ASC, created_at DESC`,
     db.sql<ColorStock>`SELECT * FROM colors ORDER BY sort_order ASC, name ASC`,
     db.sql<JobRow>`
@@ -23,9 +23,10 @@ export default async function AdminPage() {
       ORDER BY pj.created_at DESC
     `,
     db.sql<UserRow>`
-      SELECT id, email, name, role, business_name, phone, created_at
+      SELECT id, email, name, role, business_name, address, phone, printers_owned, filaments_available, created_at
       FROM users WHERE role IN ('printer', 'retailer') ORDER BY role ASC, name ASC
     `,
+    db.sql<Order>`SELECT * FROM orders ORDER BY status ASC, created_at DESC`,
   ]);
 
   return (
@@ -33,7 +34,7 @@ export default async function AdminPage() {
       <AppHeader title="Admin" subtitle={`Signed in as ${user.name}.`} />
 
       <div className="mt-10">
-        <AdminPanel applications={applications} colors={colors} jobs={jobs} users={users} />
+        <AdminPanel applications={applications} colors={colors} jobs={jobs} users={users} orders={orders} />
       </div>
     </main>
   );
