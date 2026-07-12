@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logo from "@/components/Logo";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function LandingPage() {
   return (
@@ -14,7 +14,7 @@ export default function LandingPage() {
       <div className="relative">
         <h1 className="sr-only">Echo Prints</h1>
         <div className="flex justify-center">
-          <Logo size="xl" />
+          <BrandLogo size="xl" />
         </div>
         <p className="mx-auto mt-6 max-w-md text-slate-400">
           Custom 3D printed goods, made-to-order swirl colorways, and a network of

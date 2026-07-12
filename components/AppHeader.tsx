@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logo from "@/components/Logo";
+import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
 
 export default function AppHeader({ title, subtitle }: { title: string; subtitle: string }) {
@@ -7,7 +7,7 @@ export default function AppHeader({ title, subtitle }: { title: string; subtitle
     <div>
       <div className="flex items-center justify-between">
         <Link href="/browse" aria-label="Echo Prints home">
-          <Logo size="sm" />
+          <BrandLogo size="sm" />
         </Link>
         <form action={logoutAction}>
           <button className="text-sm text-slate-500 hover:text-slate-300">Log out</button>
