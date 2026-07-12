@@ -102,7 +102,7 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
           {error && <p className="text-sm text-rose-400 sm:col-span-2">{error}</p>}
           <button
             type="submit"
-            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-ink hover:bg-accent/90 sm:col-span-2"
+            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark sm:col-span-2"
           >
             Add Color
           </button>

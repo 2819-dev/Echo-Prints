@@ -1,0 +1,22 @@
+import Link from "next/link";
+import Logo from "@/components/Logo";
+import { logoutAction } from "@/lib/actions/auth";
+
+export default function AppHeader({ title, subtitle }: { title: string; subtitle: string }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <Link href="/browse" aria-label="Echo Prints home">
+          <Logo size="sm" />
+        </Link>
+        <form action={logoutAction}>
+          <button className="text-sm text-slate-500 hover:text-slate-300">Log out</button>
+        </form>
+      </div>
+      <div className="mt-10">
+        <h1 className="text-2xl font-bold">{title}</h1>
+        <p className="mt-1 text-sm text-slate-400">{subtitle}</p>
+      </div>
+    </div>
+  );
+}

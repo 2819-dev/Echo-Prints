@@ -26,7 +26,7 @@ export async function addColorAction(formData: FormData) {
   `;
 
   revalidatePath("/admin");
-  revalidatePath("/inventory");
+  revalidatePath("/colors");
   return { error: "" };
 }
 
@@ -34,12 +34,12 @@ export async function toggleColorStockAction(colorId: number, inStock: boolean) 
   await requireUser("admin");
   await db.sql`UPDATE colors SET in_stock = ${inStock} WHERE id = ${colorId}`;
   revalidatePath("/admin");
-  revalidatePath("/inventory");
+  revalidatePath("/colors");
 }
 
 export async function deleteColorAction(colorId: number) {
   await requireUser("admin");
   await db.sql`DELETE FROM colors WHERE id = ${colorId}`;
   revalidatePath("/admin");
-  revalidatePath("/inventory");
+  revalidatePath("/colors");
 }

@@ -14,7 +14,7 @@ export default function RetailerPrinterTabs() {
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold capitalize transition ${
-              tab === t ? "bg-accent text-ink" : "text-slate-400 hover:text-slate-200"
+              tab === t ? "bg-accent text-white" : "text-slate-400 hover:text-slate-200"
             }`}
           >
             {t}

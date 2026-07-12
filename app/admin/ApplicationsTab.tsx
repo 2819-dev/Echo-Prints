@@ -73,7 +73,7 @@ export default function ApplicationsTab({ applications }: { applications: Applic
                   <button
                     onClick={() => approve(app)}
                     disabled={isPending && busyId === app.id}
-                    className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-ink hover:bg-accent/90 disabled:opacity-60"
+                    className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark disabled:opacity-60"
                   >
                     Approve
                   </button>

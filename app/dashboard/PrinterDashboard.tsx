@@ -84,7 +84,7 @@ export default function PrinterDashboard({
               <button
                 onClick={() => claim(job.id)}
                 disabled={isPending && busyId === job.id}
-                className="shrink-0 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-ink hover:bg-accent/90 disabled:opacity-60"
+                className="shrink-0 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark disabled:opacity-60"
               >
                 Claim
               </button>
@@ -153,7 +153,7 @@ function MyJobCard({
         <button
           onClick={onMarkPrinted}
           disabled={busy}
-          className="mt-4 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-ink hover:bg-accent/90 disabled:opacity-60"
+          className="mt-4 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark disabled:opacity-60"
         >
           Mark as Printed
         </button>
@@ -178,7 +178,7 @@ function MyJobCard({
             <button
               onClick={() => retailerId && onFulfill("retailer_dropoff", Number(retailerId))}
               disabled={busy || !retailerId}
-              className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-ink hover:bg-accent/90 disabled:opacity-60"
+              className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark disabled:opacity-60"
             >
               Drop off to retailer
             </button>
@@ -186,7 +186,7 @@ function MyJobCard({
             <button
               onClick={() => onFulfill("echo_pickup", null)}
               disabled={busy}
-              className="rounded-full bg-accent2 px-4 py-2 text-sm font-semibold text-ink hover:bg-accent2/90 disabled:opacity-60"
+              className="rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-slate-700/50 disabled:opacity-60"
             >
               Echo Prints will pick it up
             </button>

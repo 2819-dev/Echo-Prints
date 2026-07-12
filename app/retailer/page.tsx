@@ -1,5 +1,5 @@
 import { requireUser } from "@/lib/auth";
-import { logoutAction } from "@/lib/actions/auth";
+import AppHeader from "@/components/AppHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -13,13 +13,8 @@ export default async function RetailerPage() {
   )}`;
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6 py-16">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Welcome, {user.name}</h1>
-        <form action={logoutAction}>
-          <button className="text-sm text-slate-500 hover:text-slate-300">Log out</button>
-        </form>
-      </div>
+    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6 py-10">
+      <AppHeader title={`Welcome, ${user.name}`} subtitle="Echo Prints retailer portal" />
 
       <div className="mt-8 rounded-2xl bg-panel p-6 card-glow">
         <p className="text-slate-300">
@@ -32,7 +27,7 @@ export default async function RetailerPage() {
         </p>
         <a
           href={mailtoHref}
-          className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-ink transition hover:bg-accent/90"
+          className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-white shadow-lg shadow-accent/20 transition hover:bg-accent-dark"
         >
           Request Price Sheet / Restock
         </a>

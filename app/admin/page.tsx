@@ -1,6 +1,6 @@
 import { requireUser } from "@/lib/auth";
 import { db, type Application, type ColorStock } from "@/lib/db";
-import { logoutAction } from "@/lib/actions/auth";
+import AppHeader from "@/components/AppHeader";
 import AdminPanel, { type JobRow, type UserRow } from "./AdminPanel";
 
 export const dynamic = "force-dynamic";
@@ -29,16 +29,8 @@ export default async function AdminPage() {
   ]);
 
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-6 py-16">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Admin</h1>
-          <p className="mt-1 text-sm text-slate-400">Signed in as {user.name}.</p>
-        </div>
-        <form action={logoutAction}>
-          <button className="text-sm text-slate-500 hover:text-slate-300">Log out</button>
-        </form>
-      </div>
+    <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
+      <AppHeader title="Admin" subtitle={`Signed in as ${user.name}.`} />
 
       <div className="mt-10">
         <AdminPanel applications={applications} colors={colors} jobs={jobs} users={users} />
