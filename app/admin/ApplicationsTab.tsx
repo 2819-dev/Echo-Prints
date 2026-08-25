@@ -53,49 +53,49 @@ export default function ApplicationsTab({ applications }: { applications: Applic
       <section>
         <h2 className="text-lg font-semibold">Pending Submissions</h2>
         <div className="mt-4 space-y-3">
-          {pending.length === 0 && <p className="text-sm text-slate-500">Nothing pending.</p>}
+          {pending.length === 0 && <p className="text-sm text-muted">Nothing pending.</p>}
           {pending.map((app) => (
             <div key={app.id} className="card-glow rounded-xl bg-panel p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <p className="font-medium">
                     {app.name}{" "}
-                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs capitalize text-slate-600">
+                    <span className="rounded-full bg-panel2 px-2 py-0.5 text-xs capitalize text-muted">
                       {app.type}
                     </span>
                   </p>
-                  <p className="text-sm text-slate-500">{app.email}</p>
-                  {app.phone && <p className="text-sm text-slate-500">{app.phone}</p>}
+                  <p className="text-sm text-muted">{app.email}</p>
+                  {app.phone && <p className="text-sm text-muted">{app.phone}</p>}
 
                   {app.type === "retailer" ? (
-                    <div className="mt-2 space-y-1 text-sm text-slate-600">
+                    <div className="mt-2 space-y-1 text-sm text-muted">
                       {app.business_name && (
                         <p>
-                          <span className="text-slate-500">Business:</span> {app.business_name}
+                          <span className="text-muted">Business:</span> {app.business_name}
                         </p>
                       )}
                       {app.address && (
                         <p>
-                          <span className="text-slate-500">Address:</span> {app.address}
+                          <span className="text-muted">Address:</span> {app.address}
                         </p>
                       )}
                     </div>
                   ) : (
-                    <div className="mt-2 space-y-1 text-sm text-slate-600">
+                    <div className="mt-2 space-y-1 text-sm text-muted">
                       {app.printers_owned && (
                         <p>
-                          <span className="text-slate-500">Printers:</span> {app.printers_owned}
+                          <span className="text-muted">Printers:</span> {app.printers_owned}
                         </p>
                       )}
                       {app.filaments_available && (
                         <p>
-                          <span className="text-slate-500">Filaments:</span> {app.filaments_available}
+                          <span className="text-muted">Filaments:</span> {app.filaments_available}
                         </p>
                       )}
                     </div>
                   )}
 
-                  {app.message && <p className="mt-2 text-sm text-slate-500">{app.message}</p>}
+                  {app.message && <p className="mt-2 text-sm text-muted">{app.message}</p>}
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button
@@ -108,7 +108,7 @@ export default function ApplicationsTab({ applications }: { applications: Applic
                   <button
                     onClick={() => reject(app)}
                     disabled={isPending && busyId === app.id}
-                    className="rounded-full bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300 disabled:opacity-60"
+                    className="rounded-full bg-panel2 px-4 py-2 text-sm font-semibold text-ink hover:bg-hairline disabled:opacity-60"
                   >
                     Reject
                   </button>
@@ -120,7 +120,7 @@ export default function ApplicationsTab({ applications }: { applications: Applic
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-500">History</h2>
+        <h2 className="text-lg font-semibold text-muted">History</h2>
         <div className="mt-4 space-y-2">
           {decided.map((app) => (
             <div key={app.id} className="flex items-center justify-between rounded-xl bg-panel/60 px-4 py-2 text-sm">

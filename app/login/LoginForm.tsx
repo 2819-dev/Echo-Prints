@@ -38,21 +38,21 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="mb-1 block text-sm text-slate-600">Email</label>
+        <label className="mb-1 block text-sm text-muted">Email</label>
         <input
           type="email"
           name="email"
           required
-          className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 outline-none focus:border-accent"
+          className="w-full rounded-lg border border-hairline bg-white px-4 py-2.5 outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-slate-600">Password</label>
+        <label className="mb-1 block text-sm text-muted">Password</label>
         <input
           type="password"
           name="password"
           required
-          className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 outline-none focus:border-accent"
+          className="w-full rounded-lg border border-hairline bg-white px-4 py-2.5 outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
         />
       </div>
 

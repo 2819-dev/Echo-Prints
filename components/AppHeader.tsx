@@ -10,17 +10,17 @@ export default function AppHeader({ title, subtitle }: { title: string; subtitle
           <BrandLogo size="sm" />
         </Link>
         <div className="flex items-center gap-4">
-          <Link href="/account" className="text-sm text-slate-500 hover:text-slate-700">
+          <Link href="/account" className="text-sm text-muted hover:text-ink">
             Account
           </Link>
           <form action={logoutAction}>
-            <button className="text-sm text-slate-500 hover:text-slate-700">Log out</button>
+            <button className="text-sm text-muted hover:text-ink">Log out</button>
           </form>
         </div>
       </div>
       <div className="mt-10">
-        <h1 className="text-2xl font-bold">{title}</h1>
-        <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        <p className="mt-1 text-sm text-muted">{subtitle}</p>
       </div>
     </div>
   );

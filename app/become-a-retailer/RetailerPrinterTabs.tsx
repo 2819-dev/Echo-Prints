@@ -14,7 +14,7 @@ export default function RetailerPrinterTabs() {
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold capitalize transition ${
-              tab === t ? "bg-accent text-white" : "text-slate-500 hover:text-slate-800"
+              tab === t ? "bg-accent text-white" : "text-muted hover:text-ink"
             }`}
           >
             {t}
@@ -26,7 +26,7 @@ export default function RetailerPrinterTabs() {
         {tab === "retailer" ? (
           <div>
             <h2 className="text-xl font-semibold">Retailer Partnership</h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-muted">
               We supply inventory and a wholesale price sheet. You sell to your customers,
               in-store, and keep the profit.
             </p>
@@ -37,7 +37,7 @@ export default function RetailerPrinterTabs() {
         ) : (
           <div>
             <h2 className="text-xl font-semibold">Printer Network</h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-muted">
               We send you a model to print &mdash; a MakerWorld link or an STL file. Mark it
               printed from your dashboard, then hand it off to a certified retailer or have
               Echo Prints pick it up.
@@ -49,7 +49,7 @@ export default function RetailerPrinterTabs() {
         )}
       </div>
 
-      <p className="mt-8 text-center text-sm text-slate-500">
+      <p className="mt-8 text-center text-sm text-muted">
         Already approved?{" "}
         <a href="/login" className="text-accent hover:underline">
           Log in to your dashboard

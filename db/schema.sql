@@ -46,8 +46,10 @@ CREATE TABLE IF NOT EXISTS colors (
   hex_primary TEXT NOT NULL,
   hex_secondary TEXT NOT NULL,
   in_stock BOOLEAN NOT NULL DEFAULT TRUE,
-  sort_order INTEGER NOT NULL DEFAULT 0
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  photo_data_url TEXT
 );
+ALTER TABLE colors ADD COLUMN IF NOT EXISTS photo_data_url TEXT;
 
 CREATE TABLE IF NOT EXISTS print_jobs (
   id SERIAL PRIMARY KEY,

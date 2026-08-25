@@ -7,10 +7,16 @@ html {
 }
 
 body {
-  background: radial-gradient(circle at 20% -10%, #eef4fc 0%, #f6f8fb 55%);
+  background: #fbfbfd;
   min-height: 100vh;
 }
 
+@layer base {
+  body {
+    @apply font-sans text-ink;
+  }
+}
+
 .card-glow {
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06), 0 20px 40px -24px rgba(47, 143, 240, 0.25);
+  @apply border border-hairline shadow-sm;
 }

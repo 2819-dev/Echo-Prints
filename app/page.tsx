@@ -5,10 +5,9 @@ export default function LandingPage() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
       <div
-        className="pointer-events-none absolute inset-0 opacity-40"
+        className="pointer-events-none absolute inset-0 opacity-30"
         style={{
-          background:
-            "radial-gradient(600px circle at 50% 20%, rgba(47,143,240,0.18), transparent 60%)",
+          background: "radial-gradient(600px circle at 50% 15%, rgba(0,113,227,0.14), transparent 60%)",
         }}
       />
       <div className="relative">
@@ -16,13 +15,13 @@ export default function LandingPage() {
         <div className="flex justify-center">
           <BrandLogo size="xl" />
         </div>
-        <p className="mx-auto mt-6 max-w-md text-slate-500">
+        <p className="mx-auto mt-6 max-w-md text-[17px] leading-relaxed text-muted">
           Custom 3D printed goods in the color you want, backed by a network of
           printers &amp; retailers.
         </p>
         <Link
           href="/browse"
-          className="mt-10 inline-block rounded-full bg-accent px-8 py-3 font-semibold text-white shadow-lg shadow-accent/20 transition hover:bg-accent-dark"
+          className="mt-10 inline-block rounded-full bg-accent px-7 py-2.5 text-[15px] font-medium text-white transition hover:bg-accent-dark"
         >
           Continue
         </Link>

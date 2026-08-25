@@ -43,7 +43,7 @@ export default function AdminPanel({
             key={t}
             onClick={() => setTab(t)}
             className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-              tab === t ? "bg-accent text-white" : "text-slate-500 hover:text-slate-800"
+              tab === t ? "bg-accent text-white" : "text-muted hover:text-ink"
             }`}
           >
             {t}

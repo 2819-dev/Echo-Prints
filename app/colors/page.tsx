@@ -13,8 +13,8 @@ export default async function ColorGuidePage() {
     <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
       <SiteHeader backHref="/browse" backLabel="Back to browse" />
 
-      <h1 className="mt-10 text-3xl font-bold tracking-tight sm:text-4xl">Color Guide</h1>
-      <p className="mt-3 max-w-2xl text-slate-500">
+      <h1 className="mt-10 text-3xl font-semibold tracking-tight sm:text-4xl">Color Guide</h1>
+      <p className="mt-3 max-w-2xl text-muted">
         Pick the color you want your print made in. Tap a swatch to select it, then head to
         the shop to order &mdash; just mention the color name.
       </p>

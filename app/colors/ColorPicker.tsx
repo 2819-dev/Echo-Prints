@@ -33,17 +33,21 @@ function Swatch({
     >
       <div
         className="relative aspect-square"
-        style={{
-          background: `linear-gradient(135deg, ${color.hex_primary} 0%, ${color.hex_secondary} 100%)`,
-        }}
+        style={
+          color.photo_data_url
+            ? { backgroundImage: `url(${color.photo_data_url})`, backgroundSize: "cover", backgroundPosition: "center" }
+            : { background: `linear-gradient(135deg, ${color.hex_primary} 0%, ${color.hex_secondary} 100%)` }
+        }
       >
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 30%, rgba(0,0,0,0.15) 100%)",
-          }}
-        />
+        {!color.photo_data_url && (
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 30%, rgba(0,0,0,0.15) 100%)",
+            }}
+          />
+        )}
         <span
           className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-semibold backdrop-blur ${
             color.in_stock ? "bg-white/85 text-emerald-700" : "bg-white/85 text-rose-700"
@@ -59,7 +63,7 @@ function Swatch({
       </div>
       <div className="p-4">
         <h3 className="font-semibold">{color.name}</h3>
-        {color.material && <p className="mt-0.5 text-xs text-slate-500">{color.material}</p>}
+        {color.material && <p className="mt-0.5 text-xs text-muted">{color.material}</p>}
       </div>
     </button>
   );
@@ -85,22 +89,24 @@ export default function ColorPicker({ colors }: { colors: ColorStock[] }) {
           />
         ))}
         {colors.length === 0 && (
-          <p className="text-slate-500">No colors listed yet &mdash; check back soon.</p>
+          <p className="text-muted">No colors listed yet &mdash; check back soon.</p>
         )}
       </div>
 
       <div className="mt-8">
         {selected ? (
-          <div className="card-glow flex flex-col items-center gap-4 rounded-2xl border border-slate-200 bg-panel p-5 sm:flex-row sm:justify-between">
+          <div className="card-glow flex flex-col items-center gap-4 rounded-2xl border border-hairline bg-panel p-5 sm:flex-row sm:justify-between">
             <div className="flex items-center gap-3">
               <span
                 className="h-10 w-10 shrink-0 rounded-full"
-                style={{
-                  background: `linear-gradient(135deg, ${selected.hex_primary} 0%, ${selected.hex_secondary} 100%)`,
-                }}
+                style={
+                  selected.photo_data_url
+                    ? { backgroundImage: `url(${selected.photo_data_url})`, backgroundSize: "cover", backgroundPosition: "center" }
+                    : { background: `linear-gradient(135deg, ${selected.hex_primary} 0%, ${selected.hex_secondary} 100%)` }
+                }
               />
               <div>
-                <p className="text-xs text-slate-500">Selected color</p>
+                <p className="text-xs text-muted">Selected color</p>
                 <p className="font-semibold">{selected.name}</p>
               </div>
             </div>
@@ -109,34 +115,34 @@ export default function ColorPicker({ colors }: { colors: ColorStock[] }) {
                 href={KOFI_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="shrink-0 rounded-full bg-accent px-6 py-2.5 text-center font-semibold text-white shadow-lg shadow-accent/20 transition hover:bg-accent-dark"
+                className="shrink-0 rounded-full bg-accent px-6 py-2.5 text-center font-semibold text-white transition hover:bg-accent-dark"
               >
                 Go to Shop &mdash; mention &ldquo;{selected.name}&rdquo;
               </a>
             ) : (
               <a
                 href={mailtoHref}
-                className="shrink-0 rounded-full border border-slate-300 px-6 py-2.5 text-center font-semibold text-slate-700 transition hover:bg-slate-100"
+                className="shrink-0 rounded-full border border-hairline px-6 py-2.5 text-center font-semibold text-ink transition hover:bg-panel2"
               >
                 Ask About This Color
               </a>
             )}
           </div>
         ) : (
-          <p className="rounded-2xl border border-dashed border-slate-300 bg-panel/60 p-4 text-center text-sm text-slate-500">
+          <p className="rounded-2xl border border-dashed border-hairline bg-panel/60 p-4 text-center text-sm text-muted">
             Tap a color above to select it.
           </p>
         )}
       </div>
 
-      <div className="mt-6 rounded-2xl border border-dashed border-slate-300 p-6 text-center">
+      <div className="mt-6 rounded-2xl border border-dashed border-hairline p-6 text-center">
         <h3 className="font-semibold">Don&apos;t see the color you want?</h3>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-muted">
           Request a custom color and we&apos;ll see what we can do.
         </p>
         <a
           href={mailtoHref}
-          className="mt-4 inline-block rounded-full border border-slate-300 px-6 py-2.5 font-semibold text-slate-700 transition hover:bg-slate-100"
+          className="mt-4 inline-block rounded-full border border-hairline px-6 py-2.5 font-semibold text-ink transition hover:bg-panel2"
         >
           Request a Custom Color
         </a>

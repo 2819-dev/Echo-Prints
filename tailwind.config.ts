@@ -6,9 +6,23 @@ const config: Config = {
     extend: {
       colors: {
         panel: "#ffffff",
-        panel2: "#f4f6f9",
-        accent: "#2f8ff0",
-        "accent-dark": "#1c6fd0",
+        panel2: "#f5f5f7",
+        ink: "#1d1d1f",
+        muted: "#6e6e73",
+        hairline: "#d2d2d7",
+        accent: "#0071e3",
+        "accent-dark": "#0058b3",
+      },
+      fontFamily: {
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          '"Segoe UI"',
+          "Roboto",
+          '"Helvetica Neue"',
+          "Arial",
+          "sans-serif",
+        ],
       },
     },
   },

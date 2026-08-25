@@ -51,17 +51,17 @@ export default function OrdersTab({ orders }: { orders: Order[] }) {
       <section>
         <div className="flex items-baseline justify-between">
           <h2 className="text-lg font-semibold">Open Orders</h2>
-          <p className="text-sm text-slate-500">{formatPrice(totalPending.toFixed(2))} outstanding</p>
+          <p className="text-sm text-muted">{formatPrice(totalPending.toFixed(2))} outstanding</p>
         </div>
         <div className="mt-4 space-y-2">
-          {pending.length === 0 && <p className="text-sm text-slate-500">No open orders.</p>}
+          {pending.length === 0 && <p className="text-sm text-muted">No open orders.</p>}
           {pending.map((order) => (
             <div key={order.id} className="card-glow flex items-center gap-3 rounded-xl bg-panel p-3 text-sm">
               <div className="flex-1">
                 <p className="font-medium">
-                  {order.name} <span className="text-slate-500">&times;{order.quantity}</span>
+                  {order.name} <span className="text-muted">&times;{order.quantity}</span>
                 </p>
-                {order.notes && <p className="text-xs text-slate-500">{order.notes}</p>}
+                {order.notes && <p className="text-xs text-muted">{order.notes}</p>}
               </div>
               <span className="font-semibold">{formatPrice(order.price)}</span>
               <button
@@ -74,7 +74,7 @@ export default function OrdersTab({ orders }: { orders: Order[] }) {
               <button
                 onClick={() => remove(order)}
                 disabled={isPending}
-                className="text-xs text-slate-500 hover:text-rose-600"
+                className="text-xs text-muted hover:text-rose-600"
               >
                 Remove
               </button>
@@ -90,7 +90,7 @@ export default function OrdersTab({ orders }: { orders: Order[] }) {
             name="name"
             placeholder="Item / order name"
             required
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
+            className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 sm:col-span-2"
           />
           <input
             type="number"
@@ -99,7 +99,7 @@ export default function OrdersTab({ orders }: { orders: Order[] }) {
             step="0.01"
             min="0"
             required
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
           />
           <input
             type="number"
@@ -107,12 +107,12 @@ export default function OrdersTab({ orders }: { orders: Order[] }) {
             placeholder="Quantity"
             defaultValue={1}
             min={1}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
           />
           <input
             name="notes"
             placeholder="Notes (optional)"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
+            className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 sm:col-span-2"
           />
           {error && <p className="text-sm text-rose-600 sm:col-span-2">{error}</p>}
           <button
@@ -125,15 +125,15 @@ export default function OrdersTab({ orders }: { orders: Order[] }) {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-500">Fulfilled</h2>
+        <h2 className="text-lg font-semibold text-muted">Fulfilled</h2>
         <div className="mt-4 space-y-2">
-          {fulfilled.length === 0 && <p className="text-sm text-slate-500">None yet.</p>}
+          {fulfilled.length === 0 && <p className="text-sm text-muted">None yet.</p>}
           {fulfilled.map((order) => (
             <div key={order.id} className="flex items-center justify-between rounded-xl bg-panel/60 px-4 py-2 text-sm">
               <span>
                 {order.name} &times;{order.quantity}
               </span>
-              <span className="text-slate-500">{formatPrice(order.price)}</span>
+              <span className="text-muted">{formatPrice(order.price)}</span>
             </div>
           ))}
         </div>

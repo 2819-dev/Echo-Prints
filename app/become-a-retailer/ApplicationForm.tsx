@@ -12,14 +12,14 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-sm text-slate-600">{label}</label>
+      <label className="mb-1 block text-sm text-muted">{label}</label>
       {children}
     </div>
   );
 }
 
 const inputClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 outline-none focus:border-accent";
+  "w-full rounded-lg border border-hairline bg-white px-4 py-2.5 outline-none focus:border-accent focus:ring-4 focus:ring-accent/10";
 
 export default function ApplicationForm({ type }: { type: "retailer" | "printer" }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");

@@ -59,18 +59,18 @@ export default function PrinterDashboard({
     <div className="space-y-12">
       <section>
         <h2 className="text-lg font-semibold">Available Jobs</h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-muted">
           Claim a job, print it, then mark it printed below.
         </p>
         <div className="mt-4 space-y-3">
           {availableJobs.length === 0 && (
-            <p className="text-sm text-slate-500">No open jobs right now &mdash; check back soon.</p>
+            <p className="text-sm text-muted">No open jobs right now &mdash; check back soon.</p>
           )}
           {availableJobs.map((job) => (
             <div key={job.id} className="card-glow flex items-center justify-between gap-4 rounded-xl bg-panel p-4">
               <div>
                 <p className="font-medium">{job.title}</p>
-                {job.description && <p className="text-sm text-slate-500">{job.description}</p>}
+                {job.description && <p className="text-sm text-muted">{job.description}</p>}
                 <a
                   href={job.file_url}
                   target="_blank"
@@ -79,7 +79,7 @@ export default function PrinterDashboard({
                 >
                   Open model / file &rarr;
                 </a>
-                <p className="mt-1 text-xs text-slate-500">Qty needed: {job.quantity_needed}</p>
+                <p className="mt-1 text-xs text-muted">Qty needed: {job.quantity_needed}</p>
               </div>
               <button
                 onClick={() => claim(job.id)}
@@ -97,7 +97,7 @@ export default function PrinterDashboard({
         <h2 className="text-lg font-semibold">My Jobs</h2>
         <div className="mt-4 space-y-3">
           {myJobs.length === 0 && (
-            <p className="text-sm text-slate-500">You haven&apos;t claimed any jobs yet.</p>
+            <p className="text-sm text-muted">You haven&apos;t claimed any jobs yet.</p>
           )}
           {myJobs.map((job) => (
             <MyJobCard
@@ -144,7 +144,7 @@ function MyJobCard({
             Open model / file &rarr;
           </a>
         </div>
-        <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">
+        <span className="shrink-0 rounded-full bg-panel2 px-3 py-1 text-xs font-semibold capitalize text-muted">
           {job.status}
         </span>
       </div>
@@ -160,13 +160,13 @@ function MyJobCard({
       )}
 
       {job.status === "printed" && (
-        <div className="mt-4 space-y-3 border-t border-slate-200 pt-4">
-          <p className="text-sm text-slate-500">How will you get this to the customer?</p>
+        <div className="mt-4 space-y-3 border-t border-hairline pt-4">
+          <p className="text-sm text-muted">How will you get this to the customer?</p>
           <div className="flex flex-wrap items-center gap-2">
             <select
               value={retailerId}
               onChange={(e) => setRetailerId(e.target.value)}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
+              className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
             >
               <option value="">Choose a certified retailer&hellip;</option>
               {retailers.map((r) => (
@@ -182,11 +182,11 @@ function MyJobCard({
             >
               Drop off to retailer
             </button>
-            <span className="text-sm text-slate-500">or</span>
+            <span className="text-sm text-muted">or</span>
             <button
               onClick={() => onFulfill("echo_pickup", null)}
               disabled={busy}
-              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-60"
+              className="rounded-full border border-hairline px-4 py-2 text-sm font-semibold text-ink hover:bg-panel2 disabled:opacity-60"
             >
               Echo Prints will pick it up
             </button>
@@ -195,7 +195,7 @@ function MyJobCard({
       )}
 
       {job.status === "fulfilled" && (
-        <p className="mt-3 text-sm text-slate-500">
+        <p className="mt-3 text-sm text-muted">
           {job.fulfillment_method === "retailer_dropoff"
             ? "Dropped off to retailer."
             : "Marked for Echo Prints pickup."}

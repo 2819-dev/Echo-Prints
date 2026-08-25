@@ -68,6 +68,7 @@ export interface ColorStock {
   hex_secondary: string;
   in_stock: boolean;
   sort_order: number;
+  photo_data_url: string | null;
 }
 
 export type JobStatus = "available" | "claimed" | "printed" | "fulfilled";

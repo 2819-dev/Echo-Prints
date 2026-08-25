@@ -41,13 +41,13 @@ export default function JobsTab({ jobs }: { jobs: JobRow[] }) {
       <section>
         <h2 className="text-lg font-semibold">Print Jobs</h2>
         <div className="mt-4 space-y-2">
-          {jobs.length === 0 && <p className="text-sm text-slate-500">No jobs yet.</p>}
+          {jobs.length === 0 && <p className="text-sm text-muted">No jobs yet.</p>}
           {jobs.map((job) => (
             <div key={job.id} className="rounded-xl bg-panel p-3 text-sm">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="font-medium">{job.title}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted">
                     {job.status}
                     {job.printer_name ? ` · printer: ${job.printer_name}` : ""}
                     {job.retailer_name
@@ -61,7 +61,7 @@ export default function JobsTab({ jobs }: { jobs: JobRow[] }) {
                   <button
                     onClick={() => remove(job.id)}
                     disabled={isPending}
-                    className="shrink-0 text-xs text-slate-500 hover:text-rose-600"
+                    className="shrink-0 text-xs text-muted hover:text-rose-600"
                   >
                     Remove
                   </button>
@@ -79,19 +79,19 @@ export default function JobsTab({ jobs }: { jobs: JobRow[] }) {
             name="title"
             placeholder="Title"
             required
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
           />
           <input
             name="fileUrl"
             placeholder="MakerWorld link or .stl file URL"
             required
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
           />
           <textarea
             name="description"
             placeholder="Notes (optional)"
             rows={2}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
           />
           <input
             type="number"
@@ -99,7 +99,7 @@ export default function JobsTab({ jobs }: { jobs: JobRow[] }) {
             placeholder="Quantity needed"
             defaultValue={1}
             min={1}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
           />
           {error && <p className="text-sm text-rose-600">{error}</p>}
           <button

@@ -8,7 +8,7 @@ export default function SiteHeader({ backHref, backLabel }: { backHref?: string;
         <BrandLogo size="sm" />
       </Link>
       {backHref && (
-        <Link href={backHref} className="text-sm text-slate-500 hover:text-slate-700">
+        <Link href={backHref} className="text-sm text-muted hover:text-ink">
           {backLabel ?? "Back"}
         </Link>
       )}

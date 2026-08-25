@@ -4,7 +4,7 @@ import { useState } from "react";
 import { changePasswordAction } from "@/lib/actions/auth";
 
 const inputClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 outline-none focus:border-accent";
+  "w-full rounded-lg border border-hairline bg-white px-4 py-2.5 outline-none focus:border-accent focus:ring-4 focus:ring-accent/10";
 
 export default function ChangePasswordForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
@@ -37,15 +37,15 @@ export default function ChangePasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="mb-1 block text-sm text-slate-600">Current password</label>
+        <label className="mb-1 block text-sm text-muted">Current password</label>
         <input type="password" name="currentPassword" required className={inputClass} />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-slate-600">New password</label>
+        <label className="mb-1 block text-sm text-muted">New password</label>
         <input type="password" name="newPassword" required minLength={6} className={inputClass} />
       </div>
       <div>
-        <label className="mb-1 block text-sm text-slate-600">Confirm new password</label>
+        <label className="mb-1 block text-sm text-muted">Confirm new password</label>
         <input type="password" name="confirmPassword" required minLength={6} className={inputClass} />
       </div>
 

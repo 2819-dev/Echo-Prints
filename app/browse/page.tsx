@@ -61,24 +61,24 @@ export default function BrowsePage() {
     <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
       <SiteHeader backHref="/" backLabel="Home" />
 
-      <div className="mt-16 flex flex-col items-center text-center">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Browse Echo Prints</h1>
-        <p className="mt-3 text-slate-500">What are you here for?</p>
+      <div className="mt-20 flex flex-col items-center text-center">
+        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Browse Echo Prints</h1>
+        <p className="mt-4 text-[17px] text-muted">What are you here for?</p>
 
-        <div className="mt-12 grid w-full gap-6 sm:grid-cols-3">
+        <div className="mt-14 grid w-full gap-5 sm:grid-cols-3">
           {tiles.map(({ title, description, href, external, Icon }) => (
             <Link
               key={title}
               href={href}
               target={external ? "_blank" : undefined}
               rel={external ? "noopener noreferrer" : undefined}
-              className="card-glow group flex flex-col items-center rounded-2xl bg-panel p-8 text-center transition hover:-translate-y-1 hover:bg-panel2"
+              className="card-glow group flex flex-col items-center rounded-3xl bg-panel p-8 text-center transition hover:border-accent/30"
             >
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/10 text-accent transition group-hover:bg-accent/20">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-panel2 text-accent transition group-hover:bg-accent/10">
                 <Icon />
               </span>
-              <h2 className="mt-4 text-xl font-semibold">{title}</h2>
-              <p className="mt-2 text-sm text-slate-500">{description}</p>
+              <h2 className="mt-5 text-lg font-semibold">{title}</h2>
+              <p className="mt-2 text-[15px] leading-relaxed text-muted">{description}</p>
             </Link>
           ))}
         </div>
