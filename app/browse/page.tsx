@@ -42,7 +42,7 @@ const tiles = [
   },
   {
     title: "Color Guide",
-    description: "See exactly what each swirl colorway looks like before you order.",
+    description: "Pick the color you want your print made in.",
     href: "/colors",
     external: false,
     Icon: SwatchIcon,

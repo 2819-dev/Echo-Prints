@@ -17,7 +17,7 @@ export default function LandingPage() {
           <BrandLogo size="xl" />
         </div>
         <p className="mx-auto mt-6 max-w-md text-slate-500">
-          Custom 3D printed goods, made-to-order swirl colorways, and a network of
+          Custom 3D printed goods in the color you want, backed by a network of
           printers &amp; retailers.
         </p>
         <Link

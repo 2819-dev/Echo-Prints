@@ -42,7 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status);
 CREATE TABLE IF NOT EXISTS colors (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  material TEXT NOT NULL DEFAULT 'Bambu Lab Silk Dual-Color (Swirl)',
+  material TEXT NOT NULL DEFAULT '',
   hex_primary TEXT NOT NULL,
   hex_secondary TEXT NOT NULL,
   in_stock BOOLEAN NOT NULL DEFAULT TRUE,
@@ -92,11 +92,11 @@ WHERE NOT EXISTS (SELECT 1 FROM users WHERE role = 'admin');
 -- so it won't touch anything you've added or edited from /admin.
 INSERT INTO colors (name, material, hex_primary, hex_secondary, in_stock, sort_order)
 SELECT * FROM (VALUES
-  ('Gilded Rose', 'Bambu Lab Silk Dual-Color (Swirl)', '#c9a86a', '#b5495b', TRUE, 1),
-  ('Blue Hawaii', 'Bambu Lab Silk Dual-Color (Swirl)', '#1f8fc4', '#12c48f', TRUE, 2),
-  ('Neon City', 'Bambu Lab Silk Dual-Color (Swirl)', '#ff2d95', '#00e5ff', TRUE, 3),
-  ('Black Gold', 'Bambu Lab Silk Dual-Color (Swirl)', '#151515', '#d4af37', TRUE, 4),
-  ('Violet Purple', 'Bambu Lab Silk Dual-Color (Swirl)', '#6a3ec1', '#b388ff', FALSE, 5),
-  ('Grey Green', 'Bambu Lab Silk Dual-Color (Swirl)', '#7a8b7f', '#3f4f43', TRUE, 6)
+  ('Gilded Rose', '', '#c9a86a', '#b5495b', TRUE, 1),
+  ('Blue Hawaii', '', '#1f8fc4', '#12c48f', TRUE, 2),
+  ('Neon City', '', '#ff2d95', '#00e5ff', TRUE, 3),
+  ('Black Gold', '', '#151515', '#d4af37', TRUE, 4),
+  ('Violet Purple', '', '#6a3ec1', '#b388ff', FALSE, 5),
+  ('Grey Green', '', '#7a8b7f', '#3f4f43', TRUE, 6)
 ) AS seed(name, material, hex_primary, hex_secondary, in_stock, sort_order)
 WHERE NOT EXISTS (SELECT 1 FROM colors);

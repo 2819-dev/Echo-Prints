@@ -83,8 +83,7 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
           />
           <input
             name="material"
-            placeholder="Material"
-            defaultValue="Bambu Lab Silk Dual-Color (Swirl)"
+            placeholder="Material (optional, e.g. PLA)"
             className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-accent sm:col-span-2"
           />
           <label className="flex items-center gap-2 text-sm text-slate-500">

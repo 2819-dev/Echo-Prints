@@ -8,7 +8,7 @@ export async function addColorAction(formData: FormData) {
   await requireUser("admin");
 
   const name = String(formData.get("name") || "").trim();
-  const material = String(formData.get("material") || "Bambu Lab Silk Dual-Color (Swirl)").trim();
+  const material = String(formData.get("material") || "").trim();
   const hexPrimary = String(formData.get("hexPrimary") || "#888888").trim();
   const hexSecondary = String(formData.get("hexSecondary") || "#444444").trim();
   const inStock = formData.get("inStock") === "on";
