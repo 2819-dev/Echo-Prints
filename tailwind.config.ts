@@ -5,13 +5,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        cream: "#f1ede1",
         panel: "#ffffff",
-        panel2: "#f5f5f7",
-        ink: "#1d1d1f",
-        muted: "#6e6e73",
-        hairline: "#d2d2d7",
-        accent: "#0071e3",
-        "accent-dark": "#0058b3",
+        panel2: "#e9e4d6",
+        ink: "#1a1816",
+        muted: "#6b6558",
+        hairline: "#e2dcc9",
+        accent: "#1a1816",
+        "accent-dark": "#000000",
+        coral: "#f2704a",
       },
       fontFamily: {
         sans: [
@@ -23,6 +25,7 @@ const config: Config = {
           "Arial",
           "sans-serif",
         ],
+        serif: ["var(--font-serif)", "Georgia", "Cambria", "serif"],
       },
     },
   },
