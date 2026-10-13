@@ -39,18 +39,9 @@ function Swatch({
             : { background: `linear-gradient(135deg, ${color.hex_primary} 0%, ${color.hex_secondary} 100%)` }
         }
       >
-        {!color.photo_data_url && (
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 30%, rgba(0,0,0,0.15) 100%)",
-            }}
-          />
-        )}
         <span
-          className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-semibold backdrop-blur ${
-            color.in_stock ? "bg-white/85 text-emerald-700" : "bg-white/85 text-rose-700"
+          className={`absolute right-3 top-3 rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold ${
+            color.in_stock ? "text-emerald-700" : "text-rose-700"
           }`}
         >
           {color.in_stock ? "Available now" : "Currently unavailable"}

@@ -3,14 +3,8 @@ import BrandLogo from "@/components/BrandLogo";
 
 export default function LandingPage() {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-30"
-        style={{
-          background: "radial-gradient(600px circle at 50% 15%, rgba(0,113,227,0.14), transparent 60%)",
-        }}
-      />
-      <div className="relative">
+    <main className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
+      <div>
         <h1 className="sr-only">Echo Prints</h1>
         <div className="flex justify-center">
           <BrandLogo size="xl" />
