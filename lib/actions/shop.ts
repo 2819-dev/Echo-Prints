@@ -36,6 +36,7 @@ export async function createProductAction(formData: FormData) {
 
   const title = String(formData.get("title") || "").trim();
   const description = String(formData.get("description") || "").trim();
+  const category = String(formData.get("category") || "").trim() || null;
   const priceRaw = String(formData.get("price") || "").trim();
   const isCustom = formData.get("isCustom") === "on";
   const active = formData.get("active") === "on";
@@ -54,9 +55,9 @@ export async function createProductAction(formData: FormData) {
   }
 
   const rows = await db.sql<{ id: number }>`
-    INSERT INTO products (title, description, price, active, sort_order)
+    INSERT INTO products (title, description, price, category, active, sort_order)
     VALUES (
-      ${title}, ${description}, ${price}, ${active},
+      ${title}, ${description}, ${price}, ${category}, ${active},
       (SELECT COALESCE(MAX(sort_order), 0) + 1 FROM products)
     )
     RETURNING id
@@ -73,6 +74,7 @@ export async function updateProductAction(formData: FormData) {
   const id = Number(formData.get("id"));
   const title = String(formData.get("title") || "").trim();
   const description = String(formData.get("description") || "").trim();
+  const category = String(formData.get("category") || "").trim() || null;
   const priceRaw = String(formData.get("price") || "").trim();
   const isCustom = formData.get("isCustom") === "on";
   const photos = parsePhotos(formData);
@@ -91,7 +93,7 @@ export async function updateProductAction(formData: FormData) {
 
   await db.sql`
     UPDATE products
-    SET title = ${title}, description = ${description}, price = ${price}
+    SET title = ${title}, description = ${description}, price = ${price}, category = ${category}
     WHERE id = ${id}
   `;
   await setProductPhotos(id, photos);

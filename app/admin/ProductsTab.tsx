@@ -146,6 +146,7 @@ function ProductForm({
       {product && <input type="hidden" name="id" value={product.id} />}
       <PhotoManager photos={photos} onChange={setPhotos} />
       <input name="title" defaultValue={product?.title} placeholder="Title" required className={`${inputClass} sm:col-span-2`} />
+      <input name="category" defaultValue={product?.category ?? ""} placeholder="Category (e.g. Fidgets)" className={`${inputClass} sm:col-span-2`} />
       <textarea
         name="description"
         defaultValue={product?.description}
@@ -322,7 +323,10 @@ export default function ProductsTab({ products }: { products: ProductRow[] }) {
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{product.title}</p>
-                    <p className="truncate text-xs text-muted">{formatPrice(product.price)}</p>
+                    <p className="truncate text-xs text-muted">
+                      {formatPrice(product.price)}
+                      {product.category ? ` · ${product.category}` : ""}
+                    </p>
                   </div>
                   <button
                     onClick={() => toggleActive(product)}

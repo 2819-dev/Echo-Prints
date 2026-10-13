@@ -107,6 +107,7 @@ export interface Product {
   title: string;
   description: string;
   price: string | null; // null = custom / quote-only item
+  category: string | null;
   active: boolean;
   sort_order: number;
   created_at: string;
