@@ -13,6 +13,7 @@ import {
 } from "@/lib/actions/shop";
 import { readFileAsDataURL } from "@/lib/cropImage";
 import ImageCropModal from "@/components/ImageCropModal";
+import DownloadPriceListButton from "./DownloadPriceListButton";
 import type { Product, ProductPhoto } from "@/lib/db";
 
 export interface ProductRow extends Product {
@@ -288,9 +289,12 @@ export default function ProductsTab({ products }: { products: ProductRow[] }) {
   return (
     <div className="space-y-8">
       <section>
-        <div className="flex items-baseline justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold">Products</h2>
-          <p className="text-xs text-muted">Drag to reorder</p>
+          <div className="flex items-center gap-3">
+            <p className="text-xs text-muted">Drag to reorder</p>
+            <DownloadPriceListButton products={ordered} />
+          </div>
         </div>
 
         {selected.size > 0 && (
