@@ -23,59 +23,70 @@ function formatPrice(price: string | null) {
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 44,
-    paddingBottom: 56,
-    paddingHorizontal: 44,
-    fontSize: 10,
-    color: "#181225",
+    paddingTop: 34,
+    paddingBottom: 40,
+    paddingHorizontal: 40,
+    fontSize: 9.5,
+    color: "#262324",
   },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 14,
+    marginBottom: 8,
   },
-  logo: { width: 110, height: 41 },
+  logo: { width: 92, height: 34 },
   headerRight: { alignItems: "flex-end" },
-  headerTitle: { fontSize: 20, fontWeight: 700, color: "#181225" },
-  headerDate: { fontSize: 9, color: "#6b6478", marginTop: 2 },
-  legend: { flexDirection: "row", marginBottom: 14 },
-  legendItem: { flexDirection: "row", alignItems: "center", marginRight: 16 },
-  legendDot: { width: 7, height: 7, borderRadius: 3.5, marginRight: 4 },
-  legendText: { fontSize: 8.5, color: "#44403c" },
-  rule: { height: 3, backgroundColor: "#7c3aed", marginBottom: 24 },
-  category: { marginBottom: 20 },
-  categoryHeader: { marginBottom: 8 },
-  categoryTitle: { fontSize: 13, fontWeight: 700, color: "#7c3aed" },
+  headerTitle: { fontSize: 16, fontWeight: 700, color: "#181225" },
+  headerDate: { fontSize: 8, color: "#8c8680", marginTop: 1 },
+  legend: { flexDirection: "row", marginBottom: 8 },
+  legendItem: { flexDirection: "row", alignItems: "center", marginRight: 14 },
+  legendDot: { width: 6, height: 6, borderRadius: 3, marginRight: 3.5 },
+  legendText: { fontSize: 7.5, color: "#55504a" },
+  rule: { height: 1, backgroundColor: "#d6d3d1", marginBottom: 12 },
+  category: { marginBottom: 9 },
+  categoryHeader: {
+    marginBottom: 3,
+    paddingBottom: 2,
+    borderBottomWidth: 1,
+    borderBottomColor: "#d6d3d1",
+  },
+  categoryTitle: {
+    fontSize: 9,
+    fontWeight: 700,
+    color: "#262324",
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+  },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    paddingVertical: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e3ddf7",
+    paddingVertical: 2.75,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#eceae8",
   },
   rowLeft: { flexShrink: 1 },
   rowTitleLine: { flexDirection: "row", alignItems: "center" },
-  rowTitle: { fontSize: 10.5, fontWeight: 500 },
+  rowTitle: { fontSize: 9.5, fontWeight: 500 },
   rowTagPill: {
     alignSelf: "flex-start",
-    marginLeft: 6,
-    paddingHorizontal: 5,
-    paddingVertical: 1,
-    borderRadius: 4,
+    marginLeft: 5,
+    paddingHorizontal: 4,
+    paddingVertical: 0.75,
+    borderRadius: 3,
   },
-  rowTagText: { fontSize: 7.5, fontWeight: 700 },
-  rowDescription: { fontSize: 8.5, color: "#6b6478", marginTop: 1, maxWidth: 360 },
-  rowPrice: { fontSize: 10.5, fontWeight: 700 },
+  rowTagText: { fontSize: 6.5, fontWeight: 700 },
+  rowDescription: { fontSize: 7.5, color: "#8c8680", marginTop: 0.5, maxWidth: 360 },
+  rowPrice: { fontSize: 9.5, fontWeight: 700 },
   footer: {
     position: "absolute",
-    bottom: 28,
-    left: 44,
-    right: 44,
+    bottom: 20,
+    left: 40,
+    right: 40,
     textAlign: "center",
-    fontSize: 8.5,
-    color: "#6b6478",
+    fontSize: 7.5,
+    color: "#8c8680",
   },
 });
 
@@ -119,14 +130,14 @@ export default function PriceListDocument({
         <View style={styles.rule} />
 
         {Array.from(categories.entries()).map(([category, items]) => (
-          <View key={category} style={styles.category} wrap={false}>
-            <View style={styles.categoryHeader}>
+          <View key={category} style={styles.category}>
+            <View style={styles.categoryHeader} wrap={false}>
               <Text style={styles.categoryTitle}>{category}</Text>
             </View>
             {items.map((product, index) => {
               const meta = product.tag ? TAG_META[product.tag] : null;
               return (
-                <View key={index} style={styles.row}>
+                <View key={index} style={styles.row} wrap={false}>
                   <View style={styles.rowLeft}>
                     <View style={styles.rowTitleLine}>
                       <Text style={styles.rowTitle}>{product.title}</Text>
