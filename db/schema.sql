@@ -144,12 +144,12 @@ CREATE INDEX IF NOT EXISTS idx_custom_requests_status ON custom_requests(status)
 -- Admin login: updates it if an admin already exists, creates one if not.
 -- Change the password anytime from /account once logged in.
 UPDATE users
-SET email = 'hf@bighappysmiely.com',
+SET email = 'hf@bighappysmiley.com',
     password_hash = '$2a$10$2Ufm841TyUce2vSUrZmpzO2Rol4Qqw44gRJZyBozvxl3nbgobLEcS'
 WHERE role = 'admin';
 
 INSERT INTO users (email, password_hash, name, role)
-SELECT 'hf@bighappysmiely.com', '$2a$10$2Ufm841TyUce2vSUrZmpzO2Rol4Qqw44gRJZyBozvxl3nbgobLEcS', 'Admin', 'admin'
+SELECT 'hf@bighappysmiley.com', '$2a$10$2Ufm841TyUce2vSUrZmpzO2Rol4Qqw44gRJZyBozvxl3nbgobLEcS', 'Admin', 'admin'
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE role = 'admin');
 
 -- Starter color catalog — only seeds if the colors table is currently empty,
