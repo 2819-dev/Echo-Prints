@@ -7,10 +7,22 @@ import ColorsTab from "./ColorsTab";
 import JobsTab, { type JobRow } from "./JobsTab";
 import AccountsTab, { type UserRow } from "./AccountsTab";
 import OrdersTab from "./OrdersTab";
+import ProductsTab, { type ProductRow } from "./ProductsTab";
+import ShopOrdersTab, { type ShopOrderRow } from "./ShopOrdersTab";
+import CustomRequestsTab, { type CustomRequestRow } from "./CustomRequestsTab";
 
-export type { JobRow, UserRow };
+export type { JobRow, UserRow, ProductRow, ShopOrderRow, CustomRequestRow };
 
-const TABS = ["Orders", "Applications", "Colors", "Print Jobs", "Accounts"] as const;
+const TABS = [
+  "Orders",
+  "Applications",
+  "Products",
+  "Shop Orders",
+  "Custom Requests",
+  "Colors",
+  "Print Jobs",
+  "Accounts",
+] as const;
 type Tab = (typeof TABS)[number];
 
 export default function AdminPanel({
@@ -19,20 +31,30 @@ export default function AdminPanel({
   jobs,
   users,
   orders,
+  products,
+  shopOrders,
+  customRequests,
 }: {
   applications: Application[];
   colors: ColorStock[];
   jobs: JobRow[];
   users: UserRow[];
   orders: Order[];
+  products: ProductRow[];
+  shopOrders: ShopOrderRow[];
+  customRequests: CustomRequestRow[];
 }) {
   const [tab, setTab] = useState<Tab>("Orders");
   const pendingApplications = applications.filter((a) => a.status === "pending").length;
   const openOrders = orders.filter((o) => o.status === "pending").length;
+  const newShopOrders = shopOrders.filter((o) => o.status === "new").length;
+  const newCustomRequests = customRequests.filter((r) => r.status === "new").length;
 
   const badgeFor: Partial<Record<Tab, number>> = {
     Applications: pendingApplications,
     Orders: openOrders,
+    "Shop Orders": newShopOrders,
+    "Custom Requests": newCustomRequests,
   };
 
   return (
@@ -59,6 +81,9 @@ export default function AdminPanel({
       <div className="mt-8">
         {tab === "Orders" && <OrdersTab orders={orders} />}
         {tab === "Applications" && <ApplicationsTab applications={applications} />}
+        {tab === "Products" && <ProductsTab products={products} />}
+        {tab === "Shop Orders" && <ShopOrdersTab orders={shopOrders} />}
+        {tab === "Custom Requests" && <CustomRequestsTab requests={customRequests} />}
         {tab === "Colors" && <ColorsTab colors={colors} />}
         {tab === "Print Jobs" && <JobsTab jobs={jobs} />}
         {tab === "Accounts" && <AccountsTab users={users} />}

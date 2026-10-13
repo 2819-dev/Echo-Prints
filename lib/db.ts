@@ -101,3 +101,62 @@ export interface Order {
   status: OrderStatus;
   created_at: string;
 }
+
+export interface Product {
+  id: number;
+  title: string;
+  description: string;
+  price: string | null; // null = custom / quote-only item
+  active: boolean;
+  sort_order: number;
+  created_at: string;
+}
+
+export interface ProductPhoto {
+  id: number;
+  product_id: number;
+  data_url: string;
+  sort_order: number;
+}
+
+export type PaymentMethod = "cash" | "card";
+export type PaymentStatus = "unpaid" | "paid";
+export type ShopOrderStatus = "new" | "in_progress" | "completed" | "cancelled";
+
+export interface ShopOrder {
+  id: number;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string | null;
+  shipping_address: string | null;
+  payment_method: PaymentMethod;
+  payment_status: PaymentStatus;
+  status: ShopOrderStatus;
+  total: string;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface ShopOrderItem {
+  id: number;
+  order_id: number;
+  product_id: number | null;
+  title: string;
+  price: string;
+  quantity: number;
+}
+
+export type CustomRequestStatus = "new" | "quoted" | "closed";
+
+export interface CustomRequest {
+  id: number;
+  product_id: number | null;
+  name: string;
+  email: string;
+  phone: string | null;
+  details: string;
+  status: CustomRequestStatus;
+  quoted_price: string | null;
+  admin_notes: string | null;
+  created_at: string;
+}

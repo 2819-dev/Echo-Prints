@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { ColorStock } from "@/lib/db";
 
-const KOFI_URL = "https://ko-fi.com/echo3d";
 const CUSTOM_COLOR_EMAIL = "custom@echoprints.xyz";
 
 function CheckIcon() {
@@ -111,14 +111,12 @@ export default function ColorPicker({ colors }: { colors: ColorStock[] }) {
               </div>
             </div>
             {selected.in_stock ? (
-              <a
-                href={KOFI_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/shop"
                 className="shrink-0 rounded-full bg-accent px-6 py-2.5 text-center font-semibold text-white transition hover:bg-accent-dark"
               >
                 Go to Shop &mdash; mention &ldquo;{selected.name}&rdquo;
-              </a>
+              </Link>
             ) : (
               <a
                 href={mailtoHref}

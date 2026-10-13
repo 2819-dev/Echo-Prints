@@ -1,14 +1,31 @@
 import { requireUser } from "@/lib/auth";
-import { db, type Application, type ColorStock, type Order } from "@/lib/db";
+import { db, type Application, type ColorStock, type Order, type Product, type ProductPhoto, type ShopOrder, type ShopOrderItem, type CustomRequest } from "@/lib/db";
 import AppHeader from "@/components/AppHeader";
-import AdminPanel, { type JobRow, type UserRow } from "./AdminPanel";
+import AdminPanel, {
+  type JobRow,
+  type UserRow,
+  type ProductRow,
+  type ShopOrderRow,
+  type CustomRequestRow,
+} from "./AdminPanel";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const user = await requireUser("admin");
 
-  const [applications, colors, jobs, users, orders] = await Promise.all([
+  const [
+    applications,
+    colors,
+    jobs,
+    users,
+    orders,
+    products,
+    productPhotos,
+    shopOrders,
+    shopOrderItems,
+    customRequests,
+  ] = await Promise.all([
     db.sql<Application>`SELECT * FROM applications ORDER BY status ASC, created_at DESC`,
     db.sql<ColorStock>`SELECT * FROM colors ORDER BY sort_order ASC, name ASC`,
     db.sql<JobRow>`
@@ -27,14 +44,49 @@ export default async function AdminPage() {
       FROM users WHERE role IN ('printer', 'retailer') ORDER BY role ASC, name ASC
     `,
     db.sql<Order>`SELECT * FROM orders ORDER BY status ASC, created_at DESC`,
+    db.sql<Product>`SELECT * FROM products ORDER BY sort_order ASC, title ASC`,
+    db.sql<ProductPhoto>`SELECT * FROM product_photos ORDER BY sort_order ASC`,
+    db.sql<ShopOrder>`SELECT * FROM shop_orders ORDER BY status ASC, created_at DESC`,
+    db.sql<ShopOrderItem>`SELECT * FROM shop_order_items ORDER BY id ASC`,
+    db.sql<CustomRequest & { product_title: string | null }>`
+      SELECT cr.*, p.title AS product_title
+      FROM custom_requests cr
+      LEFT JOIN products p ON p.id = cr.product_id
+      ORDER BY cr.status ASC, cr.created_at DESC
+    `,
   ]);
+
+  const photosByProduct = new Map<number, ProductPhoto[]>();
+  for (const photo of productPhotos) {
+    const list = photosByProduct.get(photo.product_id) ?? [];
+    list.push(photo);
+    photosByProduct.set(photo.product_id, list);
+  }
+  const productRows: ProductRow[] = products.map((p) => ({ ...p, photos: photosByProduct.get(p.id) ?? [] }));
+
+  const itemsByOrder = new Map<number, ShopOrderItem[]>();
+  for (const item of shopOrderItems) {
+    const list = itemsByOrder.get(item.order_id) ?? [];
+    list.push(item);
+    itemsByOrder.set(item.order_id, list);
+  }
+  const shopOrderRows: ShopOrderRow[] = shopOrders.map((o) => ({ ...o, items: itemsByOrder.get(o.id) ?? [] }));
 
   return (
     <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
       <AppHeader title="Admin" subtitle={`Signed in as ${user.name}.`} />
 
       <div className="mt-10">
-        <AdminPanel applications={applications} colors={colors} jobs={jobs} users={users} orders={orders} />
+        <AdminPanel
+          applications={applications}
+          colors={colors}
+          jobs={jobs}
+          users={users}
+          orders={orders}
+          products={productRows}
+          shopOrders={shopOrderRows}
+          customRequests={customRequests as CustomRequestRow[]}
+        />
       </div>
     </main>
   );

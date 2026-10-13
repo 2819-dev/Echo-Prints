@@ -1,8 +1,6 @@
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 
-const KOFI_URL = "https://ko-fi.com/echo3d";
-
 function ShopIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
@@ -35,9 +33,9 @@ function HandshakeIcon() {
 const tiles = [
   {
     title: "Shop Now",
-    description: "Browse and buy ready-made prints on our Ko-fi shop.",
-    href: KOFI_URL,
-    external: true,
+    description: "Browse and buy ready-made prints, or request a custom quote.",
+    href: "/shop",
+    external: false,
     Icon: ShopIcon,
   },
   {

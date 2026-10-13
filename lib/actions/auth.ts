@@ -24,8 +24,8 @@ export async function loginAction(
 
     await createSession(user.id, user.role);
     return { role: user.role };
-  } catch (err) {
-    return { error: `Server error: ${err instanceof Error ? err.message : String(err)}` };
+  } catch {
+    return { error: "Something went wrong. Please try again." };
   }
 }
 
