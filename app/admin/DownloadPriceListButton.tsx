@@ -16,13 +16,17 @@ export default function DownloadPriceListButton({ products }: { products: Produc
         import("@/lib/pdf/PriceListDocument"),
       ]);
 
-      const activeProducts = products
-        .filter((p) => p.active)
-        .map((p) => ({ title: p.title, description: p.description, price: p.price, category: p.category }));
+      const allProducts = products.map((p) => ({
+        title: p.title,
+        description: p.description,
+        price: p.price,
+        category: p.category,
+        tag: p.tag,
+      }));
 
       const blob = await pdf(
         <PriceListDocument
-          products={activeProducts}
+          products={allProducts}
           logoSrc={`${window.location.origin}/logo.png`}
           generatedAt={new Date().toLocaleDateString()}
         />

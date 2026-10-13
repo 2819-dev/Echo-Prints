@@ -1,19 +1,19 @@
 import { Document, Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
+import type { ProductTag } from "@/lib/db";
 
 export interface PriceListProduct {
   title: string;
   description: string;
   price: string | null;
   category: string | null;
+  tag: ProductTag | null;
 }
 
-const TAG_COLORS = ["#7c3aed", "#ec4899", "#f59e0b"];
-
-function tagColor(category: string) {
-  let hash = 0;
-  for (let i = 0; i < category.length; i++) hash = (hash * 31 + category.charCodeAt(i)) >>> 0;
-  return TAG_COLORS[hash % TAG_COLORS.length];
-}
+const TAG_META: Record<ProductTag, { label: string; text: string; bg: string }> = {
+  limited_edition: { label: "Limited edition", text: "#b45309", bg: "#fef3c7" },
+  discontinued: { label: "Discontinued", text: "#be123c", bg: "#ffe4e6" },
+  customizable: { label: "Customizable", text: "#6d28d9", bg: "#ede9fe" },
+};
 
 function formatPrice(price: string | null) {
   if (price === null) return "Ask for a quote";
@@ -33,25 +33,39 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 8,
+    marginBottom: 14,
   },
   logo: { width: 110, height: 41 },
   headerRight: { alignItems: "flex-end" },
   headerTitle: { fontSize: 20, fontWeight: 700, color: "#181225" },
   headerDate: { fontSize: 9, color: "#6b6478", marginTop: 2 },
+  legend: { flexDirection: "row", marginBottom: 14 },
+  legendItem: { flexDirection: "row", alignItems: "center", marginRight: 16 },
+  legendDot: { width: 7, height: 7, borderRadius: 3.5, marginRight: 4 },
+  legendText: { fontSize: 8.5, color: "#44403c" },
   rule: { height: 3, backgroundColor: "#7c3aed", marginBottom: 24 },
   category: { marginBottom: 20 },
-  categoryHeader: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
-  categoryDot: { width: 8, height: 8, borderRadius: 4, marginRight: 6 },
-  categoryTitle: { fontSize: 13, fontWeight: 700 },
+  categoryHeader: { marginBottom: 8 },
+  categoryTitle: { fontSize: 13, fontWeight: 700, color: "#7c3aed" },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "flex-start",
     paddingVertical: 5,
     borderBottomWidth: 1,
     borderBottomColor: "#e3ddf7",
   },
+  rowLeft: { flexShrink: 1 },
+  rowTitleLine: { flexDirection: "row", alignItems: "center" },
   rowTitle: { fontSize: 10.5, fontWeight: 500 },
+  rowTagPill: {
+    alignSelf: "flex-start",
+    marginLeft: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  rowTagText: { fontSize: 7.5, fontWeight: 700 },
   rowDescription: { fontSize: 8.5, color: "#6b6478", marginTop: 1, maxWidth: 360 },
   rowPrice: { fontSize: 10.5, fontWeight: 700 },
   footer: {
@@ -93,23 +107,41 @@ export default function PriceListDocument({
             <Text style={styles.headerDate}>{generatedAt}</Text>
           </View>
         </View>
+
+        <View style={styles.legend}>
+          {(Object.keys(TAG_META) as ProductTag[]).map((tag) => (
+            <View key={tag} style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: TAG_META[tag].text }]} />
+              <Text style={styles.legendText}>{TAG_META[tag].label}</Text>
+            </View>
+          ))}
+        </View>
         <View style={styles.rule} />
 
         {Array.from(categories.entries()).map(([category, items]) => (
           <View key={category} style={styles.category} wrap={false}>
             <View style={styles.categoryHeader}>
-              <View style={[styles.categoryDot, { backgroundColor: tagColor(category) }]} />
               <Text style={styles.categoryTitle}>{category}</Text>
             </View>
-            {items.map((product, index) => (
-              <View key={index} style={styles.row}>
-                <View>
-                  <Text style={styles.rowTitle}>{product.title}</Text>
-                  {product.description && <Text style={styles.rowDescription}>{product.description}</Text>}
+            {items.map((product, index) => {
+              const meta = product.tag ? TAG_META[product.tag] : null;
+              return (
+                <View key={index} style={styles.row}>
+                  <View style={styles.rowLeft}>
+                    <View style={styles.rowTitleLine}>
+                      <Text style={styles.rowTitle}>{product.title}</Text>
+                      {meta && (
+                        <View style={[styles.rowTagPill, { backgroundColor: meta.bg }]}>
+                          <Text style={[styles.rowTagText, { color: meta.text }]}>{meta.label}</Text>
+                        </View>
+                      )}
+                    </View>
+                    {product.description && <Text style={styles.rowDescription}>{product.description}</Text>}
+                  </View>
+                  <Text style={styles.rowPrice}>{formatPrice(product.price)}</Text>
                 </View>
-                <Text style={styles.rowPrice}>{formatPrice(product.price)}</Text>
-              </View>
-            ))}
+              );
+            })}
           </View>
         ))}
 

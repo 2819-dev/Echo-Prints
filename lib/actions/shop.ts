@@ -3,11 +3,18 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
-import type { PaymentMethod, Product } from "@/lib/db";
+import type { PaymentMethod, Product, ProductTag } from "@/lib/db";
+
+const VALID_TAGS: ProductTag[] = ["customizable", "discontinued", "limited_edition"];
 
 function refreshShop() {
   revalidatePath("/admin");
   revalidatePath("/shop");
+}
+
+function parseTag(formData: FormData): ProductTag | null {
+  const raw = String(formData.get("tag") || "");
+  return (VALID_TAGS as string[]).includes(raw) ? (raw as ProductTag) : null;
 }
 
 function parsePhotos(formData: FormData): string[] {
@@ -37,6 +44,7 @@ export async function createProductAction(formData: FormData) {
   const title = String(formData.get("title") || "").trim();
   const description = String(formData.get("description") || "").trim();
   const category = String(formData.get("category") || "").trim() || null;
+  const tag = parseTag(formData);
   const priceRaw = String(formData.get("price") || "").trim();
   const isCustom = formData.get("isCustom") === "on";
   const active = formData.get("active") === "on";
@@ -55,9 +63,9 @@ export async function createProductAction(formData: FormData) {
   }
 
   const rows = await db.sql<{ id: number }>`
-    INSERT INTO products (title, description, price, category, active, sort_order)
+    INSERT INTO products (title, description, price, category, tag, active, sort_order)
     VALUES (
-      ${title}, ${description}, ${price}, ${category}, ${active},
+      ${title}, ${description}, ${price}, ${category}, ${tag}, ${active},
       (SELECT COALESCE(MAX(sort_order), 0) + 1 FROM products)
     )
     RETURNING id
@@ -75,6 +83,7 @@ export async function updateProductAction(formData: FormData) {
   const title = String(formData.get("title") || "").trim();
   const description = String(formData.get("description") || "").trim();
   const category = String(formData.get("category") || "").trim() || null;
+  const tag = parseTag(formData);
   const priceRaw = String(formData.get("price") || "").trim();
   const isCustom = formData.get("isCustom") === "on";
   const photos = parsePhotos(formData);
@@ -93,7 +102,7 @@ export async function updateProductAction(formData: FormData) {
 
   await db.sql`
     UPDATE products
-    SET title = ${title}, description = ${description}, price = ${price}, category = ${category}
+    SET title = ${title}, description = ${description}, price = ${price}, category = ${category}, tag = ${tag}
     WHERE id = ${id}
   `;
   await setProductPhotos(id, photos);

@@ -102,12 +102,15 @@ export interface Order {
   created_at: string;
 }
 
+export type ProductTag = "customizable" | "discontinued" | "limited_edition";
+
 export interface Product {
   id: number;
   title: string;
   description: string;
   price: string | null; // null = custom / quote-only item
   category: string | null;
+  tag: ProductTag | null;
   active: boolean;
   sort_order: number;
   created_at: string;

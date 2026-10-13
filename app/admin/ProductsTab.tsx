@@ -14,7 +14,7 @@ import {
 import { readFileAsDataURL } from "@/lib/cropImage";
 import ImageCropModal from "@/components/ImageCropModal";
 import DownloadPriceListButton from "./DownloadPriceListButton";
-import type { Product, ProductPhoto } from "@/lib/db";
+import type { Product, ProductPhoto, ProductTag } from "@/lib/db";
 
 export interface ProductRow extends Product {
   photos: ProductPhoto[];
@@ -22,6 +22,18 @@ export interface ProductRow extends Product {
 
 const inputClass =
   "rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10";
+
+const TAG_META: Record<ProductTag, { label: string; text: string; bg: string }> = {
+  limited_edition: { label: "Limited edition", text: "text-amber-700", bg: "bg-amber-100" },
+  discontinued: { label: "Discontinued", text: "text-rose-700", bg: "bg-rose-100" },
+  customizable: { label: "Customizable", text: "text-violet-700", bg: "bg-violet-100" },
+};
+
+function TagBadge({ tag }: { tag: ProductTag | null }) {
+  if (!tag) return null;
+  const meta = TAG_META[tag];
+  return <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${meta.text} ${meta.bg}`}>{meta.label}</span>;
+}
 
 function formatPrice(price: string | null) {
   if (price === null) return "Custom / quote";
@@ -166,7 +178,13 @@ function ProductForm({
       {product && <input type="hidden" name="id" value={product.id} />}
       <PhotoManager photos={photos} onChange={setPhotos} />
       <input name="title" defaultValue={product?.title} placeholder="Title" required className={`${inputClass} sm:col-span-2`} />
-      <input name="category" defaultValue={product?.category ?? ""} placeholder="Category (e.g. Fidgets)" className={`${inputClass} sm:col-span-2`} />
+      <input name="category" defaultValue={product?.category ?? ""} placeholder="Category (e.g. Fidgets)" className={inputClass} />
+      <select name="tag" defaultValue={product?.tag ?? ""} className={inputClass}>
+        <option value="">No tag</option>
+        <option value="limited_edition">Limited edition (orange)</option>
+        <option value="discontinued">Discontinued (red)</option>
+        <option value="customizable">Customizable (purple)</option>
+      </select>
       <textarea
         name="description"
         defaultValue={product?.description}
@@ -345,7 +363,10 @@ export default function ProductsTab({ products }: { products: ProductRow[] }) {
                     <div className="h-11 w-11 shrink-0 rounded-lg bg-panel2" />
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{product.title}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="truncate text-sm font-medium">{product.title}</p>
+                      <TagBadge tag={product.tag} />
+                    </div>
                     <p className="truncate text-xs text-muted">
                       {formatPrice(product.price)}
                       {product.category ? ` · ${product.category}` : ""}
