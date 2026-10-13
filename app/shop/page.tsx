@@ -25,7 +25,7 @@ export default async function ShopPage() {
 
       <div className="mt-10 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Shop</h1>
+          <h1 className="text-3xl font-display font-extrabold tracking-tight sm:text-4xl">Shop</h1>
           <p className="mt-2 max-w-xl text-muted">
             Ready-made prints, available now. Custom items are made to order &mdash; request a quote and we&apos;ll follow up with a price.
           </p>

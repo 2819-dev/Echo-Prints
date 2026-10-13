@@ -15,15 +15,22 @@ export type { JobRow, UserRow, ProductRow, ShopOrderRow, CustomRequestRow };
 
 const TABS = [
   "Orders",
-  "Applications",
-  "Products",
   "Shop Orders",
   "Custom Requests",
+  "Products",
   "Colors",
   "Print Jobs",
+  "Applications",
   "Accounts",
 ] as const;
 type Tab = (typeof TABS)[number];
+
+const GROUPS: { label: string; tabs: Tab[] }[] = [
+  { label: "Orders", tabs: ["Orders", "Shop Orders", "Custom Requests"] },
+  { label: "Store", tabs: ["Products", "Colors"] },
+  { label: "Operations", tabs: ["Print Jobs"] },
+  { label: "People", tabs: ["Applications", "Accounts"] },
+];
 
 export default function AdminPanel({
   applications,
@@ -58,27 +65,57 @@ export default function AdminPanel({
   };
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-1 rounded-full bg-panel2 p-1">
-        {TABS.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-              tab === t ? "bg-accent text-white" : "text-muted hover:text-ink"
-            }`}
-          >
-            {t}
-            {!!badgeFor[t] && (
-              <span className="ml-1.5 rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] text-white">
-                {badgeFor[t]}
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
+    <div className="flex flex-col gap-8 sm:flex-row sm:items-start">
+      <nav className="shrink-0 sm:w-52">
+        <div className="flex gap-1 overflow-x-auto rounded-full bg-panel2 p-1 sm:hidden">
+          {TABS.map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`shrink-0 rounded-full px-3.5 py-2 text-sm font-semibold transition ${
+                tab === t ? "bg-accent text-white" : "text-muted hover:text-ink"
+              }`}
+            >
+              {t}
+              {!!badgeFor[t] && (
+                <span className="ml-1.5 rounded-full bg-pop px-1.5 py-0.5 text-[10px] text-white">{badgeFor[t]}</span>
+              )}
+            </button>
+          ))}
+        </div>
 
-      <div className="mt-8">
+        <div className="hidden space-y-6 sm:block">
+          {GROUPS.map((group) => (
+            <div key={group.label}>
+              <p className="px-3 text-xs font-bold uppercase tracking-wide text-muted">{group.label}</p>
+              <div className="mt-2 space-y-1">
+                {group.tabs.map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTab(t)}
+                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
+                      tab === t ? "bg-accent text-white" : "text-muted hover:bg-panel2 hover:text-ink"
+                    }`}
+                  >
+                    {t}
+                    {!!badgeFor[t] && (
+                      <span
+                        className={`rounded-full px-1.5 py-0.5 text-[10px] ${
+                          tab === t ? "bg-white/25 text-white" : "bg-pop text-white"
+                        }`}
+                      >
+                        {badgeFor[t]}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </nav>
+
+      <div className="min-w-0 flex-1">
         {tab === "Orders" && <OrdersTab orders={orders} />}
         {tab === "Applications" && <ApplicationsTab applications={applications} />}
         {tab === "Products" && <ProductsTab products={products} />}

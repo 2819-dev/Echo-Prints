@@ -6,7 +6,7 @@ export default function BecomeARetailerPage() {
     <main className="mx-auto min-h-screen max-w-xl px-6 py-10">
       <SiteHeader backHref="/browse" backLabel="Back to browse" />
 
-      <h1 className="mt-10 text-3xl font-semibold tracking-tight sm:text-4xl">Join Echo Prints</h1>
+      <h1 className="mt-10 text-3xl font-display font-extrabold tracking-tight sm:text-4xl">Join Echo Prints</h1>
       <p className="mt-3 text-muted">
         Two ways to work with us &mdash; pick the tab that fits.
       </p>

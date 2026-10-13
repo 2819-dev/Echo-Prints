@@ -11,7 +11,8 @@ import {
   bulkToggleProductActiveAction,
   bulkDeleteProductsAction,
 } from "@/lib/actions/shop";
-import { resizeImageFile } from "@/lib/resizeImage";
+import { readFileAsDataURL } from "@/lib/cropImage";
+import ImageCropModal from "@/components/ImageCropModal";
 import type { Product, ProductPhoto } from "@/lib/db";
 
 export interface ProductRow extends Product {
@@ -42,13 +43,23 @@ function DragHandle() {
 
 function PhotoManager({ photos, onChange }: { photos: string[]; onChange: (photos: string[]) => void }) {
   const dragIndex = useRef<number | null>(null);
+  const [cropQueue, setCropQueue] = useState<string[]>([]);
 
   async function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
-    const resized = await Promise.all(files.map((f) => resizeImageFile(f, 960, 0.85)));
-    onChange([...photos, ...resized]);
     e.target.value = "";
+    if (files.length === 0) return;
+    const dataUrls = await Promise.all(files.map(readFileAsDataURL));
+    setCropQueue((prev) => [...prev, ...dataUrls]);
+  }
+
+  function handleCropped(dataUrl: string) {
+    onChange([...photos, dataUrl]);
+    setCropQueue((prev) => prev.slice(1));
+  }
+
+  function skipCrop() {
+    setCropQueue((prev) => prev.slice(1));
   }
 
   function remove(index: number) {
@@ -99,6 +110,14 @@ function PhotoManager({ photos, onChange }: { photos: string[]; onChange: (photo
         </label>
       </div>
       <p className="mt-1.5 text-xs text-muted">Drag to reorder &mdash; first photo is the cover image.</p>
+      {cropQueue[0] && (
+        <ImageCropModal
+          key={cropQueue[0]}
+          imageSrc={cropQueue[0]}
+          onCancel={skipCrop}
+          onCropped={handleCropped}
+        />
+      )}
     </div>
   );
 }

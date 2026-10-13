@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-6 py-10">
       <SiteHeader backHref="/browse" backLabel="Back to browse" />
-      <h1 className="mt-12 text-2xl font-semibold tracking-tight">Log In</h1>
+      <h1 className="mt-12 text-2xl font-display font-extrabold tracking-tight">Log In</h1>
       <p className="mt-2 text-sm text-muted">
         For approved printers, retailers, and admins.
       </p>

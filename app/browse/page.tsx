@@ -60,7 +60,7 @@ export default function BrowsePage() {
       <SiteHeader backHref="/" backLabel="Home" />
 
       <div className="mt-20 flex flex-col items-center text-center">
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Browse Echo Prints</h1>
+        <h1 className="text-4xl font-display font-extrabold tracking-tight sm:text-5xl">Browse Echo Prints</h1>
         <p className="mt-4 text-[17px] text-muted">What are you here for?</p>
 
         <div className="mt-14 grid w-full gap-5 sm:grid-cols-3">

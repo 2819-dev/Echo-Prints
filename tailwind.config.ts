@@ -5,15 +5,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        cream: "#f1ede1",
         panel: "#ffffff",
-        panel2: "#e9e4d6",
-        ink: "#1a1816",
-        muted: "#6b6558",
-        hairline: "#e2dcc9",
-        accent: "#1a1816",
-        "accent-dark": "#000000",
-        coral: "#f2704a",
+        panel2: "#f3f0ff",
+        ink: "#181225",
+        muted: "#6b6478",
+        hairline: "#e3ddf7",
+        accent: "#7c3aed",
+        "accent-dark": "#5b21b6",
+        pop: "#ec4899",
+        sun: "#f59e0b",
       },
       fontFamily: {
         sans: [
@@ -25,7 +25,7 @@ const config: Config = {
           "Arial",
           "sans-serif",
         ],
-        serif: ["var(--font-serif)", "Georgia", "Cambria", "serif"],
+        display: ["var(--font-display)", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
       },
     },
   },

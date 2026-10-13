@@ -48,7 +48,7 @@ export default function CheckoutPage() {
       <main className="mx-auto min-h-screen max-w-2xl px-6 py-10">
         <SiteHeader backHref="/shop" backLabel="Back to shop" />
         <div className="mt-20 flex flex-col items-center text-center">
-          <h1 className="text-3xl font-semibold tracking-tight">Order placed!</h1>
+          <h1 className="text-3xl font-display font-extrabold tracking-tight">Order placed!</h1>
           <p className="mt-3 text-muted">
             Order #{orderId} is in. We&apos;ll be in touch to arrange cash payment and pickup or delivery.
           </p>
@@ -67,7 +67,7 @@ export default function CheckoutPage() {
       <main className="mx-auto min-h-screen max-w-2xl px-6 py-10">
         <SiteHeader backHref="/shop" backLabel="Back to shop" />
         <div className="mt-20 flex flex-col items-center text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Your cart is empty</h1>
+          <h1 className="text-2xl font-display font-extrabold tracking-tight">Your cart is empty</h1>
           <Link href="/shop" className="mt-6 rounded-full bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent-dark">
             Go to Shop
           </Link>
@@ -81,7 +81,7 @@ export default function CheckoutPage() {
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-6 py-10">
       <SiteHeader backHref="/shop" backLabel="Back to shop" />
-      <h1 className="mt-10 text-3xl font-semibold tracking-tight">Checkout</h1>
+      <h1 className="mt-10 text-3xl font-display font-extrabold tracking-tight">Checkout</h1>
 
       <div className="mt-8 grid gap-8 sm:grid-cols-5">
         <section className="sm:col-span-3">

@@ -11,7 +11,8 @@ import {
   bulkToggleStockAction,
   bulkDeleteColorsAction,
 } from "@/lib/actions/colors";
-import { resizeImageFile } from "@/lib/resizeImage";
+import { readFileAsDataURL } from "@/lib/cropImage";
+import ImageCropModal from "@/components/ImageCropModal";
 import type { ColorStock } from "@/lib/db";
 
 const inputClass =
@@ -54,14 +55,20 @@ function EditForm({ color, onDone }: { color: ColorStock; onDone: () => void }) 
   const [photoDataUrl, setPhotoDataUrl] = useState("");
   const [preview, setPreview] = useState(color.photo_data_url);
   const [removePhoto, setRemovePhoto] = useState(false);
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
 
   async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
-    const resized = await resizeImageFile(file);
-    setPhotoDataUrl(resized);
-    setPreview(resized);
+    setCropSrc(await readFileAsDataURL(file));
+  }
+
+  function handleCropped(dataUrl: string) {
+    setPhotoDataUrl(dataUrl);
+    setPreview(dataUrl);
     setRemovePhoto(false);
+    setCropSrc(null);
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -144,6 +151,7 @@ function EditForm({ color, onDone }: { color: ColorStock; onDone: () => void }) 
           Cancel
         </button>
       </div>
+      {cropSrc && <ImageCropModal imageSrc={cropSrc} onCancel={() => setCropSrc(null)} onCropped={handleCropped} />}
     </form>
   );
 }
@@ -157,6 +165,7 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newPhotoDataUrl, setNewPhotoDataUrl] = useState("");
   const [newPreview, setNewPreview] = useState<string | null>(null);
+  const [newCropSrc, setNewCropSrc] = useState<string | null>(null);
   const dragIndex = useRef<number | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -229,10 +238,15 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
 
   async function handleNewPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
-    const resized = await resizeImageFile(file);
-    setNewPhotoDataUrl(resized);
-    setNewPreview(resized);
+    setNewCropSrc(await readFileAsDataURL(file));
+  }
+
+  function handleNewCropped(dataUrl: string) {
+    setNewPhotoDataUrl(dataUrl);
+    setNewPreview(dataUrl);
+    setNewCropSrc(null);
   }
 
   async function handleAdd(e: React.FormEvent<HTMLFormElement>) {
@@ -371,6 +385,9 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
           >
             Add Color
           </button>
+          {newCropSrc && (
+            <ImageCropModal imageSrc={newCropSrc} onCancel={() => setNewCropSrc(null)} onCropped={handleNewCropped} />
+          )}
         </form>
       </section>
     </div>
