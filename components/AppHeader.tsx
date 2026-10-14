@@ -18,7 +18,7 @@ export function AppHeaderBar() {
           </Link>
         </nav>
         <form action={logoutAction} className="shrink-0">
-          <button className="rounded-full border border-hairline px-3.5 py-1.5 text-sm font-semibold text-ink hover:bg-panel2">
+          <button className="rounded-lg border border-hairline px-3.5 py-1.5 text-sm font-semibold text-ink hover:bg-panel2">
             Log out
           </button>
         </form>

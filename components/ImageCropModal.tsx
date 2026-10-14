@@ -66,7 +66,7 @@ export default function ImageCropModal({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-full border border-hairline px-4 py-2 text-sm font-medium text-ink hover:bg-panel2"
+            className="rounded-lg border border-hairline px-4 py-2 text-sm font-medium text-ink hover:bg-panel2"
           >
             Cancel
           </button>
@@ -74,7 +74,7 @@ export default function ImageCropModal({
             type="button"
             onClick={handleSave}
             disabled={saving || !pixelCrop}
-            className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark disabled:opacity-60"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark disabled:opacity-60"
           >
             {saving ? "Saving..." : "Use this crop"}
           </button>

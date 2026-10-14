@@ -219,12 +219,12 @@ function ProductForm({
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark disabled:opacity-60"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark disabled:opacity-60"
         >
           {submitting ? "Saving..." : submitLabel}
         </button>
         {onCancel && (
-          <button type="button" onClick={onCancel} className="rounded-full border border-hairline px-4 py-2 text-sm font-medium text-ink hover:bg-panel2">
+          <button type="button" onClick={onCancel} className="rounded-lg border border-hairline px-4 py-2 text-sm font-medium text-ink hover:bg-panel2">
             Cancel
           </button>
         )}
@@ -318,13 +318,13 @@ export default function ProductsTab({ products }: { products: ProductRow[] }) {
         {selected.size > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-hairline bg-panel2/60 p-3 text-sm">
             <span className="font-medium">{selected.size} selected</span>
-            <button onClick={() => bulkActive(true)} disabled={isPending} className="rounded-full bg-panel px-3 py-1.5 font-medium text-emerald-700 hover:bg-emerald-50">
+            <button onClick={() => bulkActive(true)} disabled={isPending} className="rounded-lg bg-panel px-3 py-1.5 font-medium text-emerald-700 hover:bg-emerald-50">
               Mark active
             </button>
-            <button onClick={() => bulkActive(false)} disabled={isPending} className="rounded-full bg-panel px-3 py-1.5 font-medium text-rose-700 hover:bg-rose-50">
+            <button onClick={() => bulkActive(false)} disabled={isPending} className="rounded-lg bg-panel px-3 py-1.5 font-medium text-rose-700 hover:bg-rose-50">
               Mark inactive
             </button>
-            <button onClick={bulkDelete} disabled={isPending} className="rounded-full bg-panel px-3 py-1.5 font-medium text-rose-700 hover:bg-rose-50">
+            <button onClick={bulkDelete} disabled={isPending} className="rounded-lg bg-panel px-3 py-1.5 font-medium text-rose-700 hover:bg-rose-50">
               Delete selected
             </button>
             <button onClick={() => setSelected(new Set())} className="ml-auto text-muted hover:text-ink">

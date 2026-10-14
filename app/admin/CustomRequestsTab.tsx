@@ -49,10 +49,10 @@ function QuoteForm({ request, onDone }: { request: CustomRequestRow; onDone: () 
         placeholder="Notes for yourself (optional)"
         className="flex-1 rounded-lg border border-hairline bg-white px-3 py-1.5 text-xs outline-none focus:border-accent focus:ring-4 focus:ring-accent/10"
       />
-      <button type="submit" disabled={submitting} className="rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark disabled:opacity-60">
+      <button type="submit" disabled={submitting} className="rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark disabled:opacity-60">
         Save Quote
       </button>
-      <button type="button" onClick={onDone} className="rounded-full border border-hairline px-3 py-1.5 text-xs font-medium text-ink hover:bg-panel2">
+      <button type="button" onClick={onDone} className="rounded-lg border border-hairline px-3 py-1.5 text-xs font-medium text-ink hover:bg-panel2">
         Cancel
       </button>
     </form>

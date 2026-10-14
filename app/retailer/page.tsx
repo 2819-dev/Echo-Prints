@@ -29,7 +29,7 @@ export default async function RetailerPage() {
           </p>
           <a
             href={mailtoHref}
-            className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark"
+            className="mt-6 inline-block rounded-lg bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark"
           >
             Request Price Sheet / Restock
           </a>

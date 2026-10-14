@@ -139,14 +139,14 @@ function EditForm({ color, onDone }: { color: ColorStock; onDone: () => void }) 
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark disabled:opacity-60"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark disabled:opacity-60"
         >
           {submitting ? "Saving..." : "Save"}
         </button>
         <button
           type="button"
           onClick={onDone}
-          className="rounded-full border border-hairline px-4 py-2 text-sm font-medium text-ink hover:bg-panel2"
+          className="rounded-lg border border-hairline px-4 py-2 text-sm font-medium text-ink hover:bg-panel2"
         >
           Cancel
         </button>
@@ -276,13 +276,13 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
         {selected.size > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-hairline bg-panel2/60 p-3 text-sm">
             <span className="font-medium">{selected.size} selected</span>
-            <button onClick={() => bulkStock(true)} disabled={isPending} className="rounded-full bg-panel px-3 py-1.5 font-medium text-emerald-700 hover:bg-emerald-50">
+            <button onClick={() => bulkStock(true)} disabled={isPending} className="rounded-lg bg-panel px-3 py-1.5 font-medium text-emerald-700 hover:bg-emerald-50">
               Mark in stock
             </button>
-            <button onClick={() => bulkStock(false)} disabled={isPending} className="rounded-full bg-panel px-3 py-1.5 font-medium text-rose-700 hover:bg-rose-50">
+            <button onClick={() => bulkStock(false)} disabled={isPending} className="rounded-lg bg-panel px-3 py-1.5 font-medium text-rose-700 hover:bg-rose-50">
               Mark out of stock
             </button>
-            <button onClick={bulkDelete} disabled={isPending} className="rounded-full bg-panel px-3 py-1.5 font-medium text-rose-700 hover:bg-rose-50">
+            <button onClick={bulkDelete} disabled={isPending} className="rounded-lg bg-panel px-3 py-1.5 font-medium text-rose-700 hover:bg-rose-50">
               Delete selected
             </button>
             <button onClick={() => setSelected(new Set())} className="ml-auto text-muted hover:text-ink">
@@ -381,7 +381,7 @@ export default function ColorsTab({ colors }: { colors: ColorStock[] }) {
           {error && <p className="text-sm text-rose-600 sm:col-span-2">{error}</p>}
           <button
             type="submit"
-            className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark sm:col-span-2"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark sm:col-span-2"
           >
             Add Color
           </button>

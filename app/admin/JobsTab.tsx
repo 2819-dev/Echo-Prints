@@ -104,7 +104,7 @@ export default function JobsTab({ jobs }: { jobs: JobRow[] }) {
           {error && <p className="text-sm text-rose-600">{error}</p>}
           <button
             type="submit"
-            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark"
           >
             Create Job
           </button>

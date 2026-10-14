@@ -104,14 +104,14 @@ export default function ColorPicker({ colors }: { colors: ColorStock[] }) {
             {selected.in_stock ? (
               <Link
                 href="/shop"
-                className="shrink-0 rounded-full bg-accent px-6 py-2.5 text-center font-semibold text-white transition hover:bg-accent-dark"
+                className="shrink-0 rounded-lg bg-accent px-6 py-2.5 text-center font-semibold text-white transition hover:bg-accent-dark"
               >
                 Go to Shop &mdash; mention &ldquo;{selected.name}&rdquo;
               </Link>
             ) : (
               <a
                 href={mailtoHref}
-                className="shrink-0 rounded-full border border-hairline px-6 py-2.5 text-center font-semibold text-ink transition hover:bg-panel2"
+                className="shrink-0 rounded-lg border border-hairline px-6 py-2.5 text-center font-semibold text-ink transition hover:bg-panel2"
               >
                 Ask About This Color
               </a>
@@ -131,7 +131,7 @@ export default function ColorPicker({ colors }: { colors: ColorStock[] }) {
         </p>
         <a
           href={mailtoHref}
-          className="mt-4 inline-block rounded-full border border-hairline px-6 py-2.5 font-semibold text-ink transition hover:bg-panel2"
+          className="mt-4 inline-block rounded-lg border border-hairline px-6 py-2.5 font-semibold text-ink transition hover:bg-panel2"
         >
           Request a Custom Color
         </a>

@@ -45,12 +45,12 @@ function ProductCard({
           {product.price !== null ? (
             <button
               onClick={(e) => onAdd(e, product)}
-              className="shrink-0 rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark"
+              className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark"
             >
               {added ? "Added" : "Add to Cart"}
             </button>
           ) : (
-            <span className="shrink-0 rounded-full border border-hairline px-3 py-1.5 text-xs font-semibold text-ink">
+            <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-xs font-semibold text-ink">
               Request a Quote
             </span>
           )}
@@ -98,7 +98,7 @@ export default function ShopGrid({ products }: { products: ShopProduct[] }) {
     <div className="flex flex-col gap-10 sm:flex-row sm:items-start">
       <nav className="shrink-0 sm:sticky sm:top-20 sm:w-44">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">Categories</p>
-        <div className="mt-3 flex gap-1.5 overflow-x-auto sm:flex-col sm:overflow-visible">
+        <div className="mt-3 flex gap-1 overflow-x-auto sm:flex-col sm:overflow-visible">
           {categoryNames.map((name) => {
             const count = name === "All" ? products.length : categories.get(name)?.length ?? 0;
             const isActive = active === name;
@@ -106,12 +106,12 @@ export default function ShopGrid({ products }: { products: ShopProduct[] }) {
               <button
                 key={name}
                 onClick={() => setActive(name)}
-                className={`flex shrink-0 items-center justify-between gap-3 rounded-lg px-3 py-1.5 text-left text-sm transition ${
-                  isActive ? "bg-accent font-semibold text-white" : "text-muted hover:bg-panel2 hover:text-ink"
+                className={`flex shrink-0 items-center justify-between gap-3 border-l-2 py-1.5 pl-3 pr-1 text-left text-sm transition ${
+                  isActive ? "border-ink font-semibold text-ink" : "border-transparent text-muted hover:text-ink"
                 }`}
               >
                 <span>{name}</span>
-                <span className={isActive ? "text-white/70" : "text-muted"}>{count}</span>
+                <span className="text-xs text-muted">{count}</span>
               </button>
             );
           })}

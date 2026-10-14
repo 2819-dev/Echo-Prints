@@ -53,7 +53,7 @@ export default function CheckoutPage() {
             <p className="mt-3 text-muted">
               Order #{orderId} is in. We&apos;ll be in touch to arrange cash payment and pickup or delivery.
             </p>
-            <Link href="/shop" className="mt-8 rounded-full bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent-dark">
+            <Link href="/shop" className="mt-8 rounded-lg bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent-dark">
               Continue Shopping
             </Link>
           </div>
@@ -71,7 +71,7 @@ export default function CheckoutPage() {
         <main className="mx-auto min-h-screen max-w-2xl px-6 py-10">
           <div className="mt-20 flex flex-col items-center text-center">
             <h1 className="text-2xl font-display font-semibold tracking-tight">Your cart is empty</h1>
-            <Link href="/shop" className="mt-6 rounded-full bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent-dark">
+            <Link href="/shop" className="mt-6 rounded-lg bg-accent px-6 py-2.5 font-semibold text-white hover:bg-accent-dark">
               Go to Shop
             </Link>
           </div>
@@ -150,7 +150,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="rounded-full bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:opacity-60"
+                className="rounded-lg bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:opacity-60"
               >
                 {submitting ? "Placing order..." : "Place Order"}
               </button>

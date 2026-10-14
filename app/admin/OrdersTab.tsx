@@ -67,7 +67,7 @@ export default function OrdersTab({ orders }: { orders: Order[] }) {
               <button
                 onClick={() => toggle(order)}
                 disabled={isPending}
-                className="rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark disabled:opacity-60"
+                className="rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark disabled:opacity-60"
               >
                 Mark fulfilled
               </button>
@@ -117,7 +117,7 @@ export default function OrdersTab({ orders }: { orders: Order[] }) {
           {error && <p className="text-sm text-rose-600 sm:col-span-2">{error}</p>}
           <button
             type="submit"
-            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark sm:col-span-2"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark sm:col-span-2"
           >
             Add Order
           </button>

@@ -115,7 +115,7 @@ export default function ApplicationForm({ type }: { type: "retailer" | "printer"
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full rounded-full bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:opacity-60"
+        className="w-full rounded-lg bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:opacity-60"
       >
         {status === "submitting" ? "Submitting..." : "Submit Application"}
       </button>

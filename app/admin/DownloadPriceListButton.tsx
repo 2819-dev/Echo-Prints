@@ -51,7 +51,7 @@ export default function DownloadPriceListButton({ products }: { products: Produc
         type="button"
         onClick={handleDownload}
         disabled={generating}
-        className="rounded-full border border-hairline px-3.5 py-1.5 text-xs font-semibold text-ink hover:bg-panel2 disabled:opacity-60"
+        className="rounded-lg border border-hairline px-3.5 py-1.5 text-xs font-semibold text-ink hover:bg-panel2 disabled:opacity-60"
       >
         {generating ? "Generating..." : "Download Price List"}
       </button>

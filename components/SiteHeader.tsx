@@ -29,7 +29,7 @@ export default function SiteHeader({ backHref, backLabel }: { backHref?: string;
           )}
           <Link
             href="/login"
-            className="rounded-full border border-hairline px-3.5 py-1.5 text-sm font-semibold text-ink hover:bg-panel2"
+            className="rounded-lg border border-hairline px-3.5 py-1.5 text-sm font-semibold text-ink hover:bg-panel2"
           >
             Log In
           </Link>

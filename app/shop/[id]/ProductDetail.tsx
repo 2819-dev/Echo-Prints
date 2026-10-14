@@ -78,7 +78,7 @@ function AddToCart({ product }: { product: Product }) {
       />
       <button
         onClick={handleAdd}
-        className="rounded-full bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark"
+        className="rounded-lg bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark"
       >
         Add to Cart
       </button>
@@ -136,7 +136,7 @@ function QuoteRequestForm({ product }: { product: Product }) {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-full bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:opacity-60"
+        className="rounded-lg bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark disabled:opacity-60"
       >
         {submitting ? "Sending..." : "Request a Quote"}
       </button>

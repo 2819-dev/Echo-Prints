@@ -80,7 +80,7 @@ export default function ShopOrdersTab({ orders }: { orders: ShopOrderRow[] }) {
               value={order.status}
               onChange={(e) => setStatus(order.id, e.target.value as ShopOrderStatus)}
               disabled={isPending}
-              className="rounded-full border border-hairline bg-white px-2 py-1 text-xs"
+              className="rounded-lg border border-hairline bg-white px-2 py-1 text-xs"
             >
               {STATUSES.map((s) => (
                 <option key={s} value={s}>

@@ -8,12 +8,12 @@ export default function RetailerPrinterTabs() {
 
   return (
     <div>
-      <div className="flex rounded-full bg-panel2 p-1">
+      <div className="flex rounded-lg bg-panel2 p-1">
         {(["retailer", "printer"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold capitalize transition ${
+            className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold capitalize transition ${
               tab === t ? "bg-accent text-white" : "text-muted hover:text-ink"
             }`}
           >

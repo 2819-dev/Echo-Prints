@@ -67,12 +67,12 @@ export default function AdminPanel({
   return (
     <div className="flex flex-col gap-8 sm:flex-row sm:items-start">
       <nav className="shrink-0 sm:w-52">
-        <div className="flex gap-1 overflow-x-auto rounded-full bg-panel2 p-1 sm:hidden">
+        <div className="flex gap-1 overflow-x-auto rounded-lg bg-panel2 p-1 sm:hidden">
           {TABS.map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`shrink-0 rounded-full px-3.5 py-2 text-sm font-semibold transition ${
+              className={`shrink-0 rounded-md px-3.5 py-2 text-sm font-semibold transition ${
                 tab === t ? "bg-accent text-white" : "text-muted hover:text-ink"
               }`}
             >
@@ -93,19 +93,13 @@ export default function AdminPanel({
                   <button
                     key={t}
                     onClick={() => setTab(t)}
-                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
-                      tab === t ? "bg-accent text-white" : "text-muted hover:bg-panel2 hover:text-ink"
+                    className={`flex w-full items-center justify-between border-l-2 py-1.5 pl-3 pr-2 text-left text-sm font-medium transition ${
+                      tab === t ? "border-ink font-semibold text-ink" : "border-transparent text-muted hover:text-ink"
                     }`}
                   >
                     {t}
                     {!!badgeFor[t] && (
-                      <span
-                        className={`rounded-full px-1.5 py-0.5 text-[10px] ${
-                          tab === t ? "bg-white/25 text-white" : "bg-rose-500 text-white"
-                        }`}
-                      >
-                        {badgeFor[t]}
-                      </span>
+                      <span className="rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] text-white">{badgeFor[t]}</span>
                     )}
                   </button>
                 ))}
