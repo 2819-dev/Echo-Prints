@@ -11,7 +11,7 @@ export default function BecomeARetailerPage() {
           Two ways to work with us &mdash; pick the tab that fits.
         </p>
 
-        <div className="mt-10 rounded-2xl bg-panel p-6 card-glow">
+        <div className="mt-10 rounded-xl bg-panel p-6 card-glow">
           <RetailerPrinterTabs />
         </div>
       </main>

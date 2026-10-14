@@ -18,7 +18,7 @@ export default async function RetailerPage() {
       <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6 py-10">
         <AppHeader title={`Welcome, ${user.name}`} subtitle="Echo Prints retailer portal" />
 
-        <div className="mt-8 rounded-2xl bg-panel p-6 card-glow">
+        <div className="mt-8 rounded-xl bg-panel p-6 card-glow">
           <p className="text-ink">
             You&apos;re a certified Echo Prints retailer{user.business_name ? ` for ${user.business_name}` : ""}.
           </p>

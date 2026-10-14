@@ -21,7 +21,7 @@ function Gallery({ photos, title }: { photos: ProductPhoto[]; title: string }) {
 
   return (
     <div>
-      <div className="aspect-square overflow-hidden rounded-2xl bg-panel2">
+      <div className="aspect-square overflow-hidden rounded-xl bg-panel2">
         {main ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={main.data_url} alt={title} className="h-full w-full object-cover" />
@@ -113,7 +113,7 @@ function QuoteRequestForm({ product }: { product: Product }) {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-dashed border-hairline bg-panel/60 p-5 text-center">
+      <div className="rounded-xl border border-dashed border-hairline bg-panel/60 p-5 text-center">
         <p className="font-semibold">Request sent!</p>
         <p className="mt-1 text-sm text-muted">We&apos;ll follow up by email with a price.</p>
       </div>

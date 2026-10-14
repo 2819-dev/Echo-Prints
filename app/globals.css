@@ -19,5 +19,5 @@ body {
 }
 
 .card-glow {
-  @apply border border-hairline shadow-sm;
+  @apply border border-hairline;
 }

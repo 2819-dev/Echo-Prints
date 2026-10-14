@@ -27,8 +27,8 @@ function Swatch({
     <button
       type="button"
       onClick={onSelect}
-      className={`card-glow overflow-hidden rounded-2xl bg-panel text-left ring-2 transition ${
-        selected ? "ring-accent" : "ring-transparent hover:-translate-y-0.5"
+      className={`card-glow overflow-hidden rounded-xl bg-panel text-left ring-2 transition ${
+        selected ? "ring-accent" : "ring-transparent hover:ring-hairline"
       }`}
     >
       <div
@@ -86,7 +86,7 @@ export default function ColorPicker({ colors }: { colors: ColorStock[] }) {
 
       <div className="mt-8">
         {selected ? (
-          <div className="card-glow flex flex-col items-center gap-4 rounded-2xl border border-hairline bg-panel p-5 sm:flex-row sm:justify-between">
+          <div className="card-glow flex flex-col items-center gap-4 rounded-xl border border-hairline bg-panel p-5 sm:flex-row sm:justify-between">
             <div className="flex items-center gap-3">
               <span
                 className="h-10 w-10 shrink-0 rounded-full"
@@ -118,13 +118,13 @@ export default function ColorPicker({ colors }: { colors: ColorStock[] }) {
             )}
           </div>
         ) : (
-          <p className="rounded-2xl border border-dashed border-hairline bg-panel/60 p-4 text-center text-sm text-muted">
+          <p className="rounded-xl border border-dashed border-hairline bg-panel/60 p-4 text-center text-sm text-muted">
             Tap a color above to select it.
           </p>
         )}
       </div>
 
-      <div className="mt-6 rounded-2xl border border-dashed border-hairline p-6 text-center">
+      <div className="mt-6 rounded-xl border border-dashed border-hairline p-6 text-center">
         <h3 className="font-semibold">Don&apos;t see the color you want?</h3>
         <p className="mt-1 text-sm text-muted">
           Request a custom color and we&apos;ll see what we can do.

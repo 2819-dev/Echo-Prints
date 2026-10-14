@@ -49,7 +49,7 @@ export default function ApplicationForm({ type }: { type: "retailer" | "printer"
 
   if (status === "done") {
     return (
-      <div className="rounded-2xl bg-emerald-50 p-6 text-center text-emerald-700">
+      <div className="rounded-xl bg-emerald-50 p-6 text-center text-emerald-700">
         <p className="font-semibold">Application received!</p>
         <p className="mt-1 text-sm text-emerald-700/80">
           We&apos;ll review it and follow up by email with next steps and login details.

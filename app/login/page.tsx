@@ -10,7 +10,7 @@ export default function LoginPage() {
         <p className="mt-2 text-sm text-muted">
           For approved printers, retailers, and admins.
         </p>
-        <div className="mt-8 rounded-2xl bg-panel p-6 card-glow">
+        <div className="mt-8 rounded-xl bg-panel p-6 card-glow">
           <LoginForm />
         </div>
       </main>
