@@ -63,6 +63,20 @@ export async function signupAction(
   }
 }
 
+export async function updateProfileAction(formData: FormData): Promise<{ error: string; ok?: never } | { error?: never; ok: true }> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return { error: "You need to be logged in to do that." };
+  }
+
+  const phone = String(formData.get("phone") || "").trim() || null;
+  const address = String(formData.get("address") || "").trim() || null;
+
+  await db.sql`UPDATE users SET phone = ${phone}, address = ${address} WHERE id = ${user.id}`;
+
+  return { ok: true };
+}
+
 export async function logoutAction() {
   await destroySession();
   redirect("/login");

@@ -3,6 +3,7 @@ import { db, type ShopOrder, type ShopOrderItem } from "@/lib/db";
 import AppHeader, { AppHeaderBar } from "@/components/AppHeader";
 import ChangePasswordForm from "./ChangePasswordForm";
 import OrderHistory, { type OrderWithItems } from "./OrderHistory";
+import ProfileForm from "./ProfileForm";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,15 @@ export default async function AccountPage() {
       <AppHeaderBar />
       <main className="mx-auto min-h-screen max-w-xl px-6 py-10">
         <AppHeader title="Account" subtitle={user.email} />
+
+        {isCustomer && (
+          <div className="mt-8 max-w-sm rounded-xl bg-panel p-6 card-glow">
+            <h2 className="text-lg font-semibold">Shipping Info</h2>
+            <div className="mt-4">
+              <ProfileForm phone={user.phone} address={user.address} />
+            </div>
+          </div>
+        )}
 
         {isCustomer && (
           <div className="mt-8">

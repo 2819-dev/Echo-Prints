@@ -5,7 +5,10 @@ export const dynamic = "force-dynamic";
 
 export default async function CheckoutPage() {
   const user = await getCurrentUser();
-  const initialUser = user && user.role === "customer" ? { name: user.name, email: user.email } : null;
+  const initialUser =
+    user && user.role === "customer"
+      ? { name: user.name, email: user.email, phone: user.phone, address: user.address }
+      : null;
 
   return <CheckoutForm initialUser={initialUser} />;
 }

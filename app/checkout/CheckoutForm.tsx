@@ -13,7 +13,11 @@ function formatPrice(n: number) {
   return `$${n.toFixed(2)}`;
 }
 
-export default function CheckoutForm({ initialUser }: { initialUser: { name: string; email: string } | null }) {
+export default function CheckoutForm({
+  initialUser,
+}: {
+  initialUser: { name: string; email: string; phone: string | null; address: string | null } | null;
+}) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [error, setError] = useState("");
@@ -151,8 +155,19 @@ export default function CheckoutForm({ initialUser }: { initialUser: { name: str
                 required
                 className={inputClass}
               />
-              <input name="customerPhone" placeholder="Phone (optional)" className={inputClass} />
-              <textarea name="shippingAddress" placeholder="Shipping address (or leave blank for local pickup)" rows={2} className={inputClass} />
+              <input
+                name="customerPhone"
+                placeholder="Phone (optional)"
+                defaultValue={initialUser?.phone ?? ""}
+                className={inputClass}
+              />
+              <textarea
+                name="shippingAddress"
+                placeholder="Shipping address (or leave blank for local pickup)"
+                defaultValue={initialUser?.address ?? ""}
+                rows={2}
+                className={inputClass}
+              />
 
               <fieldset className="rounded-lg border border-hairline p-3">
                 <legend className="px-1 text-xs font-medium text-muted">Payment method</legend>
