@@ -33,7 +33,7 @@ export default function HomePage() {
         <section className="mt-16 sm:mt-24">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Custom 3D Printing</p>
           <h1 className="mt-4 font-display text-4xl font-semibold leading-[1.1] tracking-tight text-ink sm:text-5xl">
-            Printed goods, made to order in any color you choose.
+            Custom 3D-printed goods, made to order.
           </h1>
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-muted">
             Echo Prints runs on a network of independent printers and retailers, so your order is produced
