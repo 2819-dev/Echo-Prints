@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { requireUser } from "@/lib/auth";
+import { requireUser, getCurrentUser } from "@/lib/auth";
 import type { PaymentMethod, Product, ProductTag } from "@/lib/db";
 
 const VALID_TAGS: ProductTag[] = ["customizable", "discontinued", "limited_edition"];
@@ -202,9 +202,12 @@ export async function createShopOrderAction(formData: FormData) {
 
   const total = lineItems.reduce((sum, l) => sum + l.price * l.quantity, 0);
 
+  const currentUser = await getCurrentUser();
+  const userId = currentUser && currentUser.role === "customer" ? currentUser.id : null;
+
   const orderRows = await db.sql<{ id: number }>`
-    INSERT INTO shop_orders (customer_name, customer_email, customer_phone, shipping_address, payment_method, total, notes)
-    VALUES (${customerName}, ${customerEmail}, ${customerPhone}, ${shippingAddress}, ${paymentMethod}, ${total}, ${notes})
+    INSERT INTO shop_orders (user_id, customer_name, customer_email, customer_phone, shipping_address, payment_method, total, notes)
+    VALUES (${userId}, ${customerName}, ${customerEmail}, ${customerPhone}, ${shippingAddress}, ${paymentMethod}, ${total}, ${notes})
     RETURNING id
   `;
   const orderId = orderRows[0].id;

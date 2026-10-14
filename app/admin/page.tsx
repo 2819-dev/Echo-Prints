@@ -7,6 +7,7 @@ import AdminPanel, {
   type ProductRow,
   type ShopOrderRow,
   type CustomRequestRow,
+  type CustomerRow,
 } from "./AdminPanel";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function AdminPage() {
     shopOrders,
     shopOrderItems,
     customRequests,
+    customers,
   ] = await Promise.all([
     db.sql<Application>`SELECT * FROM applications ORDER BY status ASC, created_at DESC`,
     db.sql<ColorStock>`SELECT * FROM colors ORDER BY sort_order ASC, name ASC`,
@@ -53,6 +55,17 @@ export default async function AdminPage() {
       FROM custom_requests cr
       LEFT JOIN products p ON p.id = cr.product_id
       ORDER BY cr.status ASC, cr.created_at DESC
+    `,
+    db.sql<CustomerRow>`
+      SELECT
+        u.id, u.name, u.email, u.phone, u.created_at,
+        COUNT(so.id)::int AS order_count,
+        COALESCE(SUM(so.total), 0) AS total_spent
+      FROM users u
+      LEFT JOIN shop_orders so ON so.user_id = u.id
+      WHERE u.role = 'customer'
+      GROUP BY u.id
+      ORDER BY u.created_at DESC
     `,
   ]);
 
@@ -88,6 +101,7 @@ export default async function AdminPage() {
             products={productRows}
             shopOrders={shopOrderRows}
             customRequests={customRequests as CustomRequestRow[]}
+            customers={customers}
           />
         </div>
       </main>

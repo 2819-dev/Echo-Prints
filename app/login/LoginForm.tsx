@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { loginAction } from "@/lib/actions/auth";
 
 export default function LoginForm() {
@@ -26,7 +27,13 @@ export default function LoginForm() {
       }
 
       const destination =
-        result.role === "admin" ? "/admin" : result.role === "printer" ? "/dashboard" : "/retailer";
+        result.role === "admin"
+          ? "/admin"
+          : result.role === "printer"
+          ? "/dashboard"
+          : result.role === "retailer"
+          ? "/retailer"
+          : "/account";
       router.push(destination);
       router.refresh();
     } catch {
@@ -65,6 +72,12 @@ export default function LoginForm() {
       >
         {submitting ? "Logging in..." : "Log In"}
       </button>
+      <p className="text-center text-sm text-muted">
+        New customer?{" "}
+        <Link href="/signup" className="font-medium text-ink hover:text-accent">
+          Create an account
+        </Link>
+      </p>
     </form>
   );
 }

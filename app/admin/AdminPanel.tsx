@@ -10,8 +10,9 @@ import OrdersTab from "./OrdersTab";
 import ProductsTab, { type ProductRow } from "./ProductsTab";
 import ShopOrdersTab, { type ShopOrderRow } from "./ShopOrdersTab";
 import CustomRequestsTab, { type CustomRequestRow } from "./CustomRequestsTab";
+import CustomersTab, { type CustomerRow } from "./CustomersTab";
 
-export type { JobRow, UserRow, ProductRow, ShopOrderRow, CustomRequestRow };
+export type { JobRow, UserRow, ProductRow, ShopOrderRow, CustomRequestRow, CustomerRow };
 
 const TABS = [
   "Orders",
@@ -22,6 +23,7 @@ const TABS = [
   "Print Jobs",
   "Applications",
   "Accounts",
+  "Customers",
 ] as const;
 type Tab = (typeof TABS)[number];
 
@@ -29,7 +31,7 @@ const GROUPS: { label: string; tabs: Tab[] }[] = [
   { label: "Orders", tabs: ["Orders", "Shop Orders", "Custom Requests"] },
   { label: "Store", tabs: ["Products", "Colors"] },
   { label: "Operations", tabs: ["Print Jobs"] },
-  { label: "People", tabs: ["Applications", "Accounts"] },
+  { label: "People", tabs: ["Applications", "Accounts", "Customers"] },
 ];
 
 export default function AdminPanel({
@@ -41,6 +43,7 @@ export default function AdminPanel({
   products,
   shopOrders,
   customRequests,
+  customers,
 }: {
   applications: Application[];
   colors: ColorStock[];
@@ -50,6 +53,7 @@ export default function AdminPanel({
   products: ProductRow[];
   shopOrders: ShopOrderRow[];
   customRequests: CustomRequestRow[];
+  customers: CustomerRow[];
 }) {
   const [tab, setTab] = useState<Tab>("Orders");
   const pendingApplications = applications.filter((a) => a.status === "pending").length;
@@ -118,6 +122,7 @@ export default function AdminPanel({
         {tab === "Colors" && <ColorsTab colors={colors} />}
         {tab === "Print Jobs" && <JobsTab jobs={jobs} />}
         {tab === "Accounts" && <AccountsTab users={users} />}
+        {tab === "Customers" && <CustomersTab customers={customers} />}
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ function sql<T = Record<string, unknown>>(
 
 export const db = { sql };
 
-export type Role = "admin" | "printer" | "retailer";
+export type Role = "admin" | "printer" | "retailer" | "customer";
 
 export interface User {
   id: number;
@@ -129,6 +129,7 @@ export type ShopOrderStatus = "new" | "in_progress" | "completed" | "cancelled";
 
 export interface ShopOrder {
   id: number;
+  user_id: number | null;
   customer_name: string;
   customer_email: string;
   customer_phone: string | null;

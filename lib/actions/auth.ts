@@ -29,6 +29,40 @@ export async function loginAction(
   }
 }
 
+export async function signupAction(
+  formData: FormData
+): Promise<{ error: string } | { error?: never }> {
+  const name = String(formData.get("name") || "").trim();
+  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const password = String(formData.get("password") || "");
+
+  if (!name || !email || !password) {
+    return { error: "Fill in your name, email, and password." };
+  }
+  if (password.length < 6) {
+    return { error: "Password must be at least 6 characters." };
+  }
+
+  try {
+    const existing = await db.sql<{ id: number }>`SELECT id FROM users WHERE email = ${email}`;
+    if (existing.length > 0) {
+      return { error: "An account with that email already exists. Try logging in instead." };
+    }
+
+    const passwordHash = await hashPassword(password);
+    const rows = await db.sql<{ id: number }>`
+      INSERT INTO users (email, password_hash, name, role)
+      VALUES (${email}, ${passwordHash}, ${name}, 'customer')
+      RETURNING id
+    `;
+
+    await createSession(rows[0].id, "customer");
+    return {};
+  } catch {
+    return { error: "Something went wrong. Please try again." };
+  }
+}
+
 export async function logoutAction() {
   await destroySession();
   redirect("/login");

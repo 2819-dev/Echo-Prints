@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
   name TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('admin', 'printer', 'retailer')),
+  role TEXT NOT NULL CHECK (role IN ('admin', 'printer', 'retailer', 'customer')),
   business_name TEXT,
   address TEXT,
   phone TEXT,
@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS users (
 );
 ALTER TABLE users ADD COLUMN IF NOT EXISTS printers_owned TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS filaments_available TEXT;
+-- Allow customer accounts (self-serve signup, no admin approval needed).
+ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
+ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('admin', 'printer', 'retailer', 'customer'));
 
 CREATE TABLE IF NOT EXISTS applications (
   id SERIAL PRIMARY KEY,
@@ -107,6 +110,7 @@ CREATE INDEX IF NOT EXISTS idx_product_photos_product ON product_photos(product_
 
 CREATE TABLE IF NOT EXISTS shop_orders (
   id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL, -- NULL = guest checkout, no account
   customer_name TEXT NOT NULL,
   customer_email TEXT NOT NULL,
   customer_phone TEXT,
@@ -118,7 +122,9 @@ CREATE TABLE IF NOT EXISTS shop_orders (
   notes TEXT,
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+ALTER TABLE shop_orders ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_shop_orders_status ON shop_orders(status);
+CREATE INDEX IF NOT EXISTS idx_shop_orders_user ON shop_orders(user_id);
 
 CREATE TABLE IF NOT EXISTS shop_order_items (
   id SERIAL PRIMARY KEY,
