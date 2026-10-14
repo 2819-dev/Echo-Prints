@@ -6,14 +6,12 @@ const config: Config = {
     extend: {
       colors: {
         panel: "#ffffff",
-        panel2: "#f3f0ff",
-        ink: "#181225",
-        muted: "#6b6478",
-        hairline: "#e3ddf7",
-        accent: "#7c3aed",
-        "accent-dark": "#5b21b6",
-        pop: "#ec4899",
-        sun: "#f59e0b",
+        panel2: "#f4f4f5",
+        ink: "#18181b",
+        muted: "#6b7280",
+        hairline: "#e4e4e7",
+        accent: "#1e3a5f",
+        "accent-dark": "#132940",
       },
       fontFamily: {
         sans: [

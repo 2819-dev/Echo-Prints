@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Baloo_2 } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import Footer from "@/components/Footer";
 
-const baloo = Baloo_2({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
@@ -16,8 +17,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={baloo.variable}>
-      <body className="antialiased">{children}</body>
+    <html lang="en" className={spaceGrotesk.variable}>
+      <body className="antialiased">
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

@@ -20,22 +20,24 @@ export default async function ShopPage() {
   const rows: ShopProduct[] = products.map((p) => ({ ...p, photos: photosByProduct.get(p.id) ?? [] }));
 
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-6 py-10">
-      <SiteHeader backHref="/browse" backLabel="Back to browse" />
-
-      <div className="mt-10 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-display font-extrabold tracking-tight sm:text-4xl">Shop</h1>
-          <p className="mt-2 max-w-xl text-muted">
-            Ready-made prints, available now. Custom items are made to order &mdash; request a quote and we&apos;ll follow up with a price.
-          </p>
+    <>
+      <SiteHeader />
+      <main className="mx-auto min-h-screen max-w-5xl px-6 py-10">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-display font-semibold tracking-tight sm:text-4xl">Shop</h1>
+            <p className="mt-2 max-w-xl text-muted">
+              The full catalog, ready to order. Items listed without a price are made to order &mdash; request a
+              quote and we&apos;ll follow up.
+            </p>
+          </div>
+          <CartBadge />
         </div>
-        <CartBadge />
-      </div>
 
-      <div className="mt-10">
-        <ShopGrid products={rows} />
-      </div>
-    </main>
+        <div className="mt-10">
+          <ShopGrid products={rows} />
+        </div>
+      </main>
+    </>
   );
 }

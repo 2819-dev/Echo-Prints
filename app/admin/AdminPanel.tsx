@@ -78,7 +78,7 @@ export default function AdminPanel({
             >
               {t}
               {!!badgeFor[t] && (
-                <span className="ml-1.5 rounded-full bg-pop px-1.5 py-0.5 text-[10px] text-white">{badgeFor[t]}</span>
+                <span className="ml-1.5 rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] text-white">{badgeFor[t]}</span>
               )}
             </button>
           ))}
@@ -101,7 +101,7 @@ export default function AdminPanel({
                     {!!badgeFor[t] && (
                       <span
                         className={`rounded-full px-1.5 py-0.5 text-[10px] ${
-                          tab === t ? "bg-white/25 text-white" : "bg-pop text-white"
+                          tab === t ? "bg-white/25 text-white" : "bg-rose-500 text-white"
                         }`}
                       >
                         {badgeFor[t]}

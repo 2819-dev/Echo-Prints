@@ -18,11 +18,13 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   if (!product) notFound();
 
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
+    <>
       <SiteHeader backHref="/shop" backLabel="Back to shop" />
-      <div className="mt-10">
-        <ProductDetail product={product} photos={photos} />
-      </div>
-    </main>
+      <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
+        <div className="mt-10">
+          <ProductDetail product={product} photos={photos} />
+        </div>
+      </main>
+    </>
   );
 }

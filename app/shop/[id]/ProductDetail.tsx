@@ -149,7 +149,7 @@ export default function ProductDetail({ product, photos }: { product: Product; p
     <div className="grid gap-10 sm:grid-cols-2">
       <Gallery photos={photos} title={product.title} />
       <div>
-        <h1 className="text-2xl font-display font-extrabold tracking-tight">{product.title}</h1>
+        <h1 className="text-2xl font-display font-semibold tracking-tight">{product.title}</h1>
         <p className="mt-2 text-lg font-semibold text-accent">{formatPrice(product.price)}</p>
         {product.description && <p className="mt-4 whitespace-pre-wrap text-muted">{product.description}</p>}
         <div className="mt-6">

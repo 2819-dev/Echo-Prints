@@ -1,6 +1,6 @@
 import { requireUser } from "@/lib/auth";
 import { db, type Application, type ColorStock, type Order, type Product, type ProductPhoto, type ShopOrder, type ShopOrderItem, type CustomRequest } from "@/lib/db";
-import AppHeader from "@/components/AppHeader";
+import AppHeader, { AppHeaderBar } from "@/components/AppHeader";
 import AdminPanel, {
   type JobRow,
   type UserRow,
@@ -73,21 +73,24 @@ export default async function AdminPage() {
   const shopOrderRows: ShopOrderRow[] = shopOrders.map((o) => ({ ...o, items: itemsByOrder.get(o.id) ?? [] }));
 
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
-      <AppHeader title="Admin" subtitle={`Signed in as ${user.name}.`} />
+    <>
+      <AppHeaderBar />
+      <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
+        <AppHeader title="Admin" subtitle={`Signed in as ${user.name}.`} />
 
-      <div className="mt-10">
-        <AdminPanel
-          applications={applications}
-          colors={colors}
-          jobs={jobs}
-          users={users}
-          orders={orders}
-          products={productRows}
-          shopOrders={shopOrderRows}
-          customRequests={customRequests as CustomRequestRow[]}
-        />
-      </div>
-    </main>
+        <div className="mt-10">
+          <AdminPanel
+            applications={applications}
+            colors={colors}
+            jobs={jobs}
+            users={users}
+            orders={orders}
+            products={productRows}
+            shopOrders={shopOrderRows}
+            customRequests={customRequests as CustomRequestRow[]}
+          />
+        </div>
+      </main>
+    </>
   );
 }
