@@ -58,12 +58,17 @@ export default function ApplicationsTab({ applications }: { applications: Applic
             <div key={app.id} className="card-glow rounded-xl bg-panel p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <p className="font-medium">
-                    {app.name}{" "}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <p className="font-medium">{app.name}</p>
                     <span className="rounded-full bg-panel2 px-2 py-0.5 text-xs capitalize text-muted">
                       {app.type}
                     </span>
-                  </p>
+                    {app.also_wants_other_role && (
+                      <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs text-accent-dark">
+                        Also wants to be a {app.type === "retailer" ? "printer" : "retailer"}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-sm text-muted">{app.email}</p>
                   {app.phone && <p className="text-sm text-muted">{app.phone}</p>}
 
@@ -126,6 +131,9 @@ export default function ApplicationsTab({ applications }: { applications: Applic
             <div key={app.id} className="flex items-center justify-between rounded-xl bg-panel/60 px-4 py-2 text-sm">
               <span>
                 {app.name} &middot; {app.type} &middot; {app.email}
+                {app.also_wants_other_role && (
+                  <span className="text-muted"> &middot; also wants {app.type === "retailer" ? "printer" : "retailer"}</span>
+                )}
               </span>
               <span
                 className={`capitalize ${app.status === "approved" ? "text-emerald-600" : "text-rose-600"}`}

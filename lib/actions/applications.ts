@@ -15,6 +15,7 @@ export async function submitApplicationAction(formData: FormData) {
   const printersOwned = String(formData.get("printersOwned") || "").trim() || null;
   const filamentsAvailable = String(formData.get("filamentsAvailable") || "").trim() || null;
   const message = String(formData.get("message") || "").trim() || null;
+  const alsoWantsOtherRole = formData.get("alsoWantsOtherRole") === "on";
 
   if (type !== "retailer" && type !== "printer") {
     return { ok: false, error: "Invalid application type." };
@@ -25,9 +26,9 @@ export async function submitApplicationAction(formData: FormData) {
 
   await db.sql`
     INSERT INTO applications
-      (type, name, email, business_name, phone, address, printers_owned, filaments_available, message)
+      (type, name, email, business_name, phone, address, printers_owned, filaments_available, message, also_wants_other_role)
     VALUES
-      (${type}, ${name}, ${email}, ${businessName}, ${phone}, ${address}, ${printersOwned}, ${filamentsAvailable}, ${message})
+      (${type}, ${name}, ${email}, ${businessName}, ${phone}, ${address}, ${printersOwned}, ${filamentsAvailable}, ${message}, ${alsoWantsOtherRole})
   `;
 
   revalidatePath("/admin");

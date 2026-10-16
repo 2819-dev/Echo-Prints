@@ -57,6 +57,7 @@ export interface Application {
   filaments_available: string | null;
   message: string | null;
   status: ApplicationStatus;
+  also_wants_other_role: boolean;
   created_at: string;
 }
 

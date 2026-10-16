@@ -110,6 +110,13 @@ export default function ApplicationForm({ type }: { type: "retailer" | "printer"
         </>
       )}
 
+      <label className="flex items-center gap-2 text-sm text-muted">
+        <input type="checkbox" name="alsoWantsOtherRole" className="h-4 w-4" />
+        {type === "retailer"
+          ? "I'd also like to join the printer network"
+          : "I'd also like to become a retailer too"}
+      </label>
+
       {errorMessage && <p className="text-sm text-rose-600">{errorMessage}</p>}
 
       <button

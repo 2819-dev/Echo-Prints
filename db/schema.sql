@@ -35,11 +35,13 @@ CREATE TABLE IF NOT EXISTS applications (
   filaments_available TEXT,
   message TEXT,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+  also_wants_other_role BOOLEAN NOT NULL DEFAULT FALSE, -- interested in the other role too (informational only)
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 ALTER TABLE applications ADD COLUMN IF NOT EXISTS address TEXT;
 ALTER TABLE applications ADD COLUMN IF NOT EXISTS printers_owned TEXT;
 ALTER TABLE applications ADD COLUMN IF NOT EXISTS filaments_available TEXT;
+ALTER TABLE applications ADD COLUMN IF NOT EXISTS also_wants_other_role BOOLEAN NOT NULL DEFAULT FALSE;
 CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status);
 
 CREATE TABLE IF NOT EXISTS colors (
