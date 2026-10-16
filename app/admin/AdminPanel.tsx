@@ -116,7 +116,7 @@ export default function AdminPanel({
       <div className="min-w-0 flex-1">
         {tab === "Orders" && <OrdersTab orders={orders} />}
         {tab === "Applications" && <ApplicationsTab applications={applications} />}
-        {tab === "Products" && <ProductsTab products={products} />}
+        {tab === "Products" && <ProductsTab products={products} colors={colors} />}
         {tab === "Shop Orders" && <ShopOrdersTab orders={shopOrders} />}
         {tab === "Custom Requests" && <CustomRequestsTab requests={customRequests} />}
         {tab === "Colors" && <ColorsTab colors={colors} />}

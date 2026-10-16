@@ -4,6 +4,14 @@ export interface CartItem {
   price: number;
   photo: string | null;
   quantity: number;
+  colors: string[];
+}
+
+function sameColors(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  const sa = [...a].sort();
+  const sb = [...b].sort();
+  return sa.every((c, i) => c === sb[i]);
 }
 
 const STORAGE_KEY = "echo_cart";
@@ -30,7 +38,7 @@ function saveCart(items: CartItem[]) {
 
 export function addToCart(item: Omit<CartItem, "quantity">, quantity = 1) {
   const items = getCart();
-  const existing = items.find((i) => i.productId === item.productId);
+  const existing = items.find((i) => i.productId === item.productId && sameColors(i.colors, item.colors));
   if (existing) {
     existing.quantity += quantity;
   } else {
@@ -39,18 +47,18 @@ export function addToCart(item: Omit<CartItem, "quantity">, quantity = 1) {
   saveCart(items);
 }
 
-export function updateCartQuantity(productId: number, quantity: number) {
+export function updateCartQuantity(productId: number, colors: string[], quantity: number) {
   let items = getCart();
   if (quantity <= 0) {
-    items = items.filter((i) => i.productId !== productId);
+    items = items.filter((i) => !(i.productId === productId && sameColors(i.colors, colors)));
   } else {
-    items = items.map((i) => (i.productId === productId ? { ...i, quantity } : i));
+    items = items.map((i) => (i.productId === productId && sameColors(i.colors, colors) ? { ...i, quantity } : i));
   }
   saveCart(items);
 }
 
-export function removeFromCart(productId: number) {
-  saveCart(getCart().filter((i) => i.productId !== productId));
+export function removeFromCart(productId: number, colors: string[]) {
+  saveCart(getCart().filter((i) => !(i.productId === productId && sameColors(i.colors, colors))));
 }
 
 export function clearCart() {

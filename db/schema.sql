@@ -94,10 +94,14 @@ CREATE TABLE IF NOT EXISTS products (
   tag TEXT CHECK (tag IN ('customizable', 'discontinued', 'limited_edition')),
   active BOOLEAN NOT NULL DEFAULT TRUE,
   sort_order INTEGER NOT NULL DEFAULT 0,
+  allow_multi_color BOOLEAN NOT NULL DEFAULT FALSE,
+  model_url TEXT, -- admin/printer-only link to the model file (MakerWorld, etc.) — never shown publicly
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 ALTER TABLE products ADD COLUMN IF NOT EXISTS category TEXT;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS tag TEXT CHECK (tag IN ('customizable', 'discontinued', 'limited_edition'));
+ALTER TABLE products ADD COLUMN IF NOT EXISTS allow_multi_color BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS model_url TEXT;
 CREATE INDEX IF NOT EXISTS idx_products_active ON products(active);
 
 CREATE TABLE IF NOT EXISTS product_photos (
@@ -107,6 +111,17 @@ CREATE TABLE IF NOT EXISTS product_photos (
   sort_order INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_product_photos_product ON product_photos(product_id);
+
+-- Which colors (from the color catalog) are offered for each product.
+-- allow_multi_color on the product controls whether shoppers can pick
+-- more than one (for AMS multi-color prints) or just a single color.
+CREATE TABLE IF NOT EXISTS product_colors (
+  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  color_id INTEGER NOT NULL REFERENCES colors(id) ON DELETE CASCADE,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (product_id, color_id)
+);
+CREATE INDEX IF NOT EXISTS idx_product_colors_product ON product_colors(product_id);
 
 CREATE TABLE IF NOT EXISTS shop_orders (
   id SERIAL PRIMARY KEY,
@@ -132,8 +147,10 @@ CREATE TABLE IF NOT EXISTS shop_order_items (
   product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
   title TEXT NOT NULL,
   price NUMERIC(10, 2) NOT NULL,
-  quantity INTEGER NOT NULL DEFAULT 1
+  quantity INTEGER NOT NULL DEFAULT 1,
+  colors TEXT -- comma-separated color names the customer chose, if any
 );
+ALTER TABLE shop_order_items ADD COLUMN IF NOT EXISTS colors TEXT;
 CREATE INDEX IF NOT EXISTS idx_shop_order_items_order ON shop_order_items(order_id);
 
 -- Request-a-quote submissions for custom (no fixed price) products.

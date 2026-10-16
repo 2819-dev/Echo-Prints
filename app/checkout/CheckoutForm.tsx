@@ -36,7 +36,10 @@ export default function CheckoutForm({
     setError("");
     setSubmitting(true);
     const formData = new FormData(e.currentTarget);
-    formData.set("cart", JSON.stringify(items.map((i) => ({ productId: i.productId, quantity: i.quantity }))));
+    formData.set(
+      "cart",
+      JSON.stringify(items.map((i) => ({ productId: i.productId, quantity: i.quantity, colors: i.colors })))
+    );
     const result = await createShopOrderAction(formData);
     setSubmitting(false);
     if (result.error) {
@@ -104,7 +107,7 @@ export default function CheckoutForm({
             <h2 className="text-sm font-semibold text-muted">Your Order</h2>
             <div className="mt-3 space-y-2">
               {items.map((item) => (
-                <div key={item.productId} className="flex items-center gap-3 rounded-xl border border-hairline bg-panel p-3 text-sm">
+                <div key={`${item.productId}-${item.colors.join("|")}`} className="flex items-center gap-3 rounded-xl border border-hairline bg-panel p-3 text-sm">
                   {item.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={item.photo} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
@@ -113,17 +116,20 @@ export default function CheckoutForm({
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium">{item.title}</p>
-                    <p className="text-xs text-muted">{formatPrice(item.price)} each</p>
+                    <p className="text-xs text-muted">
+                      {formatPrice(item.price)} each
+                      {item.colors.length > 0 ? ` · ${item.colors.join(", ")}` : ""}
+                    </p>
                   </div>
                   <input
                     type="number"
                     min={1}
                     value={item.quantity}
-                    onChange={(e) => updateCartQuantity(item.productId, Math.max(1, Number(e.target.value) || 1))}
+                    onChange={(e) => updateCartQuantity(item.productId, item.colors, Math.max(1, Number(e.target.value) || 1))}
                     className={`w-16 ${inputClass}`}
                   />
                   <span className="w-16 shrink-0 text-right font-semibold">{formatPrice(item.price * item.quantity)}</span>
-                  <button onClick={() => removeFromCart(item.productId)} className="shrink-0 text-xs text-muted hover:text-rose-600">
+                  <button onClick={() => removeFromCart(item.productId, item.colors)} className="shrink-0 text-xs text-muted hover:text-rose-600">
                     Remove
                   </button>
                 </div>

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { addToCart } from "@/lib/cart";
 import { createCustomRequestAction } from "@/lib/actions/shop";
-import type { Product, ProductPhoto } from "@/lib/db";
+import type { Product, ProductPhoto, ColorStock } from "@/lib/db";
 
 const inputClass =
   "rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10";
@@ -49,18 +49,89 @@ function Gallery({ photos, title }: { photos: ProductPhoto[]; title: string }) {
   );
 }
 
-function AddToCart({ product }: { product: Product }) {
+function ColorSwatch({ color, size = 28 }: { color: ColorStock; size?: number }) {
+  const style = { width: size, height: size };
+  if (color.photo_data_url) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={color.photo_data_url} alt="" style={style} className="shrink-0 rounded-full object-cover" />;
+  }
+  return (
+    <div
+      style={{ ...style, background: `linear-gradient(135deg, ${color.hex_primary} 0%, ${color.hex_secondary} 100%)` }}
+      className="shrink-0 rounded-full"
+    />
+  );
+}
+
+function ColorSelector({
+  colors,
+  allowMultiColor,
+  selected,
+  onChange,
+}: {
+  colors: ColorStock[];
+  allowMultiColor: boolean;
+  selected: string[];
+  onChange: (names: string[]) => void;
+}) {
+  function toggle(name: string) {
+    if (allowMultiColor) {
+      onChange(selected.includes(name) ? selected.filter((n) => n !== name) : [...selected, name]);
+    } else {
+      onChange([name]);
+    }
+  }
+
+  return (
+    <div>
+      <p className="text-sm font-medium">
+        Color{allowMultiColor ? "s" : ""}
+        {allowMultiColor && <span className="ml-1.5 font-normal text-muted">&mdash; pick up to 4 for an AMS multi-color print</span>}
+      </p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {colors.map((color) => {
+          const isSelected = selected.includes(color.name);
+          return (
+            <button
+              key={color.id}
+              type="button"
+              onClick={() => toggle(color.name)}
+              disabled={!color.in_stock}
+              title={color.in_stock ? color.name : `${color.name} (out of stock)`}
+              className={`flex items-center gap-1.5 rounded-lg border px-2 py-1.5 text-xs font-medium transition ${
+                isSelected ? "border-accent bg-accent/5 text-accent" : "border-hairline text-ink hover:bg-panel2"
+              } ${!color.in_stock ? "cursor-not-allowed opacity-40" : ""}`}
+            >
+              <ColorSwatch color={color} size={18} />
+              {color.name}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function AddToCart({ product, colors }: { product: Product; colors: ColorStock[] }) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [colorError, setColorError] = useState(false);
 
   function handleAdd() {
+    if (colors.length > 0 && selectedColors.length === 0) {
+      setColorError(true);
+      return;
+    }
+    setColorError(false);
     addToCart(
       {
         productId: product.id,
         title: product.title,
         price: Number(product.price),
         photo: null,
+        colors: selectedColors,
       },
       quantity
     );
@@ -68,25 +139,39 @@ function AddToCart({ product }: { product: Product }) {
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <input
-        type="number"
-        min={1}
-        value={quantity}
-        onChange={(e) => setQuantity(Math.max(1, Number(e.target.value) || 1))}
-        className={`w-20 ${inputClass}`}
-      />
-      <button
-        onClick={handleAdd}
-        className="rounded-lg bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark"
-      >
-        Add to Cart
-      </button>
-      {added && (
-        <button onClick={() => router.push("/checkout")} className="text-sm font-medium text-accent hover:text-accent-dark">
-          Added &mdash; go to checkout &rarr;
-        </button>
+    <div className="space-y-4">
+      {colors.length > 0 && (
+        <ColorSelector
+          colors={colors}
+          allowMultiColor={product.allow_multi_color}
+          selected={selectedColors}
+          onChange={(names) => {
+            setSelectedColors(names);
+            setColorError(false);
+          }}
+        />
       )}
+      {colorError && <p className="text-sm text-rose-600">Choose a color before adding to cart.</p>}
+      <div className="flex items-center gap-3">
+        <input
+          type="number"
+          min={1}
+          value={quantity}
+          onChange={(e) => setQuantity(Math.max(1, Number(e.target.value) || 1))}
+          className={`w-20 ${inputClass}`}
+        />
+        <button
+          onClick={handleAdd}
+          className="rounded-lg bg-accent px-6 py-2.5 font-semibold text-white transition hover:bg-accent-dark"
+        >
+          Add to Cart
+        </button>
+        {added && (
+          <button onClick={() => router.push("/checkout")} className="text-sm font-medium text-accent hover:text-accent-dark">
+            Added &mdash; go to checkout &rarr;
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -144,7 +229,15 @@ function QuoteRequestForm({ product }: { product: Product }) {
   );
 }
 
-export default function ProductDetail({ product, photos }: { product: Product; photos: ProductPhoto[] }) {
+export default function ProductDetail({
+  product,
+  photos,
+  colors,
+}: {
+  product: Product;
+  photos: ProductPhoto[];
+  colors: ColorStock[];
+}) {
   return (
     <div className="grid gap-10 sm:grid-cols-2">
       <Gallery photos={photos} title={product.title} />
@@ -153,7 +246,11 @@ export default function ProductDetail({ product, photos }: { product: Product; p
         <p className="mt-2 text-lg font-semibold text-accent">{formatPrice(product.price)}</p>
         {product.description && <p className="mt-4 whitespace-pre-wrap text-muted">{product.description}</p>}
         <div className="mt-6">
-          {product.price !== null ? <AddToCart product={product} /> : <QuoteRequestForm product={product} />}
+          {product.price !== null ? (
+            <AddToCart product={product} colors={colors} />
+          ) : (
+            <QuoteRequestForm product={product} />
+          )}
         </div>
       </div>
     </div>

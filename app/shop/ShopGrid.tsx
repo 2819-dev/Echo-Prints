@@ -7,6 +7,7 @@ import type { Product, ProductPhoto } from "@/lib/db";
 
 export interface ShopProduct extends Product {
   photos: ProductPhoto[];
+  hasColors: boolean;
 }
 
 function formatPrice(price: string | null) {
@@ -43,12 +44,18 @@ function ProductCard({
         <div className="mt-3 flex items-center justify-between gap-2">
           <span className="font-semibold text-ink">{formatPrice(product.price)}</span>
           {product.price !== null ? (
-            <button
-              onClick={(e) => onAdd(e, product)}
-              className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark"
-            >
-              {added ? "Added" : "Add to Cart"}
-            </button>
+            product.hasColors ? (
+              <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-xs font-semibold text-ink">
+                Choose color
+              </span>
+            ) : (
+              <button
+                onClick={(e) => onAdd(e, product)}
+                className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark"
+              >
+                {added ? "Added" : "Add to Cart"}
+              </button>
+            )
           ) : (
             <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-xs font-semibold text-ink">
               Request a Quote
@@ -73,6 +80,7 @@ export default function ShopGrid({ products }: { products: ShopProduct[] }) {
       title: product.title,
       price: Number(product.price),
       photo: product.photos[0]?.data_url ?? null,
+      colors: [],
     });
     setAddedId(product.id);
     setTimeout(() => setAddedId((id) => (id === product.id ? null : id)), 1500);

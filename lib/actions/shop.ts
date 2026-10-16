@@ -36,6 +36,26 @@ async function setProductPhotos(productId: number, photos: string[]) {
   );
 }
 
+function parseColorIds(formData: FormData): number[] {
+  const raw = String(formData.get("colorIds") || "[]");
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((v) => Number(v)).filter((n) => Number.isInteger(n) && n > 0);
+  } catch {
+    return [];
+  }
+}
+
+async function setProductColors(productId: number, colorIds: number[]) {
+  await db.sql`DELETE FROM product_colors WHERE product_id = ${productId}`;
+  await Promise.all(
+    colorIds.map((colorId, index) =>
+      db.sql`INSERT INTO product_colors (product_id, color_id, sort_order) VALUES (${productId}, ${colorId}, ${index})`
+    )
+  );
+}
+
 // ---------- Admin: products ----------
 
 export async function createProductAction(formData: FormData) {
@@ -49,6 +69,9 @@ export async function createProductAction(formData: FormData) {
   const isCustom = formData.get("isCustom") === "on";
   const active = formData.get("active") === "on";
   const photos = parsePhotos(formData);
+  const colorIds = parseColorIds(formData);
+  const allowMultiColor = formData.get("allowMultiColor") === "on";
+  const modelUrl = String(formData.get("modelUrl") || "").trim() || null;
 
   if (!title) {
     return { error: "Title is required." };
@@ -63,14 +86,15 @@ export async function createProductAction(formData: FormData) {
   }
 
   const rows = await db.sql<{ id: number }>`
-    INSERT INTO products (title, description, price, category, tag, active, sort_order)
+    INSERT INTO products (title, description, price, category, tag, active, sort_order, allow_multi_color, model_url)
     VALUES (
       ${title}, ${description}, ${price}, ${category}, ${tag}, ${active},
-      (SELECT COALESCE(MAX(sort_order), 0) + 1 FROM products)
+      (SELECT COALESCE(MAX(sort_order), 0) + 1 FROM products), ${allowMultiColor}, ${modelUrl}
     )
     RETURNING id
   `;
   await setProductPhotos(rows[0].id, photos);
+  await setProductColors(rows[0].id, colorIds);
 
   refreshShop();
   return { error: "" };
@@ -87,6 +111,9 @@ export async function updateProductAction(formData: FormData) {
   const priceRaw = String(formData.get("price") || "").trim();
   const isCustom = formData.get("isCustom") === "on";
   const photos = parsePhotos(formData);
+  const colorIds = parseColorIds(formData);
+  const allowMultiColor = formData.get("allowMultiColor") === "on";
+  const modelUrl = String(formData.get("modelUrl") || "").trim() || null;
 
   if (!id || !title) {
     return { error: "Title is required." };
@@ -102,10 +129,11 @@ export async function updateProductAction(formData: FormData) {
 
   await db.sql`
     UPDATE products
-    SET title = ${title}, description = ${description}, price = ${price}, category = ${category}, tag = ${tag}
+    SET title = ${title}, description = ${description}, price = ${price}, category = ${category}, tag = ${tag}, allow_multi_color = ${allowMultiColor}, model_url = ${modelUrl}
     WHERE id = ${id}
   `;
   await setProductPhotos(id, photos);
+  await setProductColors(id, colorIds);
 
   refreshShop();
   return { error: "" };
@@ -148,6 +176,7 @@ export async function bulkDeleteProductsAction(ids: number[]) {
 interface CartLine {
   productId: number;
   quantity: number;
+  colors: string[];
 }
 
 function parseCart(formData: FormData): CartLine[] {
@@ -156,7 +185,11 @@ function parseCart(formData: FormData): CartLine[] {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     return parsed
-      .map((l) => ({ productId: Number(l?.productId), quantity: Number(l?.quantity) }))
+      .map((l) => ({
+        productId: Number(l?.productId),
+        quantity: Number(l?.quantity),
+        colors: Array.isArray(l?.colors) ? l.colors.filter((c: unknown) => typeof c === "string" && c) : [],
+      }))
       .filter((l) => Number.isInteger(l.productId) && l.productId > 0 && Number.isInteger(l.quantity) && l.quantity > 0);
   } catch {
     return [];
@@ -191,13 +224,43 @@ export async function createShopOrderAction(formData: FormData) {
   );
   const byId = new Map(products.flat().map((p) => [p.id, p]));
 
-  const lineItems: { productId: number; title: string; price: number; quantity: number }[] = [];
+  const allowedColors = await Promise.all(
+    cart.map((l) =>
+      db.sql<{ name: string }>`
+        SELECT c.name FROM product_colors pc
+        JOIN colors c ON c.id = pc.color_id
+        WHERE pc.product_id = ${l.productId}
+        ORDER BY pc.sort_order ASC
+      `
+    )
+  );
+  const allowedColorsById = new Map(cart.map((l, i) => [l.productId, allowedColors[i].map((c) => c.name)]));
+
+  const lineItems: { productId: number; title: string; price: number; quantity: number; colors: string | null }[] = [];
   for (const line of cart) {
     const product = byId.get(line.productId);
     if (!product || product.price === null) {
       return { error: "One of the items in your cart is no longer available. Please refresh and try again." };
     }
-    lineItems.push({ productId: product.id, title: product.title, price: Number(product.price), quantity: line.quantity });
+    const allowed = allowedColorsById.get(line.productId) ?? [];
+    let colors = line.colors.filter((c) => allowed.includes(c));
+    if (allowed.length > 0) {
+      if (colors.length === 0) {
+        return { error: `Choose a color for ${product.title}.` };
+      }
+      if (!product.allow_multi_color) {
+        colors = colors.slice(0, 1);
+      }
+    } else {
+      colors = [];
+    }
+    lineItems.push({
+      productId: product.id,
+      title: product.title,
+      price: Number(product.price),
+      quantity: line.quantity,
+      colors: colors.length > 0 ? colors.join(", ") : null,
+    });
   }
 
   const total = lineItems.reduce((sum, l) => sum + l.price * l.quantity, 0);
@@ -215,8 +278,8 @@ export async function createShopOrderAction(formData: FormData) {
   await Promise.all(
     lineItems.map((l) =>
       db.sql`
-        INSERT INTO shop_order_items (order_id, product_id, title, price, quantity)
-        VALUES (${orderId}, ${l.productId}, ${l.title}, ${l.price}, ${l.quantity})
+        INSERT INTO shop_order_items (order_id, product_id, title, price, quantity, colors)
+        VALUES (${orderId}, ${l.productId}, ${l.title}, ${l.price}, ${l.quantity}, ${l.colors})
       `
     )
   );

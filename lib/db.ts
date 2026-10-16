@@ -113,6 +113,8 @@ export interface Product {
   tag: ProductTag | null;
   active: boolean;
   sort_order: number;
+  allow_multi_color: boolean;
+  model_url: string | null;
   created_at: string;
 }
 
@@ -149,6 +151,7 @@ export interface ShopOrderItem {
   title: string;
   price: string;
   quantity: number;
+  colors: string | null;
 }
 
 export type CustomRequestStatus = "new" | "quoted" | "closed";

@@ -11,13 +11,29 @@ import {
   bulkToggleProductActiveAction,
   bulkDeleteProductsAction,
 } from "@/lib/actions/shop";
+import { createJobFromProductAction } from "@/lib/actions/jobs";
 import { readFileAsDataURL } from "@/lib/cropImage";
 import ImageCropModal from "@/components/ImageCropModal";
 import DownloadPriceListButton from "./DownloadPriceListButton";
-import type { Product, ProductPhoto, ProductTag } from "@/lib/db";
+import type { ColorStock, Product, ProductPhoto, ProductTag } from "@/lib/db";
 
 export interface ProductRow extends Product {
   photos: ProductPhoto[];
+  colorIds: number[];
+}
+
+function ColorThumb({ color, size = 18 }: { color: ColorStock; size?: number }) {
+  const style = { width: size, height: size };
+  if (color.photo_data_url) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={color.photo_data_url} alt="" style={style} className="shrink-0 rounded-full object-cover" />;
+  }
+  return (
+    <div
+      style={{ ...style, background: `linear-gradient(135deg, ${color.hex_primary} 0%, ${color.hex_secondary} 100%)` }}
+      className="shrink-0 rounded-full"
+    />
+  );
 }
 
 const inputClass =
@@ -135,13 +151,54 @@ function PhotoManager({ photos, onChange }: { photos: string[]; onChange: (photo
   );
 }
 
+function ColorPicker({
+  colors,
+  selected,
+  onChange,
+}: {
+  colors: ColorStock[];
+  selected: number[];
+  onChange: (ids: number[]) => void;
+}) {
+  function toggle(id: number) {
+    onChange(selected.includes(id) ? selected.filter((c) => c !== id) : [...selected, id]);
+  }
+
+  return (
+    <div className="sm:col-span-2">
+      <p className="text-sm text-muted">Colors offered for this model</p>
+      <div className="mt-1.5 flex flex-wrap gap-1.5">
+        {colors.map((color) => {
+          const isSelected = selected.includes(color.id);
+          return (
+            <button
+              key={color.id}
+              type="button"
+              onClick={() => toggle(color.id)}
+              className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-medium transition ${
+                isSelected ? "border-accent bg-accent/5 text-accent" : "border-hairline text-ink hover:bg-panel2"
+              }`}
+            >
+              <ColorThumb color={color} />
+              {color.name}
+            </button>
+          );
+        })}
+        {colors.length === 0 && <p className="text-xs text-muted">Add colors in the Colors tab first.</p>}
+      </div>
+    </div>
+  );
+}
+
 function ProductForm({
   product,
+  colors,
   onSubmit,
   onCancel,
   submitLabel,
 }: {
   product?: ProductRow;
+  colors: ColorStock[];
   onSubmit: (formData: FormData) => Promise<{ error: string }>;
   onCancel?: () => void;
   submitLabel: string;
@@ -151,6 +208,8 @@ function ProductForm({
   const [submitting, setSubmitting] = useState(false);
   const [isCustom, setIsCustom] = useState(product ? product.price === null : false);
   const [photos, setPhotos] = useState<string[]>(product?.photos.map((p) => p.data_url) ?? []);
+  const [colorIds, setColorIds] = useState<number[]>(product?.colorIds ?? []);
+  const [allowMultiColor, setAllowMultiColor] = useState(product?.allow_multi_color ?? false);
   const formRef = useRef<HTMLFormElement>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -160,6 +219,8 @@ function ProductForm({
     const formData = new FormData(e.currentTarget);
     formData.set("photos", JSON.stringify(photos));
     formData.set("isCustom", isCustom ? "on" : "off");
+    formData.set("colorIds", JSON.stringify(colorIds));
+    formData.set("allowMultiColor", allowMultiColor ? "on" : "off");
     const result = await onSubmit(formData);
     setSubmitting(false);
     if (result.error) {
@@ -169,6 +230,8 @@ function ProductForm({
     formRef.current?.reset();
     setPhotos([]);
     setIsCustom(false);
+    setColorIds([]);
+    setAllowMultiColor(false);
     router.refresh();
     onCancel?.();
   }
@@ -196,6 +259,26 @@ function ProductForm({
         <input type="checkbox" checked={isCustom} onChange={(e) => setIsCustom(e.target.checked)} className="h-4 w-4" />
         Custom item &mdash; no fixed price, customers submit a request and I&apos;ll quote them
       </label>
+      <ColorPicker colors={colors} selected={colorIds} onChange={setColorIds} />
+      <label className="flex items-center gap-2 text-sm text-muted sm:col-span-2">
+        <input
+          type="checkbox"
+          checked={allowMultiColor}
+          onChange={(e) => setAllowMultiColor(e.target.checked)}
+          className="h-4 w-4"
+        />
+        Allow multiple colors (AMS multi-color prints) &mdash; otherwise shoppers pick just one
+      </label>
+      <div className="sm:col-span-2">
+        <input
+          name="modelUrl"
+          defaultValue={product?.model_url ?? ""}
+          placeholder="Model link for printers (MakerWorld URL, .stl/.3mf link, etc.)"
+          type="url"
+          className={`w-full ${inputClass}`}
+        />
+        <p className="mt-1 text-xs text-muted">Printer-only &mdash; never shown on the public shop.</p>
+      </div>
       {!isCustom && (
         <input
           type="number"
@@ -233,7 +316,7 @@ function ProductForm({
   );
 }
 
-export default function ProductsTab({ products }: { products: ProductRow[] }) {
+export default function ProductsTab({ products, colors }: { products: ProductRow[]; colors: ColorStock[] }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [ordered, setOrdered] = useState(products);
@@ -246,6 +329,13 @@ export default function ProductsTab({ products }: { products: ProductRow[] }) {
   function toggleActive(product: Product) {
     startTransition(async () => {
       await toggleProductActiveAction(product.id, !product.active);
+      router.refresh();
+    });
+  }
+
+  function sendToQueue(product: ProductRow) {
+    startTransition(async () => {
+      await createJobFromProductAction(product.id, 1);
       router.refresh();
     });
   }
@@ -339,6 +429,7 @@ export default function ProductsTab({ products }: { products: ProductRow[] }) {
               {editingId === product.id ? (
                 <ProductForm
                   product={product}
+                  colors={colors}
                   submitLabel="Save"
                   onCancel={() => setEditingId(null)}
                   onSubmit={updateProductAction}
@@ -381,6 +472,16 @@ export default function ProductsTab({ products }: { products: ProductRow[] }) {
                   >
                     {product.active ? "Active" : "Inactive"}
                   </button>
+                  {product.model_url && (
+                    <button
+                      onClick={() => sendToQueue(product)}
+                      disabled={isPending}
+                      title={product.model_url}
+                      className="shrink-0 text-xs font-medium text-muted hover:text-accent"
+                    >
+                      Send to print queue
+                    </button>
+                  )}
                   <button onClick={() => setEditingId(product.id)} className="shrink-0 text-xs font-medium text-accent hover:text-accent-dark">
                     Edit
                   </button>
@@ -398,7 +499,7 @@ export default function ProductsTab({ products }: { products: ProductRow[] }) {
       <section>
         <h2 className="text-lg font-semibold">Add a Product</h2>
         <div className="mt-4">
-          <ProductForm submitLabel="Add Product" onSubmit={createProductAction} />
+          <ProductForm colors={colors} submitLabel="Add Product" onSubmit={createProductAction} />
         </div>
       </section>
     </div>

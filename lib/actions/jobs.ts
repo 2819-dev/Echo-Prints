@@ -26,6 +26,30 @@ export async function createJobAction(formData: FormData) {
   return { error: "" };
 }
 
+export async function createJobFromProductAction(productId: number, quantity: number) {
+  await requireUser("admin");
+
+  const products = await db.sql<{ title: string; model_url: string | null }>`
+    SELECT title, model_url FROM products WHERE id = ${productId}
+  `;
+  const product = products[0];
+  if (!product) {
+    return { error: "Product not found." };
+  }
+  if (!product.model_url) {
+    return { error: "This product has no model link set yet." };
+  }
+
+  await db.sql`
+    INSERT INTO print_jobs (title, file_url, quantity_needed)
+    VALUES (${product.title}, ${product.model_url}, ${quantity > 0 ? quantity : 1})
+  `;
+
+  revalidatePath("/admin");
+  revalidatePath("/dashboard");
+  return { error: "" };
+}
+
 export async function deleteJobAction(jobId: number) {
   await requireUser("admin");
   await db.sql`DELETE FROM print_jobs WHERE id = ${jobId}`;

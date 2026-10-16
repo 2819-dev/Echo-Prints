@@ -38,6 +38,7 @@ export default function OrderHistory({ orders }: { orders: OrderWithItems[] }) {
             {order.items.map((item) => (
               <p key={item.id} className="text-xs text-muted">
                 {item.title} &times;{item.quantity}
+                {item.colors && <span> &middot; {item.colors}</span>}
               </p>
             ))}
           </div>

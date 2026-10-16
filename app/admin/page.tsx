@@ -23,6 +23,7 @@ export default async function AdminPage() {
     orders,
     products,
     productPhotos,
+    productColors,
     shopOrders,
     shopOrderItems,
     customRequests,
@@ -48,6 +49,7 @@ export default async function AdminPage() {
     db.sql<Order>`SELECT * FROM orders ORDER BY status ASC, created_at DESC`,
     db.sql<Product>`SELECT * FROM products ORDER BY sort_order ASC, title ASC`,
     db.sql<ProductPhoto>`SELECT * FROM product_photos ORDER BY sort_order ASC`,
+    db.sql<{ product_id: number; color_id: number }>`SELECT product_id, color_id FROM product_colors ORDER BY sort_order ASC`,
     db.sql<ShopOrder>`SELECT * FROM shop_orders ORDER BY status ASC, created_at DESC`,
     db.sql<ShopOrderItem>`SELECT * FROM shop_order_items ORDER BY id ASC`,
     db.sql<CustomRequest & { product_title: string | null }>`
@@ -75,7 +77,17 @@ export default async function AdminPage() {
     list.push(photo);
     photosByProduct.set(photo.product_id, list);
   }
-  const productRows: ProductRow[] = products.map((p) => ({ ...p, photos: photosByProduct.get(p.id) ?? [] }));
+  const colorIdsByProduct = new Map<number, number[]>();
+  for (const pc of productColors) {
+    const list = colorIdsByProduct.get(pc.product_id) ?? [];
+    list.push(pc.color_id);
+    colorIdsByProduct.set(pc.product_id, list);
+  }
+  const productRows: ProductRow[] = products.map((p) => ({
+    ...p,
+    photos: photosByProduct.get(p.id) ?? [],
+    colorIds: colorIdsByProduct.get(p.id) ?? [],
+  }));
 
   const itemsByOrder = new Map<number, ShopOrderItem[]>();
   for (const item of shopOrderItems) {

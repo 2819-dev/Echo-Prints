@@ -97,6 +97,7 @@ export default function ShopOrdersTab({ orders }: { orders: ShopOrderRow[] }) {
               {order.items.map((item) => (
                 <p key={item.id} className="text-xs">
                   {item.title} &times;{item.quantity} &mdash; {formatPrice(item.price)}
+                  {item.colors && <span className="text-muted"> &middot; {item.colors}</span>}
                 </p>
               ))}
               {order.shipping_address && <p className="mt-2 text-xs text-muted">Ship to: {order.shipping_address}</p>}
