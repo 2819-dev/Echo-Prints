@@ -14,7 +14,7 @@ export default function SiteHeader({ backHref, backLabel }: { backHref?: string;
         <Link href="/" aria-label="Echo Prints home" className="shrink-0">
           <BrandLogo size="sm" />
         </Link>
-        <nav className="flex items-center gap-6">
+        <nav className="hidden items-center gap-6 sm:flex">
           {LINKS.map((link) => (
             <Link key={link.href} href={link.href} className="text-sm font-medium text-muted transition hover:text-ink">
               {link.label}

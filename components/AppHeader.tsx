@@ -10,7 +10,7 @@ export function AppHeaderBar() {
         <Link href="/" aria-label="Echo Prints home" className="shrink-0">
           <BrandLogo size="sm" />
         </Link>
-        <nav className="flex items-center gap-6">
+        <nav className="hidden items-center gap-6 sm:flex">
           <Link href="/shop" className="text-sm font-medium text-muted transition hover:text-ink">
             Shop
           </Link>
