@@ -41,23 +41,23 @@ function ProductCard({
       <div className="flex flex-1 flex-col p-4">
         <h3 className="font-semibold text-ink">{product.title}</h3>
         {product.description && <p className="mt-1 line-clamp-2 flex-1 text-sm text-muted">{product.description}</p>}
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <span className="font-semibold text-ink">{formatPrice(product.price)}</span>
           {product.price !== null ? (
             product.hasColors ? (
-              <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-xs font-semibold text-ink">
+              <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-center text-xs font-semibold text-ink">
                 Choose color
               </span>
             ) : (
               <button
                 onClick={(e) => onAdd(e, product)}
-                className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark"
+                className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-center text-xs font-semibold text-white hover:bg-accent-dark"
               >
                 {added ? "Added" : "Add to Cart"}
               </button>
             )
           ) : (
-            <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-xs font-semibold text-ink">
+            <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-center text-xs font-semibold text-ink">
               Request a Quote
             </span>
           )}
@@ -130,7 +130,7 @@ export default function ShopGrid({ products }: { products: ShopProduct[] }) {
         {visibleCategories.map(([category, items]) => (
           <section key={category}>
             <h2 className="font-display text-xl font-semibold text-ink">{category}</h2>
-            <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
               {items.map((product) => (
                 <ProductCard key={product.id} product={product} added={addedId === product.id} onAdd={handleAdd} />
               ))}
