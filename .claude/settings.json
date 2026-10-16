@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc --noEmit*)",
+      "Bash(curl -s*)",
+      "Bash(npm view *)",
+      "mcp__Netlify__netlify-project-services-reader",
+      "mcp__Neon__get_database_tables"
+    ]
+  }
+}
