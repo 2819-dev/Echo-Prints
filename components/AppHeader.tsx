@@ -1,6 +1,7 @@
 import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
 import { logoutAction } from "@/lib/actions/auth";
+import InstallAppButton from "@/components/InstallAppButton";
 
 export function AppHeaderBar() {
   return (
@@ -17,11 +18,14 @@ export function AppHeaderBar() {
             Account
           </Link>
         </nav>
-        <form action={logoutAction} className="shrink-0">
-          <button className="rounded-lg border border-hairline px-3.5 py-1.5 text-sm font-semibold text-ink hover:bg-panel2">
-            Log out
-          </button>
-        </form>
+        <div className="flex shrink-0 items-center gap-2">
+          <InstallAppButton />
+          <form action={logoutAction}>
+            <button className="rounded-lg border border-hairline px-3.5 py-1.5 text-sm font-semibold text-ink hover:bg-panel2">
+              Log out
+            </button>
+          </form>
+        </div>
       </div>
     </header>
   );
