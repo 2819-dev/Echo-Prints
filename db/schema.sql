@@ -178,6 +178,7 @@ SELECT * FROM (VALUES
   ('Black', 'PA-CF', '#1A1A1A', '#1A1A1A', TRUE, 10),
   ('Silk Purple', 'Generic PLA Silk', '#9B59B6', '#D6A8E8', TRUE, 11),
   ('Matte Turquoise', 'iSANMATE PLA-HS', '#1CA9A0', '#1CA9A0', TRUE, 12),
-  ('White', 'COMGROW PETG', '#F5F5F0', '#F5F5F0', TRUE, 13)
+  ('White', 'COMGROW PETG', '#F5F5F0', '#F5F5F0', TRUE, 13),
+  ('White Marble', 'PLA Marble', '#F7F3F0', '#D9D2CC', TRUE, 14)
 ) AS seed(name, material, hex_primary, hex_secondary, in_stock, sort_order)
 WHERE NOT EXISTS (SELECT 1 FROM colors);
