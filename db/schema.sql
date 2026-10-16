@@ -159,18 +159,25 @@ SET email = 'hf@bighappysmiley.com',
 WHERE role = 'admin';
 
 INSERT INTO users (email, password_hash, name, role)
-SELECT 'hf@bighappysmiley.com', '$2a$10$2Ufm841TyUce2vSUrZmpzO2Rol4Qqw44gRJZyBozvxl3nbgobLEcS', 'Admin', 'admin'
+SELECT 'hf@bighappysmiley.com', '$2a$10$ymqeKVn.HOhZX25/ZHbeleqBc8vtDNvYGUp0bbK2TBT1QsjwzwzQe', 'Admin', 'admin'
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE role = 'admin');
 
 -- Starter color catalog — only seeds if the colors table is currently empty,
 -- so it won't touch anything you've added or edited from /admin.
 INSERT INTO colors (name, material, hex_primary, hex_secondary, in_stock, sort_order)
 SELECT * FROM (VALUES
-  ('Gilded Rose', '', '#c9a86a', '#b5495b', TRUE, 1),
-  ('Blue Hawaii', '', '#1f8fc4', '#12c48f', TRUE, 2),
-  ('Neon City', '', '#ff2d95', '#00e5ff', TRUE, 3),
-  ('Black Gold', '', '#151515', '#d4af37', TRUE, 4),
-  ('Violet Purple', '', '#6a3ec1', '#b388ff', FALSE, 5),
-  ('Grey Green', '', '#7a8b7f', '#3f4f43', TRUE, 6)
+  ('White', 'PLA Basic', '#FFFFFF', '#FFFFFF', TRUE, 1),
+  ('Black', 'PLA Basic', '#000000', '#000000', TRUE, 2),
+  ('Cocoa Brown', 'PLA Basic', '#6F5034', '#6F5034', TRUE, 3),
+  ('Bambu Green', 'PLA Basic', '#00AE42', '#00AE42', TRUE, 4),
+  ('Mandarin Orange', 'PLA Matte', '#F99963', '#F99963', TRUE, 5),
+  ('Latte Brown', 'PLA Matte', '#D3B7A7', '#D3B7A7', TRUE, 6),
+  ('Teal', 'PLA Translucent', '#009FA1', '#FFFFFF', TRUE, 7),
+  ('Blue', 'PLA Translucent', '#0078BF', '#FFFFFF', TRUE, 8),
+  ('Ice Blue', 'PLA Translucent', '#B8CDE9', '#FFFFFF', TRUE, 9),
+  ('Black', 'PA-CF', '#1A1A1A', '#1A1A1A', TRUE, 10),
+  ('Silk Purple', 'Generic PLA Silk', '#9B59B6', '#D6A8E8', TRUE, 11),
+  ('Matte Turquoise', 'iSANMATE PLA-HS', '#1CA9A0', '#1CA9A0', TRUE, 12),
+  ('White', 'COMGROW PETG', '#F5F5F0', '#F5F5F0', TRUE, 13)
 ) AS seed(name, material, hex_primary, hex_secondary, in_stock, sort_order)
 WHERE NOT EXISTS (SELECT 1 FROM colors);
