@@ -43,11 +43,11 @@ const styles = StyleSheet.create({
   legendItem: { flexDirection: "row", alignItems: "center", marginRight: 14 },
   legendDot: { width: 6, height: 6, borderRadius: 3, marginRight: 3.5 },
   legendText: { fontSize: 7.5, color: "#6b7280" },
-  rule: { height: 1, backgroundColor: "#e4e4e7", marginBottom: 12 },
-  category: { marginBottom: 9 },
+  rule: { height: 1, backgroundColor: "#e4e4e7", marginBottom: 14 },
+  category: { marginBottom: 14 },
   categoryHeader: {
-    marginBottom: 3,
-    paddingBottom: 2,
+    marginBottom: 4,
+    paddingBottom: 2.5,
     borderBottomWidth: 1,
     borderBottomColor: "#e4e4e7",
   },
@@ -56,28 +56,22 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     color: "#18181b",
     textTransform: "uppercase",
-    letterSpacing: 0.6,
+    letterSpacing: 0.8,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    paddingVertical: 2.75,
+    paddingVertical: 3.5,
+    paddingHorizontal: 6,
+    marginHorizontal: -6,
+    borderRadius: 3,
     borderBottomWidth: 0.5,
     borderBottomColor: "#f1f1f3",
   },
-  rowLeft: { flexShrink: 1 },
-  rowTitleLine: { flexDirection: "row", alignItems: "center" },
+  rowLeft: { flexShrink: 1, paddingRight: 10 },
   rowTitle: { fontSize: 9.5, fontWeight: 500 },
-  rowTagPill: {
-    alignSelf: "flex-start",
-    marginLeft: 5,
-    paddingHorizontal: 4,
-    paddingVertical: 0.75,
-    borderRadius: 3,
-  },
-  rowTagText: { fontSize: 6.5, fontWeight: 700 },
-  rowDescription: { fontSize: 7.5, color: "#6b7280", marginTop: 0.5, maxWidth: 360 },
+  rowDescription: { fontSize: 7.5, color: "#6b7280", marginTop: 1, lineHeight: 1.3, maxWidth: 360 },
   rowPrice: { fontSize: 9.5, fontWeight: 700 },
   footer: {
     position: "absolute",
@@ -136,17 +130,22 @@ export default function PriceListDocument({
             </View>
             {items.map((product, index) => {
               const meta = product.tag ? TAG_META[product.tag] : null;
+              const rowStyle = meta
+                ? [
+                    styles.row,
+                    {
+                      backgroundColor: meta.bg,
+                      borderBottomColor: meta.bg,
+                      borderLeftWidth: 2.5,
+                      borderLeftColor: meta.text,
+                      paddingLeft: 7,
+                    },
+                  ]
+                : styles.row;
               return (
-                <View key={index} style={styles.row} wrap={false}>
+                <View key={index} style={rowStyle} wrap={false}>
                   <View style={styles.rowLeft}>
-                    <View style={styles.rowTitleLine}>
-                      <Text style={styles.rowTitle}>{product.title}</Text>
-                      {meta && (
-                        <View style={[styles.rowTagPill, { backgroundColor: meta.bg }]}>
-                          <Text style={[styles.rowTagText, { color: meta.text }]}>{meta.label}</Text>
-                        </View>
-                      )}
-                    </View>
+                    <Text style={styles.rowTitle}>{product.title}</Text>
                     {product.description && <Text style={styles.rowDescription}>{product.description}</Text>}
                   </View>
                   <Text style={styles.rowPrice}>{formatPrice(product.price)}</Text>
