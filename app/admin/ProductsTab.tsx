@@ -164,26 +164,41 @@ function ColorPicker({
     onChange(selected.includes(id) ? selected.filter((c) => c !== id) : [...selected, id]);
   }
 
+  const groups = new Map<string, ColorStock[]>();
+  for (const color of colors) {
+    const key = color.material?.trim() || "Other";
+    const list = groups.get(key) ?? [];
+    list.push(color);
+    groups.set(key, list);
+  }
+
   return (
     <div className="sm:col-span-2">
       <p className="text-sm text-muted">Colors offered for this model</p>
-      <div className="mt-1.5 flex flex-wrap gap-1.5">
-        {colors.map((color) => {
-          const isSelected = selected.includes(color.id);
-          return (
-            <button
-              key={color.id}
-              type="button"
-              onClick={() => toggle(color.id)}
-              className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-medium transition ${
-                isSelected ? "border-accent bg-accent/5 text-accent" : "border-hairline text-ink hover:bg-panel2"
-              }`}
-            >
-              <ColorThumb color={color} />
-              {color.name}
-            </button>
-          );
-        })}
+      <div className="mt-1.5 space-y-2.5">
+        {Array.from(groups.entries()).map(([material, items]) => (
+          <div key={material}>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">{material}</p>
+            <div className="mt-1 flex flex-wrap gap-1.5">
+              {items.map((color) => {
+                const isSelected = selected.includes(color.id);
+                return (
+                  <button
+                    key={color.id}
+                    type="button"
+                    onClick={() => toggle(color.id)}
+                    className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-medium transition ${
+                      isSelected ? "border-accent bg-accent/5 text-accent" : "border-hairline text-ink hover:bg-panel2"
+                    }`}
+                  >
+                    <ColorThumb color={color} />
+                    {color.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
         {colors.length === 0 && <p className="text-xs text-muted">Add colors in the Colors tab first.</p>}
       </div>
     </div>
@@ -322,6 +337,7 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
   const [ordered, setOrdered] = useState(products);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
   const dragIndex = useRef<number | null>(null);
 
   useEffect(() => setOrdered(products), [products]);
@@ -402,8 +418,25 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
           <div className="flex items-center gap-3">
             <p className="text-xs text-muted">Drag to reorder</p>
             <DownloadPriceListButton products={ordered} />
+            <button
+              onClick={() => setShowAddForm((v) => !v)}
+              className="rounded-lg bg-accent px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark"
+            >
+              {showAddForm ? "Cancel" : "+ Add Product"}
+            </button>
           </div>
         </div>
+
+        {showAddForm && (
+          <div className="mt-4">
+            <ProductForm
+              colors={colors}
+              submitLabel="Add Product"
+              onCancel={() => setShowAddForm(false)}
+              onSubmit={createProductAction}
+            />
+          </div>
+        )}
 
         {selected.size > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-hairline bg-panel2/60 p-3 text-sm">
@@ -493,13 +526,6 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
             </div>
           ))}
           {ordered.length === 0 && <p className="text-sm text-muted">No products yet.</p>}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold">Add a Product</h2>
-        <div className="mt-4">
-          <ProductForm colors={colors} submitLabel="Add Product" onSubmit={createProductAction} />
         </div>
       </section>
     </div>

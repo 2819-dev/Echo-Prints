@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireUser, getCurrentUser } from "@/lib/auth";
+import { colorLabel } from "@/lib/colorLabel";
 import type { PaymentMethod, Product, ProductTag } from "@/lib/db";
 
 const VALID_TAGS: ProductTag[] = ["customizable", "discontinued", "limited_edition"];
@@ -226,15 +227,15 @@ export async function createShopOrderAction(formData: FormData) {
 
   const allowedColors = await Promise.all(
     cart.map((l) =>
-      db.sql<{ name: string }>`
-        SELECT c.name FROM product_colors pc
+      db.sql<{ name: string; material: string }>`
+        SELECT c.name, c.material FROM product_colors pc
         JOIN colors c ON c.id = pc.color_id
         WHERE pc.product_id = ${l.productId}
         ORDER BY pc.sort_order ASC
       `
     )
   );
-  const allowedColorsById = new Map(cart.map((l, i) => [l.productId, allowedColors[i].map((c) => c.name)]));
+  const allowedColorsById = new Map(cart.map((l, i) => [l.productId, allowedColors[i].map((c) => colorLabel(c))]));
 
   const lineItems: { productId: number; title: string; price: number; quantity: number; colors: string | null }[] = [];
   for (const line of cart) {

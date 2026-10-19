@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { addToCart } from "@/lib/cart";
 import { createCustomRequestAction } from "@/lib/actions/shop";
+import { colorLabel } from "@/lib/colorLabel";
 import type { Product, ProductPhoto, ColorStock } from "@/lib/db";
 
 const inputClass =
@@ -90,20 +91,21 @@ function ColorSelector({
       </p>
       <div className="mt-2 flex flex-wrap gap-2">
         {colors.map((color) => {
-          const isSelected = selected.includes(color.name);
+          const label = colorLabel(color);
+          const isSelected = selected.includes(label);
           return (
             <button
               key={color.id}
               type="button"
-              onClick={() => toggle(color.name)}
+              onClick={() => toggle(label)}
               disabled={!color.in_stock}
-              title={color.in_stock ? color.name : `${color.name} (out of stock)`}
+              title={color.in_stock ? label : `${label} (out of stock)`}
               className={`flex items-center gap-1.5 rounded-lg border px-2 py-1.5 text-xs font-medium transition ${
                 isSelected ? "border-accent bg-accent/5 text-accent" : "border-hairline text-ink hover:bg-panel2"
               } ${!color.in_stock ? "cursor-not-allowed opacity-40" : ""}`}
             >
               <ColorSwatch color={color} size={18} />
-              {color.name}
+              {label}
             </button>
           );
         })}
