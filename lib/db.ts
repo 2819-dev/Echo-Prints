@@ -91,6 +91,16 @@ export interface PrintJob {
   created_at: string;
 }
 
+export interface PrinterFilament {
+  id: number;
+  user_id: number;
+  company: string;
+  type: string;
+  color: string;
+  sort_order: number;
+  created_at: string;
+}
+
 export type OrderStatus = "pending" | "fulfilled";
 
 export interface Order {

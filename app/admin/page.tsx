@@ -1,5 +1,5 @@
 import { requireUser } from "@/lib/auth";
-import { db, type Application, type ColorStock, type Order, type Product, type ProductPhoto, type ShopOrder, type ShopOrderItem, type CustomRequest } from "@/lib/db";
+import { db, type Application, type ColorStock, type Order, type Product, type ProductPhoto, type ShopOrder, type ShopOrderItem, type CustomRequest, type PrinterFilament } from "@/lib/db";
 import AppHeader, { AppHeaderBar } from "@/components/AppHeader";
 import AdminPanel, {
   type JobRow,
@@ -24,6 +24,7 @@ export default async function AdminPage() {
     products,
     productPhotos,
     productColors,
+    printerFilaments,
     shopOrders,
     shopOrderItems,
     customRequests,
@@ -50,6 +51,7 @@ export default async function AdminPage() {
     db.sql<Product>`SELECT * FROM products ORDER BY sort_order ASC, title ASC`,
     db.sql<ProductPhoto>`SELECT * FROM product_photos ORDER BY sort_order ASC`,
     db.sql<{ product_id: number; color_id: number }>`SELECT product_id, color_id FROM product_colors ORDER BY sort_order ASC`,
+    db.sql<PrinterFilament>`SELECT * FROM printer_filaments ORDER BY sort_order ASC`,
     db.sql<ShopOrder>`SELECT * FROM shop_orders ORDER BY status ASC, created_at DESC`,
     db.sql<ShopOrderItem>`SELECT * FROM shop_order_items ORDER BY id ASC`,
     db.sql<CustomRequest & { product_title: string | null }>`
@@ -89,6 +91,14 @@ export default async function AdminPage() {
     colorIds: colorIdsByProduct.get(p.id) ?? [],
   }));
 
+  const filamentsByUser = new Map<number, PrinterFilament[]>();
+  for (const f of printerFilaments) {
+    const list = filamentsByUser.get(f.user_id) ?? [];
+    list.push(f);
+    filamentsByUser.set(f.user_id, list);
+  }
+  const userRows = users.map((u) => ({ ...u, filaments: filamentsByUser.get(u.id) ?? [] }));
+
   const itemsByOrder = new Map<number, ShopOrderItem[]>();
   for (const item of shopOrderItems) {
     const list = itemsByOrder.get(item.order_id) ?? [];
@@ -108,7 +118,7 @@ export default async function AdminPage() {
             applications={applications}
             colors={colors}
             jobs={jobs}
-            users={users}
+            users={userRows}
             orders={orders}
             products={productRows}
             shopOrders={shopOrderRows}

@@ -73,6 +73,20 @@ CREATE TABLE IF NOT EXISTS print_jobs (
 );
 CREATE INDEX IF NOT EXISTS idx_print_jobs_status ON print_jobs(status);
 
+-- Structured filament inventory per printer (Company / Type / Color), which
+-- printers manage themselves from their dashboard — replaces the old
+-- free-text users.filaments_available blurb captured once at application time.
+CREATE TABLE IF NOT EXISTS printer_filaments (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  company TEXT NOT NULL,
+  type TEXT NOT NULL,
+  color TEXT NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_printer_filaments_user ON printer_filaments(user_id);
+
 CREATE TABLE IF NOT EXISTS orders (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,

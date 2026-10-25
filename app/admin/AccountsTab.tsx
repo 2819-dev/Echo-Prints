@@ -1,3 +1,5 @@
+import type { PrinterFilament } from "@/lib/db";
+
 export interface UserRow {
   id: number;
   email: string;
@@ -9,6 +11,7 @@ export interface UserRow {
   printers_owned: string | null;
   filaments_available: string | null;
   created_at: string;
+  filaments: PrinterFilament[];
 }
 
 export default function AccountsTab({ users }: { users: UserRow[] }) {
@@ -49,14 +52,21 @@ export default function AccountsTab({ users }: { users: UserRow[] }) {
                 {u.phone ? ` · ${u.phone}` : ""}
               </p>
               {u.printers_owned && (
-                <p className="mt-1 text-xs text-muted">
+                <p className="mt-1 whitespace-pre-line text-xs text-muted">
                   <span className="text-muted">Printers:</span> {u.printers_owned}
                 </p>
               )}
-              {u.filaments_available && (
-                <p className="text-xs text-muted">
-                  <span className="text-muted">Filaments:</span> {u.filaments_available}
+              {u.filaments.length > 0 ? (
+                <p className="mt-1 text-xs text-muted">
+                  <span className="text-muted">Filaments:</span>{" "}
+                  {u.filaments.map((f) => `${f.color} (${f.type}, ${f.company})`).join(", ")}
                 </p>
+              ) : (
+                u.filaments_available && (
+                  <p className="mt-1 text-xs text-muted">
+                    <span className="text-muted">Filaments:</span> {u.filaments_available}
+                  </p>
+                )
               )}
             </div>
           ))}
