@@ -136,6 +136,13 @@ export interface ProductPhoto {
   sort_order: number;
 }
 
+export interface ProductPart {
+  id: number;
+  product_id: number;
+  name: string;
+  sort_order: number;
+}
+
 export type PaymentMethod = "cash" | "card";
 export type PaymentStatus = "unpaid" | "paid";
 export type ShopOrderStatus = "new" | "in_progress" | "completed" | "cancelled";

@@ -6,10 +6,11 @@ import CartBadge from "./CartBadge";
 export const dynamic = "force-dynamic";
 
 export default async function ShopPage() {
-  const [products, photos, productColors] = await Promise.all([
+  const [products, photos, productColors, productParts] = await Promise.all([
     db.sql<Product>`SELECT * FROM products WHERE active = TRUE ORDER BY sort_order ASC, title ASC`,
     db.sql<ProductPhoto>`SELECT * FROM product_photos ORDER BY sort_order ASC`,
     db.sql<{ product_id: number }>`SELECT DISTINCT product_id FROM product_colors`,
+    db.sql<{ product_id: number }>`SELECT DISTINCT product_id FROM product_parts`,
   ]);
 
   const photosByProduct = new Map<number, ProductPhoto[]>();
@@ -18,11 +19,14 @@ export default async function ShopPage() {
     list.push(photo);
     photosByProduct.set(photo.product_id, list);
   }
-  const productsWithColors = new Set(productColors.map((pc) => pc.product_id));
+  const productsNeedingColorChoice = new Set([
+    ...productColors.map((pc) => pc.product_id),
+    ...productParts.map((pp) => pp.product_id),
+  ]);
   const rows: ShopProduct[] = products.map((p) => ({
     ...p,
     photos: photosByProduct.get(p.id) ?? [],
-    hasColors: productsWithColors.has(p.id),
+    hasColors: productsNeedingColorChoice.has(p.id),
   }));
 
   return (

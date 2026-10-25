@@ -5,7 +5,11 @@ import { useState } from "react";
 import { addToCart } from "@/lib/cart";
 import { createCustomRequestAction } from "@/lib/actions/shop";
 import { colorLabel } from "@/lib/colorLabel";
-import type { Product, ProductPhoto, ColorStock } from "@/lib/db";
+import type { Product, ProductPhoto, ColorStock, ProductPart } from "@/lib/db";
+
+export interface PartWithColors extends ProductPart {
+  colors: ColorStock[];
+}
 
 const inputClass =
   "rounded-lg border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10";
@@ -114,26 +118,78 @@ function ColorSelector({
   );
 }
 
-function AddToCart({ product, colors }: { product: Product; colors: ColorStock[] }) {
+function PartSelector({
+  part,
+  selected,
+  onChange,
+}: {
+  part: PartWithColors;
+  selected: string | null;
+  onChange: (label: string) => void;
+}) {
+  return (
+    <div>
+      <p className="text-sm font-medium">{part.name}</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {part.colors.map((color) => {
+          const label = `${part.name}: ${colorLabel(color)}`;
+          const isSelected = selected === label;
+          return (
+            <button
+              key={color.id}
+              type="button"
+              onClick={() => onChange(label)}
+              disabled={!color.in_stock}
+              title={color.in_stock ? colorLabel(color) : `${colorLabel(color)} (out of stock)`}
+              className={`flex items-center gap-1.5 rounded-lg border px-2 py-1.5 text-xs font-medium transition ${
+                isSelected ? "border-accent bg-accent/5 text-accent" : "border-hairline text-ink hover:bg-panel2"
+              } ${!color.in_stock ? "cursor-not-allowed opacity-40" : ""}`}
+            >
+              <ColorSwatch color={color} size={18} />
+              {colorLabel(color)}
+            </button>
+          );
+        })}
+        {part.colors.length === 0 && <p className="text-xs text-muted">No colors set for this part yet.</p>}
+      </div>
+    </div>
+  );
+}
+
+function AddToCart({ product, colors, parts }: { product: Product; colors: ColorStock[]; parts: PartWithColors[] }) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedParts, setSelectedParts] = useState<Record<number, string>>({});
   const [colorError, setColorError] = useState(false);
 
+  const usesParts = parts.length > 0;
+
+  function setPartColor(partId: number, label: string) {
+    setSelectedParts((prev) => ({ ...prev, [partId]: label }));
+    setColorError(false);
+  }
+
   function handleAdd() {
-    if (colors.length > 0 && selectedColors.length === 0) {
+    if (usesParts) {
+      if (parts.some((p) => !selectedParts[p.id])) {
+        setColorError(true);
+        return;
+      }
+    } else if (colors.length > 0 && selectedColors.length === 0) {
       setColorError(true);
       return;
     }
     setColorError(false);
+    const finalColors = usesParts ? parts.map((p) => selectedParts[p.id]) : selectedColors;
     addToCart(
       {
         productId: product.id,
         title: product.title,
         price: Number(product.price),
         photo: null,
-        colors: selectedColors,
+        colors: finalColors,
       },
       quantity
     );
@@ -142,18 +198,35 @@ function AddToCart({ product, colors }: { product: Product; colors: ColorStock[]
 
   return (
     <div className="space-y-4">
-      {colors.length > 0 && (
-        <ColorSelector
-          colors={colors}
-          allowMultiColor={product.allow_multi_color}
-          selected={selectedColors}
-          onChange={(names) => {
-            setSelectedColors(names);
-            setColorError(false);
-          }}
-        />
+      {usesParts ? (
+        <div className="space-y-4">
+          {parts.map((part) => (
+            <PartSelector
+              key={part.id}
+              part={part}
+              selected={selectedParts[part.id] ?? null}
+              onChange={(label) => setPartColor(part.id, label)}
+            />
+          ))}
+        </div>
+      ) : (
+        colors.length > 0 && (
+          <ColorSelector
+            colors={colors}
+            allowMultiColor={product.allow_multi_color}
+            selected={selectedColors}
+            onChange={(names) => {
+              setSelectedColors(names);
+              setColorError(false);
+            }}
+          />
+        )
       )}
-      {colorError && <p className="text-sm text-rose-600">Choose a color before adding to cart.</p>}
+      {colorError && (
+        <p className="text-sm text-rose-600">
+          {usesParts ? "Choose a color for every part before adding to cart." : "Choose a color before adding to cart."}
+        </p>
+      )}
       <div className="flex items-center gap-3">
         <input
           type="number"
@@ -235,10 +308,12 @@ export default function ProductDetail({
   product,
   photos,
   colors,
+  parts,
 }: {
   product: Product;
   photos: ProductPhoto[];
   colors: ColorStock[];
+  parts: PartWithColors[];
 }) {
   return (
     <div className="grid gap-10 sm:grid-cols-2">
@@ -249,7 +324,7 @@ export default function ProductDetail({
         {product.description && <p className="mt-4 whitespace-pre-wrap text-muted">{product.description}</p>}
         <div className="mt-6">
           {product.price !== null ? (
-            <AddToCart product={product} colors={colors} />
+            <AddToCart product={product} colors={colors} parts={parts} />
           ) : (
             <QuoteRequestForm product={product} />
           )}

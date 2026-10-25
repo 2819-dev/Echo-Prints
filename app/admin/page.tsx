@@ -1,5 +1,5 @@
 import { requireUser } from "@/lib/auth";
-import { db, type Application, type ColorStock, type Order, type Product, type ProductPhoto, type ShopOrder, type ShopOrderItem, type CustomRequest, type PrinterFilament } from "@/lib/db";
+import { db, type Application, type ColorStock, type Order, type Product, type ProductPhoto, type ProductPart, type ShopOrder, type ShopOrderItem, type CustomRequest, type PrinterFilament } from "@/lib/db";
 import AppHeader, { AppHeaderBar } from "@/components/AppHeader";
 import AdminPanel, {
   type JobRow,
@@ -24,6 +24,8 @@ export default async function AdminPage() {
     products,
     productPhotos,
     productColors,
+    productParts,
+    productPartColors,
     printerFilaments,
     shopOrders,
     shopOrderItems,
@@ -51,6 +53,8 @@ export default async function AdminPage() {
     db.sql<Product>`SELECT * FROM products ORDER BY sort_order ASC, title ASC`,
     db.sql<ProductPhoto>`SELECT * FROM product_photos ORDER BY sort_order ASC`,
     db.sql<{ product_id: number; color_id: number }>`SELECT product_id, color_id FROM product_colors ORDER BY sort_order ASC`,
+    db.sql<ProductPart>`SELECT * FROM product_parts ORDER BY sort_order ASC`,
+    db.sql<{ part_id: number; color_id: number }>`SELECT part_id, color_id FROM product_part_colors ORDER BY sort_order ASC`,
     db.sql<PrinterFilament>`SELECT * FROM printer_filaments ORDER BY sort_order ASC`,
     db.sql<ShopOrder>`SELECT * FROM shop_orders ORDER BY status ASC, created_at DESC`,
     db.sql<ShopOrderItem>`SELECT * FROM shop_order_items ORDER BY id ASC`,
@@ -85,10 +89,24 @@ export default async function AdminPage() {
     list.push(pc.color_id);
     colorIdsByProduct.set(pc.product_id, list);
   }
+  const colorIdsByPart = new Map<number, number[]>();
+  for (const ppc of productPartColors) {
+    const list = colorIdsByPart.get(ppc.part_id) ?? [];
+    list.push(ppc.color_id);
+    colorIdsByPart.set(ppc.part_id, list);
+  }
+  const partsByProduct = new Map<number, { id: number; name: string; colorIds: number[] }[]>();
+  for (const part of productParts) {
+    const list = partsByProduct.get(part.product_id) ?? [];
+    list.push({ id: part.id, name: part.name, colorIds: colorIdsByPart.get(part.id) ?? [] });
+    partsByProduct.set(part.product_id, list);
+  }
+
   const productRows: ProductRow[] = products.map((p) => ({
     ...p,
     photos: photosByProduct.get(p.id) ?? [],
     colorIds: colorIdsByProduct.get(p.id) ?? [],
+    parts: partsByProduct.get(p.id) ?? [],
   }));
 
   const filamentsByUser = new Map<number, PrinterFilament[]>();

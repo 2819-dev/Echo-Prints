@@ -57,6 +57,45 @@ async function setProductColors(productId: number, colorIds: number[]) {
   );
 }
 
+interface PartInput {
+  name: string;
+  colorIds: number[];
+}
+
+function parsePartsInput(formData: FormData): PartInput[] {
+  const raw = String(formData.get("parts") || "[]");
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((p) => ({
+        name: typeof p?.name === "string" ? p.name.trim() : "",
+        colorIds: Array.isArray(p?.colorIds)
+          ? p.colorIds.map((v: unknown) => Number(v)).filter((n: number) => Number.isInteger(n) && n > 0)
+          : [],
+      }))
+      .filter((p) => p.name);
+  } catch {
+    return [];
+  }
+}
+
+async function setProductParts(productId: number, parts: PartInput[]) {
+  await db.sql`DELETE FROM product_parts WHERE product_id = ${productId}`;
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    const rows = await db.sql<{ id: number }>`
+      INSERT INTO product_parts (product_id, name, sort_order) VALUES (${productId}, ${part.name}, ${i}) RETURNING id
+    `;
+    const partId = rows[0].id;
+    await Promise.all(
+      part.colorIds.map((colorId, index) =>
+        db.sql`INSERT INTO product_part_colors (part_id, color_id, sort_order) VALUES (${partId}, ${colorId}, ${index})`
+      )
+    );
+  }
+}
+
 // ---------- Admin: products ----------
 
 export async function createProductAction(formData: FormData) {
@@ -73,6 +112,7 @@ export async function createProductAction(formData: FormData) {
   const colorIds = parseColorIds(formData);
   const allowMultiColor = formData.get("allowMultiColor") === "on";
   const modelUrl = String(formData.get("modelUrl") || "").trim() || null;
+  const parts = parsePartsInput(formData);
 
   if (!title) {
     return { error: "Title is required." };
@@ -96,6 +136,7 @@ export async function createProductAction(formData: FormData) {
   `;
   await setProductPhotos(rows[0].id, photos);
   await setProductColors(rows[0].id, colorIds);
+  await setProductParts(rows[0].id, parts);
 
   refreshShop();
   return { error: "" };
@@ -115,6 +156,7 @@ export async function updateProductAction(formData: FormData) {
   const colorIds = parseColorIds(formData);
   const allowMultiColor = formData.get("allowMultiColor") === "on";
   const modelUrl = String(formData.get("modelUrl") || "").trim() || null;
+  const parts = parsePartsInput(formData);
 
   if (!id || !title) {
     return { error: "Title is required." };
@@ -135,6 +177,7 @@ export async function updateProductAction(formData: FormData) {
   `;
   await setProductPhotos(id, photos);
   await setProductColors(id, colorIds);
+  await setProductParts(id, parts);
 
   refreshShop();
   return { error: "" };
@@ -169,6 +212,28 @@ export async function bulkToggleProductActiveAction(ids: number[], active: boole
 export async function bulkDeleteProductsAction(ids: number[]) {
   await requireUser("admin");
   await Promise.all(ids.map((id) => db.sql`DELETE FROM products WHERE id = ${id}`));
+  refreshShop();
+}
+
+// ---------- Admin: categories ----------
+// Categories are just the distinct values of products.category — there's no
+// separate table, so "editing" a category means bulk-updating every product
+// that currently has it.
+
+export async function renameCategoryAction(oldName: string, newName: string) {
+  await requireUser("admin");
+  const trimmed = newName.trim();
+  if (!trimmed) {
+    return { error: "New category name can't be empty." };
+  }
+  await db.sql`UPDATE products SET category = ${trimmed} WHERE category = ${oldName}`;
+  refreshShop();
+  return { error: "" };
+}
+
+export async function deleteCategoryAction(name: string) {
+  await requireUser("admin");
+  await db.sql`UPDATE products SET category = NULL WHERE category = ${name}`;
   refreshShop();
 }
 
@@ -237,24 +302,65 @@ export async function createShopOrderAction(formData: FormData) {
   );
   const allowedColorsById = new Map(cart.map((l, i) => [l.productId, allowedColors[i].map((c) => colorLabel(c))]));
 
+  // Multi-part products (e.g. a 3-part shelf) require one color per part,
+  // instead of the product-level single/multi color picker above.
+  const partsRows = await Promise.all(
+    cart.map((l) =>
+      db.sql<{ part_id: number; part_name: string; name: string; material: string }>`
+        SELECT pp.id AS part_id, pp.name AS part_name, c.name, c.material
+        FROM product_parts pp
+        JOIN product_part_colors ppc ON ppc.part_id = pp.id
+        JOIN colors c ON c.id = ppc.color_id
+        WHERE pp.product_id = ${l.productId}
+        ORDER BY pp.sort_order ASC, ppc.sort_order ASC
+      `
+    )
+  );
+  const partsByProductId = new Map(
+    cart.map((l, i) => {
+      const parts = new Map<number, { name: string; allowedLabels: string[] }>();
+      for (const row of partsRows[i]) {
+        const part = parts.get(row.part_id) ?? { name: row.part_name, allowedLabels: [] };
+        part.allowedLabels.push(`${row.part_name}: ${colorLabel(row)}`);
+        parts.set(row.part_id, part);
+      }
+      return [l.productId, Array.from(parts.values())];
+    })
+  );
+
   const lineItems: { productId: number; title: string; price: number; quantity: number; colors: string | null }[] = [];
   for (const line of cart) {
     const product = byId.get(line.productId);
     if (!product || product.price === null) {
       return { error: "One of the items in your cart is no longer available. Please refresh and try again." };
     }
-    const allowed = allowedColorsById.get(line.productId) ?? [];
-    let colors = line.colors.filter((c) => allowed.includes(c));
-    if (allowed.length > 0) {
-      if (colors.length === 0) {
-        return { error: `Choose a color for ${product.title}.` };
-      }
-      if (!product.allow_multi_color) {
-        colors = colors.slice(0, 1);
+
+    const parts = partsByProductId.get(line.productId) ?? [];
+    let colors: string[];
+    if (parts.length > 0) {
+      colors = [];
+      for (const part of parts) {
+        const match = line.colors.find((c) => part.allowedLabels.includes(c));
+        if (!match) {
+          return { error: `Choose a color for "${part.name}" on ${product.title}.` };
+        }
+        colors.push(match);
       }
     } else {
-      colors = [];
+      const allowed = allowedColorsById.get(line.productId) ?? [];
+      colors = line.colors.filter((c) => allowed.includes(c));
+      if (allowed.length > 0) {
+        if (colors.length === 0) {
+          return { error: `Choose a color for ${product.title}.` };
+        }
+        if (!product.allow_multi_color) {
+          colors = colors.slice(0, 1);
+        }
+      } else {
+        colors = [];
+      }
     }
+
     lineItems.push({
       productId: product.id,
       title: product.title,

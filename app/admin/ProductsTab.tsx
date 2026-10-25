@@ -10,6 +10,8 @@ import {
   reorderProductsAction,
   bulkToggleProductActiveAction,
   bulkDeleteProductsAction,
+  renameCategoryAction,
+  deleteCategoryAction,
 } from "@/lib/actions/shop";
 import { createJobFromProductAction } from "@/lib/actions/jobs";
 import { readFileAsDataURL } from "@/lib/cropImage";
@@ -17,9 +19,16 @@ import ImageCropModal from "@/components/ImageCropModal";
 import DownloadPriceListButton from "./DownloadPriceListButton";
 import type { ColorStock, Product, ProductPhoto, ProductTag } from "@/lib/db";
 
+export interface ProductPartRow {
+  id: number;
+  name: string;
+  colorIds: number[];
+}
+
 export interface ProductRow extends Product {
   photos: ProductPhoto[];
   colorIds: number[];
+  parts: ProductPartRow[];
 }
 
 function ColorThumb({ color, size = 18 }: { color: ColorStock; size?: number }) {
@@ -205,15 +214,84 @@ function ColorPicker({
   );
 }
 
+interface PartDraft {
+  name: string;
+  colorIds: number[];
+}
+
+function PartsEditor({
+  colors,
+  parts,
+  onChange,
+}: {
+  colors: ColorStock[];
+  parts: PartDraft[];
+  onChange: (parts: PartDraft[]) => void;
+}) {
+  function updatePart(index: number, patch: Partial<PartDraft>) {
+    onChange(parts.map((p, i) => (i === index ? { ...p, ...patch } : p)));
+  }
+
+  function addPart() {
+    onChange([...parts, { name: "", colorIds: [] }]);
+  }
+
+  function removePart(index: number) {
+    onChange(parts.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="sm:col-span-2">
+      <p className="text-sm text-muted">
+        Parts &mdash; for products made of multiple independently-colored pieces (e.g. a 3-part shelf: Top, Legs,
+        Shelf). Leave empty for a single-piece product.
+      </p>
+      <div className="mt-2 space-y-3">
+        {parts.map((part, index) => (
+          <div key={index} className="rounded-lg border border-hairline bg-white p-3">
+            <div className="flex items-center gap-2">
+              <input
+                value={part.name}
+                onChange={(e) => updatePart(index, { name: e.target.value })}
+                placeholder={`Part ${index + 1} name (e.g. Top)`}
+                className={`flex-1 ${inputClass}`}
+              />
+              <button
+                type="button"
+                onClick={() => removePart(index)}
+                className="shrink-0 text-xs text-muted hover:text-rose-600"
+              >
+                Remove part
+              </button>
+            </div>
+            <div className="mt-2">
+              <ColorPicker
+                colors={colors}
+                selected={part.colorIds}
+                onChange={(ids) => updatePart(index, { colorIds: ids })}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      <button type="button" onClick={addPart} className="mt-2 text-sm font-medium text-accent hover:text-accent-dark">
+        + Add Part
+      </button>
+    </div>
+  );
+}
+
 function ProductForm({
   product,
   colors,
+  categories,
   onSubmit,
   onCancel,
   submitLabel,
 }: {
   product?: ProductRow;
   colors: ColorStock[];
+  categories: string[];
   onSubmit: (formData: FormData) => Promise<{ error: string }>;
   onCancel?: () => void;
   submitLabel: string;
@@ -225,6 +303,9 @@ function ProductForm({
   const [photos, setPhotos] = useState<string[]>(product?.photos.map((p) => p.data_url) ?? []);
   const [colorIds, setColorIds] = useState<number[]>(product?.colorIds ?? []);
   const [allowMultiColor, setAllowMultiColor] = useState(product?.allow_multi_color ?? false);
+  const [parts, setParts] = useState<PartDraft[]>(
+    product?.parts.map((p) => ({ name: p.name, colorIds: p.colorIds })) ?? []
+  );
   const formRef = useRef<HTMLFormElement>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -236,6 +317,7 @@ function ProductForm({
     formData.set("isCustom", isCustom ? "on" : "off");
     formData.set("colorIds", JSON.stringify(colorIds));
     formData.set("allowMultiColor", allowMultiColor ? "on" : "off");
+    formData.set("parts", JSON.stringify(parts.filter((p) => p.name.trim())));
     const result = await onSubmit(formData);
     setSubmitting(false);
     if (result.error) {
@@ -247,6 +329,7 @@ function ProductForm({
     setIsCustom(false);
     setColorIds([]);
     setAllowMultiColor(false);
+    setParts([]);
     router.refresh();
     onCancel?.();
   }
@@ -256,7 +339,18 @@ function ProductForm({
       {product && <input type="hidden" name="id" value={product.id} />}
       <PhotoManager photos={photos} onChange={setPhotos} />
       <input name="title" defaultValue={product?.title} placeholder="Title" required className={`${inputClass} sm:col-span-2`} />
-      <input name="category" defaultValue={product?.category ?? ""} placeholder="Category (e.g. Fidgets)" className={inputClass} />
+      <input
+        name="category"
+        list="category-options"
+        defaultValue={product?.category ?? ""}
+        placeholder="Category (e.g. Fidgets)"
+        className={inputClass}
+      />
+      <datalist id="category-options">
+        {categories.map((c) => (
+          <option key={c} value={c} />
+        ))}
+      </datalist>
       <select name="tag" defaultValue={product?.tag ?? ""} className={inputClass}>
         <option value="">No tag</option>
         <option value="limited_edition">Limited edition (orange)</option>
@@ -274,16 +368,21 @@ function ProductForm({
         <input type="checkbox" checked={isCustom} onChange={(e) => setIsCustom(e.target.checked)} className="h-4 w-4" />
         Custom item &mdash; no fixed price, customers submit a request and I&apos;ll quote them
       </label>
-      <ColorPicker colors={colors} selected={colorIds} onChange={setColorIds} />
-      <label className="flex items-center gap-2 text-sm text-muted sm:col-span-2">
-        <input
-          type="checkbox"
-          checked={allowMultiColor}
-          onChange={(e) => setAllowMultiColor(e.target.checked)}
-          className="h-4 w-4"
-        />
-        Allow multiple colors (AMS multi-color prints) &mdash; otherwise shoppers pick just one
-      </label>
+      {parts.length === 0 && (
+        <>
+          <ColorPicker colors={colors} selected={colorIds} onChange={setColorIds} />
+          <label className="flex items-center gap-2 text-sm text-muted sm:col-span-2">
+            <input
+              type="checkbox"
+              checked={allowMultiColor}
+              onChange={(e) => setAllowMultiColor(e.target.checked)}
+              className="h-4 w-4"
+            />
+            Allow multiple colors (AMS multi-color prints) &mdash; otherwise shoppers pick just one
+          </label>
+        </>
+      )}
+      <PartsEditor colors={colors} parts={parts} onChange={setParts} />
       <div className="sm:col-span-2">
         <input
           name="modelUrl"
@@ -331,6 +430,74 @@ function ProductForm({
   );
 }
 
+function CategoryManager({ categories, onDone }: { categories: string[]; onDone: () => void }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [busy, setBusy] = useState<string | null>(null);
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [error, setError] = useState("");
+
+  function rename(category: string) {
+    const newName = (drafts[category] ?? category).trim();
+    if (!newName || newName === category) return;
+    setBusy(category);
+    setError("");
+    startTransition(async () => {
+      const result = await renameCategoryAction(category, newName);
+      setBusy(null);
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+      router.refresh();
+    });
+  }
+
+  function remove(category: string) {
+    setBusy(category);
+    startTransition(async () => {
+      await deleteCategoryAction(category);
+      setBusy(null);
+      router.refresh();
+    });
+  }
+
+  return (
+    <div className="mt-4 rounded-xl border border-hairline bg-panel2/60 p-4">
+      <div className="space-y-2">
+        {categories.length === 0 && <p className="text-sm text-muted">No categories yet.</p>}
+        {categories.map((c) => (
+          <div key={c} className="flex items-center gap-2">
+            <input
+              value={drafts[c] ?? c}
+              onChange={(e) => setDrafts((prev) => ({ ...prev, [c]: e.target.value }))}
+              className={`flex-1 ${inputClass}`}
+            />
+            <button
+              onClick={() => rename(c)}
+              disabled={isPending && busy === c}
+              className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-xs font-medium text-ink hover:bg-panel2"
+            >
+              Rename
+            </button>
+            <button
+              onClick={() => remove(c)}
+              disabled={isPending && busy === c}
+              className="shrink-0 text-xs text-muted hover:text-rose-600"
+            >
+              Delete
+            </button>
+          </div>
+        ))}
+      </div>
+      {error && <p className="mt-2 text-sm text-rose-600">{error}</p>}
+      <button type="button" onClick={onDone} className="mt-3 text-sm font-medium text-accent hover:text-accent-dark">
+        Done
+      </button>
+    </div>
+  );
+}
+
 export default function ProductsTab({ products, colors }: { products: ProductRow[]; colors: ColorStock[] }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -338,7 +505,10 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
   const dragIndex = useRef<number | null>(null);
+
+  const categories = Array.from(new Set(products.map((p) => p.category?.trim()).filter((c): c is string => !!c))).sort();
 
   useEffect(() => setOrdered(products), [products]);
 
@@ -419,6 +589,12 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
             <p className="text-xs text-muted">Drag to reorder</p>
             <DownloadPriceListButton products={ordered} />
             <button
+              onClick={() => setShowCategories((v) => !v)}
+              className="rounded-lg border border-hairline px-3.5 py-1.5 text-xs font-semibold text-ink hover:bg-panel2"
+            >
+              {showCategories ? "Cancel" : "Edit Categories"}
+            </button>
+            <button
               onClick={() => setShowAddForm((v) => !v)}
               className="rounded-lg bg-accent px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-accent-dark"
             >
@@ -427,10 +603,13 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
           </div>
         </div>
 
+        {showCategories && <CategoryManager categories={categories} onDone={() => setShowCategories(false)} />}
+
         {showAddForm && (
           <div className="mt-4">
             <ProductForm
               colors={colors}
+              categories={categories}
               submitLabel="Add Product"
               onCancel={() => setShowAddForm(false)}
               onSubmit={createProductAction}
@@ -463,6 +642,7 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
                 <ProductForm
                   product={product}
                   colors={colors}
+                  categories={categories}
                   submitLabel="Save"
                   onCancel={() => setEditingId(null)}
                   onSubmit={updateProductAction}
@@ -494,6 +674,7 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
                     <p className="truncate text-xs text-muted">
                       {formatPrice(product.price)}
                       {product.category ? ` · ${product.category}` : ""}
+                      {product.parts.length > 0 ? ` · ${product.parts.length} parts` : ""}
                     </p>
                   </div>
                   <button
