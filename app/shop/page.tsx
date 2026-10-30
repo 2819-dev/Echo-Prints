@@ -37,8 +37,8 @@ export default async function ShopPage() {
           <div>
             <h1 className="text-3xl font-display font-semibold tracking-tight sm:text-4xl">Shop</h1>
             <p className="mt-2 max-w-xl text-muted">
-              The full catalog, ready to order. Items listed without a price are made to order &mdash; request a
-              quote and we&apos;ll follow up.
+              The full catalog, ready to order. Items without a listed price are either made to order &mdash;
+              request a quote and we&apos;ll follow up &mdash; or marked coming soon.
             </p>
           </div>
           <CartBadge />

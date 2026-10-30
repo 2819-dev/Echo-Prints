@@ -10,12 +10,14 @@ export interface PriceListProduct {
 }
 
 const TAG_META: Record<ProductTag, { label: string; text: string; bg: string }> = {
+  coming_soon: { label: "Coming soon", text: "#0369a1", bg: "#e0f2fe" },
   limited_edition: { label: "Limited edition", text: "#b45309", bg: "#fef3c7" },
   discontinued: { label: "Discontinued", text: "#be123c", bg: "#ffe4e6" },
   customizable: { label: "Customizable", text: "#6d28d9", bg: "#ede9fe" },
 };
 
-function formatPrice(price: string | null) {
+function formatPrice(price: string | null, tag: ProductTag | null) {
+  if (tag === "coming_soon") return "Coming soon";
   if (price === null) return "Ask for a quote";
   const n = Number(price);
   return Number.isFinite(n) ? `$${n.toFixed(2)}` : price;
@@ -148,7 +150,7 @@ export default function PriceListDocument({
                     <Text style={styles.rowTitle}>{product.title}</Text>
                     {product.description && <Text style={styles.rowDescription}>{product.description}</Text>}
                   </View>
-                  <Text style={styles.rowPrice}>{formatPrice(product.price)}</Text>
+                  <Text style={styles.rowPrice}>{formatPrice(product.price, product.tag)}</Text>
                 </View>
               );
             })}

@@ -113,7 +113,7 @@ export interface Order {
   created_at: string;
 }
 
-export type ProductTag = "customizable" | "discontinued" | "limited_edition";
+export type ProductTag = "customizable" | "discontinued" | "limited_edition" | "coming_soon";
 
 export interface Product {
   id: number;

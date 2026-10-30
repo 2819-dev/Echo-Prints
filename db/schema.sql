@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS products (
   description TEXT NOT NULL DEFAULT '',
   price NUMERIC(10, 2), -- NULL = custom / quote-only item, no fixed price
   category TEXT,
-  tag TEXT CHECK (tag IN ('customizable', 'discontinued', 'limited_edition')),
+  tag TEXT CHECK (tag IN ('customizable', 'discontinued', 'limited_edition', 'coming_soon')),
   active BOOLEAN NOT NULL DEFAULT TRUE,
   sort_order INTEGER NOT NULL DEFAULT 0,
   allow_multi_color BOOLEAN NOT NULL DEFAULT FALSE,
@@ -115,9 +115,12 @@ CREATE TABLE IF NOT EXISTS products (
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 ALTER TABLE products ADD COLUMN IF NOT EXISTS category TEXT;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS tag TEXT CHECK (tag IN ('customizable', 'discontinued', 'limited_edition'));
+ALTER TABLE products ADD COLUMN IF NOT EXISTS tag TEXT;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS allow_multi_color BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS model_url TEXT;
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_tag_check;
+ALTER TABLE products ADD CONSTRAINT products_tag_check
+  CHECK (tag IN ('customizable', 'discontinued', 'limited_edition', 'coming_soon'));
 CREATE INDEX IF NOT EXISTS idx_products_active ON products(active);
 
 CREATE TABLE IF NOT EXISTS product_photos (

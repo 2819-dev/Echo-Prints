@@ -52,6 +52,7 @@ const TAG_META: Record<ProductTag, { label: string; text: string; bg: string }> 
   limited_edition: { label: "Limited edition", text: "text-amber-700", bg: "bg-amber-100" },
   discontinued: { label: "Discontinued", text: "text-rose-700", bg: "bg-rose-100" },
   customizable: { label: "Customizable", text: "text-violet-700", bg: "bg-violet-100" },
+  coming_soon: { label: "Coming soon", text: "text-sky-700", bg: "bg-sky-100" },
 };
 
 function TagBadge({ tag }: { tag: ProductTag | null }) {
@@ -353,6 +354,7 @@ function ProductForm({
       </datalist>
       <select name="tag" defaultValue={product?.tag ?? ""} className={inputClass}>
         <option value="">No tag</option>
+        <option value="coming_soon">Coming soon (blue)</option>
         <option value="limited_edition">Limited edition (orange)</option>
         <option value="discontinued">Discontinued (red)</option>
         <option value="customizable">Customizable (purple)</option>

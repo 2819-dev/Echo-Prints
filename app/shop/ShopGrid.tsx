@@ -16,6 +16,14 @@ function formatPrice(price: string | null) {
   return Number.isFinite(n) ? `$${n.toFixed(2)}` : price;
 }
 
+function ComingSoonBadge() {
+  return (
+    <span className="absolute left-2 top-2 rounded-full bg-sky-100 px-2.5 py-1 text-[11px] font-semibold text-sky-700">
+      Coming soon
+    </span>
+  );
+}
+
 function ProductCard({
   product,
   added,
@@ -31,35 +39,47 @@ function ProductCard({
       className="group flex flex-col overflow-hidden rounded-xl border border-hairline bg-panel text-left transition hover:border-ink/30"
     >
       <div className="relative aspect-square bg-panel2">
+        {product.tag === "coming_soon" && <ComingSoonBadge />}
         {product.photos[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={product.photos[0].data_url} alt={product.title} className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm text-muted">No photo</div>
+          <div className="flex h-full w-full items-center justify-center text-sm text-muted">No photo yet</div>
         )}
       </div>
       <div className="flex flex-1 flex-col p-4">
         <h3 className="font-semibold text-ink">{product.title}</h3>
         {product.description && <p className="mt-1 line-clamp-2 flex-1 text-sm text-muted">{product.description}</p>}
         <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <span className="font-semibold text-ink">{formatPrice(product.price)}</span>
-          {product.price !== null ? (
-            product.hasColors ? (
-              <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-center text-xs font-semibold text-ink">
-                Choose color
+          {product.tag === "coming_soon" ? (
+            <>
+              <span className="shrink-0 whitespace-nowrap font-semibold text-muted">Coming soon</span>
+              <span className="shrink-0 whitespace-nowrap rounded-lg border border-hairline px-3 py-1.5 text-center text-xs font-semibold text-muted">
+                Not yet available
               </span>
-            ) : (
-              <button
-                onClick={(e) => onAdd(e, product)}
-                className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-center text-xs font-semibold text-white hover:bg-accent-dark"
-              >
-                {added ? "Added" : "Add to Cart"}
-              </button>
-            )
+            </>
           ) : (
-            <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-center text-xs font-semibold text-ink">
-              Request a Quote
-            </span>
+            <>
+              <span className="font-semibold text-ink">{formatPrice(product.price)}</span>
+              {product.price !== null ? (
+                product.hasColors ? (
+                  <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-center text-xs font-semibold text-ink">
+                    Choose color
+                  </span>
+                ) : (
+                  <button
+                    onClick={(e) => onAdd(e, product)}
+                    className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-center text-xs font-semibold text-white hover:bg-accent-dark"
+                  >
+                    {added ? "Added" : "Add to Cart"}
+                  </button>
+                )
+              ) : (
+                <span className="shrink-0 rounded-lg border border-hairline px-3 py-1.5 text-center text-xs font-semibold text-ink">
+                  Request a Quote
+                </span>
+              )}
+            </>
           )}
         </div>
       </div>

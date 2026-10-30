@@ -6,7 +6,7 @@ import { requireUser, getCurrentUser } from "@/lib/auth";
 import { colorLabel } from "@/lib/colorLabel";
 import type { PaymentMethod, Product, ProductTag } from "@/lib/db";
 
-const VALID_TAGS: ProductTag[] = ["customizable", "discontinued", "limited_edition"];
+const VALID_TAGS: ProductTag[] = ["customizable", "discontinued", "limited_edition", "coming_soon"];
 
 function refreshShop() {
   revalidatePath("/admin");

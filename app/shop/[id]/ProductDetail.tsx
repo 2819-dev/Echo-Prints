@@ -315,15 +315,26 @@ export default function ProductDetail({
   colors: ColorStock[];
   parts: PartWithColors[];
 }) {
+  const comingSoon = product.tag === "coming_soon";
+
   return (
     <div className="grid gap-10 sm:grid-cols-2">
       <Gallery photos={photos} title={product.title} />
       <div>
+        {comingSoon && (
+          <span className="mb-2 inline-block rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-700">
+            Coming soon
+          </span>
+        )}
         <h1 className="text-2xl font-display font-semibold tracking-tight">{product.title}</h1>
-        <p className="mt-2 text-lg font-semibold text-accent">{formatPrice(product.price)}</p>
+        {!comingSoon && <p className="mt-2 text-lg font-semibold text-accent">{formatPrice(product.price)}</p>}
         {product.description && <p className="mt-4 whitespace-pre-wrap text-muted">{product.description}</p>}
         <div className="mt-6">
-          {product.price !== null ? (
+          {comingSoon ? (
+            <div className="rounded-xl border border-dashed border-hairline bg-panel/60 p-5 text-sm text-muted">
+              We&apos;re still finishing this one up &mdash; pricing and availability are on the way. Check back soon.
+            </div>
+          ) : product.price !== null ? (
             <AddToCart product={product} colors={colors} parts={parts} />
           ) : (
             <QuoteRequestForm product={product} />
