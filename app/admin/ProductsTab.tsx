@@ -656,54 +656,58 @@ export default function ProductsTab({ products, colors }: { products: ProductRow
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDrop={handleDrop}
                   onDragEnd={handleDrop}
-                  className="flex items-center gap-3 rounded-xl border border-hairline bg-panel p-3"
+                  className="flex flex-col gap-2 rounded-xl border border-hairline bg-panel p-3 sm:flex-row sm:items-center sm:gap-3"
                 >
-                  <span className="cursor-grab active:cursor-grabbing" title="Drag to reorder">
-                    <DragHandle />
-                  </span>
-                  <input type="checkbox" checked={selected.has(product.id)} onChange={() => toggleSelect(product.id)} className="h-4 w-4" />
-                  {product.photos[0] ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={product.photos[0].data_url} alt="" className="h-11 w-11 shrink-0 rounded-lg object-cover" />
-                  ) : (
-                    <div className="h-11 w-11 shrink-0 rounded-lg bg-panel2" />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <p className="truncate text-sm font-medium">{product.title}</p>
-                      <TagBadge tag={product.tag} />
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <span className="cursor-grab active:cursor-grabbing" title="Drag to reorder">
+                      <DragHandle />
+                    </span>
+                    <input type="checkbox" checked={selected.has(product.id)} onChange={() => toggleSelect(product.id)} className="h-4 w-4" />
+                    {product.photos[0] ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={product.photos[0].data_url} alt="" className="h-11 w-11 shrink-0 rounded-lg object-cover" />
+                    ) : (
+                      <div className="h-11 w-11 shrink-0 rounded-lg bg-panel2" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <p className="truncate text-sm font-medium">{product.title}</p>
+                        <TagBadge tag={product.tag} />
+                      </div>
+                      <p className="truncate text-xs text-muted">
+                        {formatPrice(product.price)}
+                        {product.category ? ` · ${product.category}` : ""}
+                        {product.parts.length > 0 ? ` · ${product.parts.length} parts` : ""}
+                      </p>
                     </div>
-                    <p className="truncate text-xs text-muted">
-                      {formatPrice(product.price)}
-                      {product.category ? ` · ${product.category}` : ""}
-                      {product.parts.length > 0 ? ` · ${product.parts.length} parts` : ""}
-                    </p>
                   </div>
-                  <button
-                    onClick={() => toggleActive(product)}
-                    disabled={isPending}
-                    className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-                      product.active ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
-                    }`}
-                  >
-                    {product.active ? "Active" : "Inactive"}
-                  </button>
-                  {product.model_url && (
+                  <div className="flex shrink-0 items-center gap-3 sm:ml-auto">
                     <button
-                      onClick={() => sendToQueue(product)}
+                      onClick={() => toggleActive(product)}
                       disabled={isPending}
-                      title={product.model_url}
-                      className="shrink-0 text-xs font-medium text-muted hover:text-accent"
+                      className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+                        product.active ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
+                      }`}
                     >
-                      Send to print queue
+                      {product.active ? "Active" : "Inactive"}
                     </button>
-                  )}
-                  <button onClick={() => setEditingId(product.id)} className="shrink-0 text-xs font-medium text-accent hover:text-accent-dark">
-                    Edit
-                  </button>
-                  <button onClick={() => remove(product)} disabled={isPending} className="shrink-0 text-xs text-muted hover:text-rose-600">
-                    Remove
-                  </button>
+                    {product.model_url && (
+                      <button
+                        onClick={() => sendToQueue(product)}
+                        disabled={isPending}
+                        title={product.model_url}
+                        className="shrink-0 text-xs font-medium text-muted hover:text-accent"
+                      >
+                        Send to print queue
+                      </button>
+                    )}
+                    <button onClick={() => setEditingId(product.id)} className="shrink-0 text-xs font-medium text-accent hover:text-accent-dark">
+                      Edit
+                    </button>
+                    <button onClick={() => remove(product)} disabled={isPending} className="shrink-0 text-xs text-muted hover:text-rose-600">
+                      Remove
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

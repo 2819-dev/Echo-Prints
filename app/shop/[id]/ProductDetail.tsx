@@ -156,7 +156,17 @@ function PartSelector({
   );
 }
 
-function AddToCart({ product, colors, parts }: { product: Product; colors: ColorStock[]; parts: PartWithColors[] }) {
+function AddToCart({
+  product,
+  photo,
+  colors,
+  parts,
+}: {
+  product: Product;
+  photo: string | null;
+  colors: ColorStock[];
+  parts: PartWithColors[];
+}) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
@@ -188,7 +198,7 @@ function AddToCart({ product, colors, parts }: { product: Product; colors: Color
         productId: product.id,
         title: product.title,
         price: Number(product.price),
-        photo: null,
+        photo,
         colors: finalColors,
       },
       quantity
@@ -335,7 +345,7 @@ export default function ProductDetail({
               We&apos;re still finishing this one up &mdash; pricing and availability are on the way. Check back soon.
             </div>
           ) : product.price !== null ? (
-            <AddToCart product={product} colors={colors} parts={parts} />
+            <AddToCart product={product} photo={photos[0]?.data_url ?? null} colors={colors} parts={parts} />
           ) : (
             <QuoteRequestForm product={product} />
           )}
